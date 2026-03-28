@@ -1,97 +1,129 @@
-/* Temel Ayarlar ve Ortak Yapılar */
-:root {
-    --gold: #d4af37;
-    --dark-bg: #1a1a1a;
-    --gray-bg: #f8f9fa;
-    --text-dark: #333;
-    --text-light: #fff;
-}
+/* =========================================
+   VIP KIBRIS TRAVEL - TURLAR DIKEY GRID STILI
+========================================= */
 
-body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--gray-bg); color: var(--text-dark); }
-
-/* Üst Bilgi ve Menü */
-.topbar { background-color: #000; color: #ccc; font-size: 13px; padding: 8px 50px; display: flex; justify-content: space-between; }
-.topbar-right a { color: var(--gold); text-decoration: none; margin-left: 15px; }
-
-header { background-color: var(--dark-bg); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
-.logo { color: var(--gold); font-size: 26px; font-weight: bold; text-decoration: none; letter-spacing: 1px; }
-nav a { color: var(--text-light); text-decoration: none; margin-left: 25px; font-size: 15px; text-transform: uppercase; transition: 0.3s; }
-nav a:hover, nav a.active { color: var(--gold); }
-
-/* Turlar Sayfası Özel Başlık Alanı */
-.tours-header {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/tours-bg.jpg') center/cover;
-    background-color: #222;
-    color: var(--gold);
-    text-align: center;
-    padding: 80px 20px;
-}
-.tours-header h1 { margin: 0; font-size: 42px; text-transform: uppercase; letter-spacing: 2px; }
-.tours-header p { color: #fff; font-size: 18px; margin-top: 15px; max-width: 600px; margin-left: auto; margin-right: auto; }
-
-/* Turlar Listesi (Grid Yapısı) */
-.tours-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 40px;
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 20px;
-}
-
-.tour-card {
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Hero Banner */
+.tours-hero {
+    height: 400px;
+    background: linear-gradient(rgba(15, 61, 122, 0.8), rgba(15, 61, 122, 0.8)), url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
 }
 
-.tour-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+.tours-hero h1 { font-size: 48px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
 
-.tour-image { position: relative; height: 250px; overflow: hidden; }
-.tour-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-.tour-card:hover .tour-image img { transform: scale(1.1); }
+/* ANA SAYFAYA DÖN / BREADCRUMB STİLİ */
+.breadcrumb-container {
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+}
+.breadcrumb-container a {
+    color: #fff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.breadcrumb-container a:hover {
+    color: var(--accent);
+}
+.breadcrumb-container span {
+    color: var(--accent);
+}
 
-/* Fiyat veya Etiket Balonu (Opsiyonel) */
+.tours-hero p { font-size: 18px; opacity: 0.9; }
+
+/* 3'LÜ GRID YAPISI */
+.tours-vertical-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+/* DIKEY KART YAPISI */
+.tour-v-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+.tour-v-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(15, 61, 122, 0.1); }
+
+.tour-v-img { position: relative; height: 220px; overflow: hidden; }
+.tour-v-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+.tour-v-card:hover .tour-v-img img { transform: scale(1.1); }
+
 .tour-badge {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--gold);
-    color: #000;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 14px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    top: 15px; left: 15px;
+    background: var(--accent);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 11px;
+    z-index: 2;
 }
 
-.tour-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
-.tour-content h3 { margin-top: 0; color: var(--dark-bg); font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
-.tour-content p { color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+.tour-v-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+.tour-v-body h3 { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 10px; }
+.tour-v-body p { font-size: 14px; color: #666; margin-bottom: 20px; line-height: 1.6; height: 70px; overflow: hidden; }
 
-/* Liste İkonları */
-.tour-features { list-style: none; padding: 0; margin: 0 0 25px 0; }
-.tour-features li { font-size: 14px; color: #555; margin-bottom: 8px; display: flex; align-items: center; }
-.tour-features li::before { content: '✓'; color: var(--gold); font-weight: bold; margin-right: 10px; }
+/* PANEL İÇİ SEKME (TAB) SİSTEMİ */
+.tour-v-tabs { background: #f9f9f9; border-radius: 6px; overflow: hidden; border: 1px solid #eee; margin-bottom: 20px; }
+.t-v-tab-header { display: flex; border-bottom: 1px solid #eee; }
+.tv-btn { 
+    flex: 1; padding: 10px; border: none; background: #eee; 
+    font-size: 10px; font-weight: 800; cursor: pointer; color: #888; 
+    transition: 0.3s;
+}
+.tv-btn.active { background: #fff; color: var(--primary); }
+
+.tv-tab-content { padding: 15px; display: none; }
+.tv-tab-content.active { display: block; animation: fadeIn 0.4s; }
+
+.v-tour-list { list-style: none; padding: 0; margin: 0; }
+.v-tour-list li { font-size: 12px; color: #555; margin-bottom: 6px; display: flex; align-items: center; }
+.v-tour-list li::before { content: '✓'; color: var(--accent); font-weight: bold; margin-right: 8px; }
+
+.v-mini-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.v-mini-gallery img { width: 100%; height: 60px; object-fit: cover; border-radius: 3px; }
 
 /* Buton */
-.btn-tour {
-    background-color: var(--dark-bg);
-    color: var(--gold);
+.btn-tour-v {
+    background: var(--primary);
+    color: #fff;
     text-align: center;
-    padding: 12px 20px;
-    border-radius: 4px;
+    padding: 12px;
+    border-radius: 6px;
     text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: auto;
     transition: 0.3s;
-    border: 1px solid var(--dark-bg);
+}
+.btn-tour-v:hover { background: var(--accent); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tours-vertical-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-.btn-tour:hover { background-color: var(--gold); color: #000; border-color: var(--gold); }
-
-footer { background-color: var(--dark-bg); color: #aaa; text-align: center; padding: 30px 20px; font-size: 14px; margin-top: 40px; }
+@media (max-width: 768px) {
+    .tours-vertical-grid { grid-template-columns: 1fr; }
+    .tours-hero h1 { font-size: 32px; }
+}

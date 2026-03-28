@@ -4,125 +4,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İletişim & Rezervasyon - Kıbrıs VIP Transfer</title>
-    <link rel="stylesheet" href="/Css/iletisim.css">
+    <title>İletişim - VIP KIBRIS TRAVEL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/style.css">
+    <link rel="stylesheet" href="../Css/iletisim.css">
 </head>
 
 <body>
 
     <div class="topbar">
-        <div class="topbar-left">📧 info@vipkibristravel.com | 📱 +90 532 000 00 00</div>
-        <div class="topbar-right">7/24 Hizmetinizdeyiz</div>
-    </div>
-
-    <header>
-        <a href="index.html" class="logo">VIP KIBRIS</a>
-        <nav>
-            <a href="index.html">Ana Sayfa</a>
-            <a href="hakkimizda.html">Kurumsal</a>
-            <a href="hizmetler.html">Hizmetlerimiz</a>
-            <a href="turlar.html">Kıbrıs Turları</a>
-            <a href="iletisim.html" class="active">İletişim</a>
-        </nav>
-    </header>
-
-    <div class="contact-header">
-        <h1>İletişim & Rezervasyon</h1>
-        <p>VIP Transfer ve Turlarımız için bize hemen ulaşın.</p>
-    </div>
-
-    <div class="contact-container">
-        <div class="contact-info">
-            <h3>İletişim Bilgilerimiz</h3>
-            <p><strong>📍 Adres:</strong> Ercan Havalimanı Yolu, Lefkoşa / KKTC</p>
-            <p><strong>📞 Telefon:</strong> +90 532 000 00 00</p>
-            <p><strong>✉️ E-Posta:</strong> info@vipkibristravel.com</p>
-            <p><strong>⏱ Çalışma Saatleri:</strong> 7 Gün 24 Saat hizmetinizdeyiz. Havalimanı transferleri için uçuş
-                saatinizi belirtmeniz yeterlidir.</p>
-
-            <h3 style="margin-top: 40px;">Kıbrıs Ofisimiz</h3>
-            <div
-                style="background: #e9ecef; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: #666;">
-                [Google Harita Alanı]
+        <div class="topbar-container">
+            <div class="topbar-left">
+                <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone">+90 532 000 00
+                        00</a></span>
+            </div>
+            <div class="topbar-right">
+                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
+                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
             </div>
         </div>
-
-        <div class="contact-form-wrapper">
-            <h3>Hızlı Rezervasyon Talebi</h3>
-            <form id="rezervasyonFormu" onsubmit="whatsappGonder(event)">
-
-                <div class="form-group">
-                    <label>Adınız Soyadınız</label>
-                    <input type="text" id="isim" required placeholder="Adınız Soyadınız">
-                </div>
-
-                <div class="form-group" style="display: flex; gap: 15px;">
-                    <div style="flex: 1;">
-                        <label>Alınış Noktası</label>
-                        <input type="text" id="nereden" required placeholder="Örn: Ercan Havalimanı">
-                    </div>
-                    <div style="flex: 1;">
-                        <label>Varış Noktası</label>
-                        <input type="text" id="nereye" required placeholder="Örn: Girne Liman">
-                    </div>
-                </div>
-
-                <div class="form-group" style="display: flex; gap: 15px;">
-                    <div style="flex: 1;">
-                        <label>Tarih ve Saat</label>
-                        <input type="datetime-local" id="tarih" required>
-                    </div>
-                    <div style="flex: 1;">
-                        <label>Kişi Sayısı</label>
-                        <input type="number" id="kisi" min="1" max="15" required placeholder="1">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Özel İstekleriniz (Bebek Koltuğu, Uçuş Kodu vb.)</label>
-                    <textarea id="notlar" rows="3"
-                        placeholder="Uçuş numaranızı ve diğer isteklerinizi buraya yazabilirsiniz..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">WhatsApp ile Talebi Gönder</button>
-            </form>
-        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 VIP KIBRIS TRAVEL. Tüm Hakları Saklıdır.</p>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">VIP KIBRIS</a>
+            <nav class="main-nav">
+                <a href="index.html">ANA SAYFA</a>
+                <a href="hakkimizda.html">HAKKIMIZDA</a>
+                <a href="hizmetler.html">HİZMETLERİMİZ</a>
+                <a href="araclarimiz.html">ARAÇLARIMIZ</a>
+                <a href="turlar.html">TURLAR</a>
+                <a href="iletisim.html" class="active">İLETİŞİM</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="contact-hero">
+        <div class="container">
+            <span class="offer-tag">BİZE ULAŞIN <span></span></span>
+            <h1>İletişim</h1>
+            <div class="breadcrumb-container">
+                <a href="index.html">Ana Sayfa</a> / <span>İletişim</span>
+            </div>
+            <p>Sorularınız, rezervasyon talepleriniz ve özel turlarınız için bize 7/24 ulaşabilirsiniz.</p>
+        </div>
+    </section>
+
+    <section class="section-padding bg-white">
+        <div class="container">
+            <div class="contact-wrapper">
+
+                <div class="contact-info-side">
+                    <div class="contact-info-item">
+                        <div class="c-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="c-text">
+                            <h3>Adresimiz</h3>
+                            <p>Girne Limanı Mevkii, No:45 <br> Girne / KKTC</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="c-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="c-text">
+                            <h3>Telefon & WhatsApp</h3>
+                            <p><a href="tel:+905320000000">+90 532 000 00 00</a></p>
+                            <p><a href="https://wa.me/905320000000">+90 532 000 00 00</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="c-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="c-text">
+                            <h3>E-Posta</h3>
+                            <p>info@vipkibristravel.com</p>
+                            <p>destek@vipkibristravel.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="contact-form-side">
+                    <h3>Mesaj Gönderin</h3>
+                    <form action="#" class="contact-form-clean">
+                        <div class="form-row-grid">
+                            <div class="input-block">
+                                <label>Adınız Soyadınız</label>
+                                <input type="text" placeholder="Örn: Ahmet Yılmaz" required>
+                            </div>
+                            <div class="input-block">
+                                <label>Telefon Numaranız</label>
+                                <input type="tel" placeholder="05XX XXX XX XX" required>
+                            </div>
+                        </div>
+                        <div class="input-block">
+                            <label>E-Posta Adresiniz</label>
+                            <input type="email" placeholder="ornek@mail.com">
+                        </div>
+                        <div class="input-block">
+                            <label>Konu</label>
+                            <select>
+                                <option>Transfer Rezervasyonu</option>
+                                <option>Tur Bilgisi</option>
+                                <option>Şikayet / Öneri</option>
+                                <option>Diğer</option>
+                            </select>
+                        </div>
+                        <div class="input-block">
+                            <label>Mesajınız</label>
+                            <textarea rows="5" placeholder="Size nasıl yardımcı olabiliriz?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-send">MESAJI GÖNDER <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="map-section">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52140.40751917531!2d33.27218684719266!3d35.3351980838118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14de13f019077113%3A0x6b0933e08f5e135e!2sGirne!5e0!3m2!1str!2s!4v1700000000000"
+            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <a href="index.html" class="footer-logo">VIP KIBRIS</a>
+                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
+            </div>
+            <div class="footer-col">
+                <h3>HIZLI MENÜ</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Ana Sayfa</a></li>
+                    <li><a href="turlar.html">Turlar</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>İLETİŞİM</h3>
+                <ul class="footer-contact">
+                    <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
+                    <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
+        </div>
     </footer>
 
-    <script>
-        function whatsappGonder(event) {
-            event.preventDefault(); // Sayfanın yenilenmesini engeller
+    <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
-            // Formdaki verileri çekiyoruz
-            const isim = document.getElementById('isim').value;
-            const nereden = document.getElementById('nereden').value;
-            const nereye = document.getElementById('nereye').value;
-            const tarih = document.getElementById('tarih').value;
-            const kisi = document.getElementById('kisi').value;
-            const notlar = document.getElementById('notlar').value;
-
-            // Müşterinin WhatsApp numarasını buraya yazmalısın (Boşluksuz, + olmadan)
-            const telefonNumarasi = "905320000000";
-
-            // WhatsApp'a gidecek mesaj taslağı (%0A alt satıra geçmek içindir)
-            const mesaj = `Merhaba VIP Kıbrıs, web sitenizden yeni bir transfer/tur talebi oluşturmak istiyorum.%0A%0A` +
-                `*Ad Soyad:* ${isim}%0A` +
-                `*Nereden:* ${nereden}%0A` +
-                `*Nereye:* ${nereye}%0A` +
-                `*Tarih / Saat:* ${tarih}%0A` +
-                `*Kişi Sayısı:* ${kisi}%0A` +
-                `*Ek Notlar:* ${notlar}%0A%0A` +
-                `Müsaitlik ve fiyat bilgisi alabilir miyim?`;
-
-            // WhatsApp linkini oluştur ve yeni sekmede aç
-            const whatsappLink = `https://wa.me/${telefonNumarasi}?text=${mesaj}`;
-            window.open(whatsappLink, '_blank');
-        }
-    </script>
 </body>
 
 </html>

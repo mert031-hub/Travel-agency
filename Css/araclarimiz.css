@@ -1,0 +1,266 @@
+/* =========================================
+   ARAÇLARIMIZ SAYFASI ÖZEL STİLLERİ
+   Sekmeli Yapı & Transparan Arka Plan
+========================================= */
+
+/* Transparan Arka Plan Görüntüsü */
+.transparent-bg-effect {
+    background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), 
+                url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1920&q=80');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Hero Banner */
+.vehicles-hero {
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+
+.vehicles-hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(15, 61, 122, 0.8), rgba(15, 61, 122, 0.9));
+}
+
+.vehicles-hero .container { 
+    position: relative; 
+    z-index: 2; 
+}
+
+/* YAZI HİZALAMASI: Başlığı ve alt metni sağa kaydırarak VIP ARACLARIMIZ ile aynı hizaya getirir */
+.hero-text {
+    padding-left: 15px; /* Konteyner içindeki standart boşlukla uyumlu hale getirildi */
+    text-align: left;
+}
+
+.vehicles-hero h1 { 
+    font-size: 52px; 
+    font-weight: 800; 
+    margin-bottom: 10px; 
+}
+
+/* --- BREADCRUMB (ANA SAYFA LİNKİ) RENK DÜZENLEMESİ --- */
+.breadcrumb {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Linkin pembe olmasını engellemek için tüm durumlar beyaz yapıldı */
+.breadcrumb a, 
+.breadcrumb a:visited, 
+.breadcrumb a:active, 
+.breadcrumb a:link {
+    color: #ffffff !important; 
+    text-decoration: none;
+    opacity: 0.9;
+    transition: 0.3s;
+}
+
+.breadcrumb a:hover {
+    opacity: 1;
+    color: var(--accent) !important; /* Üzerine gelince altın sarısı olur */
+}
+
+.breadcrumb span {
+    color: var(--accent);
+    margin-left: 5px;
+}
+
+/* Araç Ana Kartı */
+.vehicle-main-card {
+    background: #fff;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 60px;
+    transition: 0.3s;
+}
+
+.vehicle-main-card:hover {
+    box-shadow: 0 15px 40px rgba(15, 61, 122, 0.1);
+}
+
+.vehicle-top-info {
+    display: flex;
+    align-items: stretch;
+}
+
+.v-img-side { 
+    flex: 1; 
+    overflow: hidden; 
+    position: relative;
+}
+
+.v-img-side img { 
+    width: 100%; 
+    height: 100%; 
+    min-height: 320px; 
+    object-fit: cover; 
+    transition: 0.5s; 
+}
+
+.vehicle-main-card:hover .v-img-side img { transform: scale(1.05); }
+
+.v-content-side { 
+    flex: 1.2; 
+    padding: 40px; 
+    background: #fff; 
+}
+
+.v-content-side h3 { 
+    font-size: 26px; 
+    color: var(--primary); 
+    font-weight: 800; 
+    margin-bottom: 15px; 
+}
+
+.tag {
+    font-size: 11px;
+    color: #888;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.quick-specs { 
+    display: flex; 
+    gap: 25px; 
+    border-top: 1px solid var(--border-color); 
+    padding-top: 25px; 
+    margin-top: 20px;
+}
+
+.quick-specs span { 
+    font-size: 13px; 
+    font-weight: 700; 
+    color: var(--text-dark); 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
+
+.quick-specs i { color: var(--accent); }
+
+/* SEKME (TAB) YAPISI */
+.vehicle-tabs { 
+    background: #f9f9f9; 
+    border-top: 1px solid var(--border-color); 
+}
+
+.tab-header { 
+    display: flex; 
+    background: #eeeeee; 
+}
+
+.tab-btn { 
+    flex: 1; 
+    padding: 20px; 
+    border: none; 
+    background: #eeeeee; 
+    font-weight: 700; 
+    color: #777777; 
+    cursor: pointer; 
+    transition: 0.3s;
+    font-family: inherit; 
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tab-btn i { margin-right: 10px; color: var(--primary); }
+
+.tab-btn.active { 
+    background: var(--primary); 
+    color: #fff; 
+}
+
+.tab-btn.active i { color: var(--accent); }
+
+.tab-content-wrapper { padding: 40px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+
+/* Araç Galeri Grid */
+.vehicle-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.vehicle-gallery-grid img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.vehicle-gallery-grid img:hover {
+    transform: scale(1.03);
+    border-color: var(--accent);
+}
+
+/* Sekme İçi Hızlı Form */
+.inline-rez-form { display: flex; gap: 15px; }
+
+.inline-rez-form input { 
+    flex: 1; 
+    padding: 14px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    font-size: 14px; 
+    outline: none; 
+    transition: 0.3s;
+}
+
+.inline-rez-form input:focus { border-color: var(--primary); }
+
+.inline-rez-form .btn-primary { 
+    padding: 0 40px; 
+    font-size: 14px; 
+    border-radius: 6px; 
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* Sekme İçi Yorumlar */
+.mini-comment { border-left: 4px solid var(--accent); padding-left: 25px; }
+.mini-comment .stars { color: var(--accent); font-size: 12px; margin-bottom: 12px; }
+.mini-comment p { font-style: italic; color: #555555; font-size: 15px; }
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 992px) {
+    .vehicle-top-info { flex-direction: column; }
+    .v-img-side { height: 250px; }
+    .v-content-side { padding: 30px; }
+    .inline-rez-form { flex-direction: column; }
+    .tab-header { flex-direction: column; }
+    .tab-btn { border-bottom: 1px solid #ddd; }
+}
+
+@media (max-width: 768px) {
+    .vehicles-hero h1 { font-size: 38px; }
+    .tab-content-wrapper { padding: 25px; }
+    .vehicle-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}

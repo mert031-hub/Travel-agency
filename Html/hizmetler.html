@@ -5,82 +5,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hizmetlerimiz - VIP KIBRIS TRAVEL</title>
-    <link rel="stylesheet" href="/Css/hizmetler.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/style.css">
+    <link rel="stylesheet" href="../Css/hizmetler.css">
 </head>
 
 <body>
 
     <div class="topbar">
-        <div class="topbar-left">📧 info@vipkibristravel.com | 📱 +90 532 000 00 00</div>
-        <div class="topbar-right">7/24 Hizmetinizdeyiz</div>
+        <div class="topbar-container">
+            <div class="topbar-left">
+                <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000"
+                        style="color:white; text-decoration:none;">+90 532 000 00 00</a></span>
+            </div>
+            <div class="topbar-right">
+                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
+                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
+            </div>
+        </div>
     </div>
 
-    <header>
-        <a href="index.html" class="logo">VIP KIBRIS</a>
-        <nav>
-            <a href="index.html">Ana Sayfa</a>
-            <a href="hakkimizda.html">Kurumsal</a>
-            <a href="hizmetler.html" class="active">Hizmetlerimiz</a>
-            <a href="turlar.html">Kıbrıs Turları</a>
-            <a href="iletisim.html">İletişim</a>
-        </nav>
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">VIP KIBRIS</a>
+            <nav class="main-nav">
+                <a href="index.html">ANA SAYFA</a>
+                <a href="hakkimizda.html">HAKKIMIZDA</a>
+                <a href="hizmetler.html" class="active">HİZMETLERİMİZ</a>
+                <a href="araclarimiz.html">ARAÇLARIMIZ</a>
+                <a href="turlar.html">TURLAR</a>
+                <a href="iletisim.html">İLETİŞİM</a>
+            </nav>
+        </div>
     </header>
 
-    <div class="services-header">
-        <h1>Ayrıcalıklı Hizmetlerimiz</h1>
-        <p>Seyahatinizin her anında lüks, konfor ve güvenliği bir arada sunuyoruz.</p>
+    <div class="services-hero"
+        style="background-image: url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1920&q=80');">
+        <div class="container">
+            <div class="hero-text">
+                <span class="offer-tag">VIP AYRICALIĞI <span></span></span>
+                <h1>Hizmetlerimiz</h1>
+                <div class="breadcrumb">
+                    <a href="index.html">Ana Sayfa</a> / <span>Hizmetlerimiz</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="services-container">
+    <section class="section-padding bg-white">
+        <div class="container">
 
-        <div class="service-row">
-            <div class="service-image">
-                <img src="images/airport-transfer.jpg" alt="Ercan Havalimanı Transferi">
+            <div class="service-detail-row">
+                <div class="service-detail-img">
+                    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
+                        alt="Ercan Havalimanı Transfer">
+                    <div class="img-overlay-info">VIP TRANSFER</div>
+                </div>
+                <div class="service-detail-content">
+                    <div class="content-header">
+                        <span class="number">01</span>
+                        <h2>Ercan Havalimanı VIP Transfer</h2>
+                    </div>
+                    <p>Kıbrıs'a adım attığınız ilk andan itibaren ayrıcalıklı olduğunuzu hissedin. Ercan Havalimanı'ndan
+                        Girne, Lefkoşa, Magosa veya Bafra bölgesindeki otelinize lüks Mercedes Vito araçlarımızla
+                        kesintisiz ve konforlu bir şekilde ulaştırıyoruz.</p>
+                    <p>Günün her saati (7/24) önceden rezervasyon yaparak uçak rötar dertlerini düşünmeden güvenle
+                        seyahat edebilirsiniz. Şoförünüz sizi isminizle karşılar.</p>
+                    <a href="iletisim.html" class="btn-primary">TEKLİF AL <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
-            <div class="service-content">
-                <h2>Ercan Havalimanı VIP Transfer</h2>
-                <p>Kıbrıs'a adım attığınız ilk andan itibaren ayrıcalıklı olduğunuzu hissedin. Ercan Havalimanı'ndan
-                    Girne, Lefkoşa, Magosa veya Bafra bölgesindeki otelinize lüks Mercedes Vito araçlarımızla kesintisiz
-                    ve konforlu bir şekilde ulaştırıyoruz.</p>
-                <p>Günün her saati (7/24) önceden rezervasyon yaparak uçak rötar dertlerini düşünmeden güvenle seyahat
-                    edebilirsiniz.</p>
-                <a href="iletisim.html" class="btn-service">Transfer Talep Et</a>
+
+            <div class="service-detail-row reverse">
+                <div class="service-detail-img">
+                    <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
+                        alt="Şoförlü Araç Tahsisi">
+                    <div class="img-overlay-info">ÖZEL TAHSİS</div>
+                </div>
+                <div class="service-detail-content">
+                    <div class="content-header">
+                        <span class="number">02</span>
+                        <h2>Şoförlü Araç Tahsisi</h2>
+                    </div>
+                    <p>İş toplantılarınız, özel davetleriniz veya gün boyu sürecek ada içi ziyaretleriniz için
+                        profesyonel şoförlü VIP araç kiralama hizmeti sunuyoruz. Sadece rotanızı belirleyin, gerisini
+                        bize bırakın.</p>
+                    <p>Tam donanımlı, Wi-Fi erişimli ve ikramlı araçlarımızla şoförümüz sizi dilediğiniz yerde beklesin.
+                        Zaman yönetimi tamamen sizin elinizde.</p>
+                    <a href="iletisim.html" class="btn-primary">DETAYLI BİLGİ <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="service-detail-row">
+                <div class="service-detail-img">
+                    <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=800&q=80"
+                        alt="VIP Karşılama">
+                    <div class="img-overlay-info">KARŞILAMA</div>
+                </div>
+                <div class="service-detail-content">
+                    <div class="content-header">
+                        <span class="number">03</span>
+                        <h2>VIP Karşılama ve Asistanlık</h2>
+                    </div>
+                    <p>Özel misafirlerinizi veya şirket yetkililerinizi sizin adınıza en prestijli şekilde karşılıyoruz.
+                        İsim veya şirket logolu özel tabelalarla karşılama yapıyor, bagaj asistanlığı sağlıyoruz.</p>
+                    <p>İlk intibanın ne kadar önemli olduğunu biliyoruz. Misafirlerinize kendilerini özel hissettirecek
+                        kusursuz bir operasyon yürütüyoruz.</p>
+                    <a href="iletisim.html" class="btn-primary">REZERVASYON <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <a href="index.html" class="footer-logo">VIP KIBRIS</a>
+                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli, konforlu ve zamanında ulaşım.</p>
+            </div>
+            <div class="footer-col">
+                <h3>HIZLI MENÜ</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Ana Sayfa</a></li>
+                    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+                    <li><a href="hizmetler.html">Hizmetler</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>İLETİŞİM</h3>
+                <ul class="footer-contact">
+                    <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
+                    <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
+                </ul>
             </div>
         </div>
-
-        <div class="service-row">
-            <div class="service-image">
-                <img src="images/soforlu-vito.jpg" alt="Şoförlü Mercedes Vito Kiralama">
-            </div>
-            <div class="service-content">
-                <h2>Şoförlü Araç Tahsisi</h2>
-                <p>İş toplantılarınız, özel davetleriniz, casino ziyaretleriniz veya gün boyu sürecek ada içi
-                    ziyaretleriniz için profesyonel şoförlü VIP araç kiralama hizmeti sunuyoruz.</p>
-                <p>Siz sadece rotanızı belirleyin; tam donanımlı, Wi-Fi erişimli ve ikramlı araçlarımızla şoförümüz sizi
-                    dilediğiniz yerde beklesin.</p>
-                <a href="iletisim.html" class="btn-service">Fiyat Bilgisi Al</a>
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
         </div>
-
-        <div class="service-row">
-            <div class="service-image">
-                <img src="images/vip-karsilama-detay.jpg" alt="VIP Karşılama ve Asistanlık">
-            </div>
-            <div class="service-content">
-                <h2>VIP Karşılama ve Asistanlık</h2>
-                <p>Özel misafirlerinizi veya şirket yetkililerinizi sizin adınıza en prestijli şekilde karşılıyoruz.
-                    İsim veya şirket logolu özel tabelalarla karşılama yapıyor, bagaj asistanlığı sağlıyoruz.</p>
-                <p>İlk intibanın ne kadar önemli olduğunu biliyor, misafirlerinize kendilerini özel hissettirecek
-                    kusursuz bir operasyon yürütüyoruz.</p>
-                <a href="iletisim.html" class="btn-service">Detaylı Bilgi Al</a>
-            </div>
-        </div>
-
-    </div>
-
-    <footer>
-        <p>&copy; 2026 VIP KIBRIS TRAVEL. Tüm Hakları Saklıdır.</p>
     </footer>
+
+    <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
 </body>
 
