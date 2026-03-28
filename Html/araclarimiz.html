@@ -6,18 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Araç Filomuz - VIP KIBRIS TRAVEL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/style.css">
-    <link rel="stylesheet" href="../Css/araclarimiz.css">
+    <link rel="stylesheet" href="/Css/araclarimiz.css">
 </head>
 
 <body>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
 
     <div class="topbar">
         <div class="topbar-container">
             <div class="topbar-left">
                 <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000"
-                        style="color:white; text-decoration:none;">+90 532 000 00 00</a></span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone">+90 532 000 00
+                        00</a></span>
             </div>
             <div class="topbar-right">
                 <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
@@ -30,13 +31,24 @@
     <header class="main-header">
         <div class="header-container">
             <a href="index.html" class="logo">VIP KIBRIS</a>
-            <nav class="main-nav">
-                <a href="index.html">ANA SAYFA</a>
-                <a href="hakkimizda.html">HAKKIMIZDA</a>
-                <a href="hizmetler.html">HİZMETLERİMİZ</a>
-                <a href="araclarimiz.html" class="active">ARAÇLARIMIZ</a>
-                <a href="turlar.html">TURLAR</a>
-                <a href="iletisim.html">İLETİŞİM</a>
+
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <nav class="main-nav" id="mainNav">
+                <div class="nav-header-mobile">
+                    <span class="nav-title">MENÜ</span>
+                    <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
+                </div>
+                <ul>
+                    <li><a href="index.html">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html" class="active">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta">İLETİŞİM</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -193,19 +205,6 @@
         </div>
     </section>
 
-    <section class="offer-section">
-        <div class="container offer-wrapper">
-            <div class="offer-left">
-                <span class="offer-tag">VIP AYRICALIĞI <span></span></span>
-                <h2>Siz Planınızı Yapın, Biz Sizi Götürelim</h2>
-                <p>En uygun fiyat garantisiyle lüks araçlarımızı deneyimleyin.</p>
-            </div>
-            <div class="offer-right">
-                <a href="tel:+905320000000" class="btn-offer">HEMEN ARA</a>
-            </div>
-        </div>
-    </section>
-
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col">
@@ -216,8 +215,8 @@
                 <h3>HIZLI MENÜ</h3>
                 <ul class="footer-links">
                     <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="hizmetler.html">Hizmetler</a></li>
-                    <li><a href="araclarimiz.html">Araçlarımız</a></li>
+                    <li><a href="hakkimizda.html">Hakkımızda</a></li>
+                    <li><a href="iletisim.html">İletişim</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -235,6 +234,8 @@
 
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
+
+    <script src="/Js/main.js"></script>
 
     <script>
         function openTab(evt, tabName) {

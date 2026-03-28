@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hizmetlerimiz - VIP KIBRIS TRAVEL</title>
+    <title>Hizmetler - VIP KIBRIS TRAVEL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/style.css">
-    <link rel="stylesheet" href="../Css/hizmetler.css">
+    <link rel="stylesheet" href="/Css/hizmetler.css">
 </head>
 
 <body>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
 
     <div class="topbar">
         <div class="topbar-container">
@@ -30,13 +31,24 @@
     <header class="main-header">
         <div class="header-container">
             <a href="index.html" class="logo">VIP KIBRIS</a>
-            <nav class="main-nav">
-                <a href="index.html">ANA SAYFA</a>
-                <a href="hakkimizda.html">HAKKIMIZDA</a>
-                <a href="hizmetler.html" class="active">HİZMETLERİMİZ</a>
-                <a href="araclarimiz.html">ARAÇLARIMIZ</a>
-                <a href="turlar.html">TURLAR</a>
-                <a href="iletisim.html">İLETİŞİM</a>
+
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <nav class="main-nav" id="mainNav">
+                <div class="nav-header-mobile">
+                    <span class="nav-title">MENÜ</span>
+                    <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
+                </div>
+                <ul>
+                    <li><a href="index.html">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html" class="active">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta">İLETİŞİM</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -46,7 +58,7 @@
         <div class="container">
             <div class="hero-text">
                 <span class="offer-tag">VIP AYRICALIĞI <span></span></span>
-                <h1>Hizmetlerimiz</h1>
+                <h1>Hizmetlerimizde Sınır Tanımıyoruz</h1>
                 <div class="breadcrumb">
                     <a href="index.html">Ana Sayfa</a> / <span>Hizmetlerimiz</span>
                 </div>
@@ -149,6 +161,7 @@
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
+    <script src="/Js/main.js"></script>
 </body>
 
 </html>
