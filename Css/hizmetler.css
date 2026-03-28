@@ -1,0 +1,114 @@
+/* Temel Ayarlar ve Ortak Yapılar */
+:root {
+    --gold: #d4af37;
+    --dark-bg: #1a1a1a;
+    --gray-bg: #f8f9fa;
+    --text-dark: #333;
+    --text-light: #fff;
+}
+
+body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--gray-bg); color: var(--text-dark); }
+
+/* Üst Bilgi ve Menü */
+.topbar { background-color: #000; color: #ccc; font-size: 13px; padding: 8px 50px; display: flex; justify-content: space-between; }
+.topbar-right a { color: var(--gold); text-decoration: none; margin-left: 15px; }
+
+header { background-color: var(--dark-bg); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+.logo { color: var(--gold); font-size: 26px; font-weight: bold; text-decoration: none; letter-spacing: 1px; }
+nav a { color: var(--text-light); text-decoration: none; margin-left: 25px; font-size: 15px; text-transform: uppercase; transition: 0.3s; }
+nav a:hover, nav a.active { color: var(--gold); }
+
+/* Hizmetler Sayfası Özel Başlık Alanı */
+.services-header {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/services-bg.jpg') center/cover;
+    background-color: #222;
+    color: var(--gold);
+    text-align: center;
+    padding: 80px 20px;
+}
+.services-header h1 { margin: 0; font-size: 42px; text-transform: uppercase; letter-spacing: 2px; }
+.services-header p { color: #fff; font-size: 18px; margin-top: 15px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+/* Hizmet Blokları (Zig-Zag Düzeni) */
+.services-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.service-row {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    margin-bottom: 50px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* Çift numaralı satırlarda yönü tersine çevir (Sağ-Sol değişimi) */
+.service-row:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.service-image {
+    flex: 1;
+    min-width: 300px;
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    object-fit: cover;
+    display: block;
+}
+
+.service-content {
+    flex: 1;
+    padding: 50px;
+}
+
+.service-content h2 {
+    color: var(--dark-bg);
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 3px solid var(--gold);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.service-content p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+/* Buton */
+.btn-service {
+    background-color: var(--gold);
+    color: #000;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background 0.3s;
+}
+
+.btn-service:hover {
+    background-color: var(--dark-bg);
+    color: var(--gold);
+}
+
+/* Mobil Uyumluluk İçin Ufak Bir Dokunuş */
+@media (max-width: 768px) {
+    .service-row, .service-row:nth-child(even) {
+        flex-direction: column;
+    }
+    .service-content { padding: 30px; }
+}
+
+footer { background-color: var(--dark-bg); color: #aaa; text-align: center; padding: 30px 20px; font-size: 14px; margin-top: 40px; }

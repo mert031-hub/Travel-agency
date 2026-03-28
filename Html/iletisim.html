@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim & Rezervasyon - Kıbrıs VIP Transfer</title>
+    <link rel="stylesheet" href="/Css/iletisim.css">
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="topbar-left">📧 info@vipkibristravel.com | 📱 +90 532 000 00 00</div>
+        <div class="topbar-right">7/24 Hizmetinizdeyiz</div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">VIP KIBRIS</a>
+        <nav>
+            <a href="index.html">Ana Sayfa</a>
+            <a href="hakkimizda.html">Kurumsal</a>
+            <a href="hizmetler.html">Hizmetlerimiz</a>
+            <a href="turlar.html">Kıbrıs Turları</a>
+            <a href="iletisim.html" class="active">İletişim</a>
+        </nav>
+    </header>
+
+    <div class="contact-header">
+        <h1>İletişim & Rezervasyon</h1>
+        <p>VIP Transfer ve Turlarımız için bize hemen ulaşın.</p>
+    </div>
+
+    <div class="contact-container">
+        <div class="contact-info">
+            <h3>İletişim Bilgilerimiz</h3>
+            <p><strong>📍 Adres:</strong> Ercan Havalimanı Yolu, Lefkoşa / KKTC</p>
+            <p><strong>📞 Telefon:</strong> +90 532 000 00 00</p>
+            <p><strong>✉️ E-Posta:</strong> info@vipkibristravel.com</p>
+            <p><strong>⏱ Çalışma Saatleri:</strong> 7 Gün 24 Saat hizmetinizdeyiz. Havalimanı transferleri için uçuş
+                saatinizi belirtmeniz yeterlidir.</p>
+
+            <h3 style="margin-top: 40px;">Kıbrıs Ofisimiz</h3>
+            <div
+                style="background: #e9ecef; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: #666;">
+                [Google Harita Alanı]
+            </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+            <h3>Hızlı Rezervasyon Talebi</h3>
+            <form id="rezervasyonFormu" onsubmit="whatsappGonder(event)">
+
+                <div class="form-group">
+                    <label>Adınız Soyadınız</label>
+                    <input type="text" id="isim" required placeholder="Adınız Soyadınız">
+                </div>
+
+                <div class="form-group" style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Alınış Noktası</label>
+                        <input type="text" id="nereden" required placeholder="Örn: Ercan Havalimanı">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Varış Noktası</label>
+                        <input type="text" id="nereye" required placeholder="Örn: Girne Liman">
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Tarih ve Saat</label>
+                        <input type="datetime-local" id="tarih" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Kişi Sayısı</label>
+                        <input type="number" id="kisi" min="1" max="15" required placeholder="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Özel İstekleriniz (Bebek Koltuğu, Uçuş Kodu vb.)</label>
+                    <textarea id="notlar" rows="3"
+                        placeholder="Uçuş numaranızı ve diğer isteklerinizi buraya yazabilirsiniz..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">WhatsApp ile Talebi Gönder</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 VIP KIBRIS TRAVEL. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script>
+        function whatsappGonder(event) {
+            event.preventDefault(); // Sayfanın yenilenmesini engeller
+
+            // Formdaki verileri çekiyoruz
+            const isim = document.getElementById('isim').value;
+            const nereden = document.getElementById('nereden').value;
+            const nereye = document.getElementById('nereye').value;
+            const tarih = document.getElementById('tarih').value;
+            const kisi = document.getElementById('kisi').value;
+            const notlar = document.getElementById('notlar').value;
+
+            // Müşterinin WhatsApp numarasını buraya yazmalısın (Boşluksuz, + olmadan)
+            const telefonNumarasi = "905320000000";
+
+            // WhatsApp'a gidecek mesaj taslağı (%0A alt satıra geçmek içindir)
+            const mesaj = `Merhaba VIP Kıbrıs, web sitenizden yeni bir transfer/tur talebi oluşturmak istiyorum.%0A%0A` +
+                `*Ad Soyad:* ${isim}%0A` +
+                `*Nereden:* ${nereden}%0A` +
+                `*Nereye:* ${nereye}%0A` +
+                `*Tarih / Saat:* ${tarih}%0A` +
+                `*Kişi Sayısı:* ${kisi}%0A` +
+                `*Ek Notlar:* ${notlar}%0A%0A` +
+                `Müsaitlik ve fiyat bilgisi alabilir miyim?`;
+
+            // WhatsApp linkini oluştur ve yeni sekmede aç
+            const whatsappLink = `https://wa.me/${telefonNumarasi}?text=${mesaj}`;
+            window.open(whatsappLink, '_blank');
+        }
+    </script>
+</body>
+
+</html>
