@@ -215,7 +215,14 @@ const translations = {
         contact_opt_4: "Diğer",
         contact_label_message: "Mesajınız",
         contact_ph_message: "Size nasıl yardımcı olabiliriz?",
-        contact_btn_send: "MESAJI GÖNDER"
+        contact_btn_send: "MESAJI GÖNDER",
+        //WP MESSAGE
+        wp_msg_default: "Merhaba, VIP Transfer hizmetleriniz hakkında bilgi almak istiyorum.",
+        wp_msg_srv1: "Merhaba, Otel Transfer hizmetiniz hakkında bilgi alabilir miyim?",
+        wp_msg_srv2: "Merhaba, Şoförlü Araç Tahsisi hakkında bilgi alabilir miyim?",
+        wp_msg_srv3: "Merhaba, VIP Karşılama hizmetiniz hakkında bilgi alabilir miyim?",
+        wp_msg_tour_girne: "Merhaba, Girne & Bellapais turu hakkında bilgi ve fiyat alabilir miyim?",
+        wp_msg_tour_magosa: "Merhaba, Magosa & Maraş turu hakkında bilgi ve fiyat alabilir miyim?",
     },
     en: {
         topbar_service: "24/7 At Your Service",
@@ -425,7 +432,14 @@ const translations = {
         contact_opt_4: "Other",
         contact_label_message: "Your Message",
         contact_ph_message: "How can we help you?",
-        contact_btn_send: "SEND MESSAGE"
+        contact_btn_send: "SEND MESSAGE",
+        //WP MESSAGE
+        wp_msg_default: "Hello, I would like to get information about your VIP Transfer services.",
+        wp_msg_srv1: "Hello, could I get information about your Hotel Transfer service?",
+        wp_msg_srv2: "Hello, could I get information about Chauffeured Vehicle Allocation?",
+        wp_msg_srv3: "Hello, could I get information about your VIP Meet & Greet service?",
+        wp_msg_tour_girne: "Hello, I would like to get information and pricing for the Kyrenia & Bellapais tour.",
+        wp_msg_tour_magosa: "Hello, I would like to get information and pricing for the Famagusta & Varosha tour.",
     },
     ru: {
         topbar_service: "К Вашим Услугам 24/7",
@@ -635,6 +649,13 @@ const translations = {
         contact_opt_4: "Другое",
         contact_label_message: "Ваше Сообщение",
         contact_ph_message: "Чем мы можем вам помочь?",
-        contact_btn_send: "ОТПРАВИТЬ"
+        contact_btn_send: "ОТПРАВИТЬ",
+        //WP MESSAGE
+        wp_msg_default: "Здравствуйте, я хотел бы получить информацию о ваших услугах VIP-трансфера.",
+        wp_msg_srv1: "Здравствуйте, могу ли я получить информацию об услуге трансфера в отель?",
+        wp_msg_srv2: "Здравствуйте, могу ли я получить информацию об аренде автомобиля с водителем?",
+        wp_msg_srv3: "Здравствуйте, могу ли я получить информацию о вашей услуге VIP-встречи?",
+        wp_msg_tour_girne: "Здравствуйте, я хотел бы получить информацию и цены на тур Кирения и Беллапаис.",
+        wp_msg_tour_magosa: "Здравствуйте, я хотел бы получить информацию и цены на тур Фамагуста и Вароша.",
     }
 };
