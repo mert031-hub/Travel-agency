@@ -38,9 +38,9 @@ a { text-decoration: none; outline: none; }
 .topbar { background-color: var(--primary); color: #fff; padding: 10px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .topbar-container { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 20px;}
 .topbar i { color: var(--accent); margin-right: 5px; }
-.topbar-phone-link { color: #fff !important; text-decoration: none; font-weight: 600; transition: var(--transition); }
+.topbar-phone-link, .topbar-phone-link:visited, .topbar-phone-link:active { color: #fff !important; text-decoration: none; font-weight: 600; transition: var(--transition); }
 .topbar-phone-link:hover { color: var(--accent) !important; }
-.top-whatsapp-btn { color: #fff !important; text-decoration: none; font-weight: 600; transition: var(--transition); }
+.top-whatsapp-btn, .top-whatsapp-btn:visited, .top-whatsapp-btn:active { color: #fff !important; text-decoration: none; font-weight: 600; transition: var(--transition); }
 .top-whatsapp-btn:hover { color: var(--accent) !important; opacity: 0.8; }
 
 /* 3. Header & Navigation (Ortak Yapı) */
@@ -70,7 +70,8 @@ a { text-decoration: none; outline: none; }
 /* NAVBAR İLETİŞİM BUTONU KESİN ÇÖZÜMÜ */
 .main-nav ul li a.nav-cta,
 .main-nav ul li a.nav-cta:visited,
-.main-nav ul li a.nav-cta:link { 
+.main-nav ul li a.nav-cta:link,
+.main-nav ul li a.nav-cta:active { 
     background-color: var(--primary) !important; 
     color: #ffffff !important; 
     padding: 10px 25px !important; 
@@ -79,12 +80,73 @@ a { text-decoration: none; outline: none; }
 }
 .main-nav ul li a.nav-cta::after { display: none !important; }
 .main-nav ul li a.nav-cta:hover,
-.main-nav ul li a.nav-cta:active,
 .main-nav ul li a.nav-cta.active { 
     background-color: var(--accent) !important; 
     color: var(--primary) !important; 
     transform: translateY(-2px); 
 }
+
+/* ÇOKLU DİL SEÇİCİ (LANGUAGE SWITCHER) YENİ EKLENDİ */
+.lang-menu {
+    position: relative;
+    margin-left: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.selected-lang {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 50px;
+    background: var(--bg-light);
+    transition: 0.3s;
+}
+
+.selected-lang:hover { background: #e2e8f0; }
+.selected-lang img { border-radius: 3px; width: 20px; }
+.selected-lang i { font-size: 12px; transition: 0.3s; }
+
+.lang-menu:hover .selected-lang i { transform: rotate(180deg); }
+
+.lang-dropdown {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    background: #fff;
+    list-style: none !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.lang-menu:hover .lang-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-dropdown li {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+    color: var(--text-dark);
+}
+
+.lang-dropdown li img { width: 20px; border-radius: 3px; }
+.lang-dropdown li:hover { background: var(--bg-light); color: var(--primary); }
 
 /* Mobil Menü Butonu */
 .mobile-menu-btn { display: none; font-size: 26px; color: var(--primary); cursor: pointer; transition: 0.3s; }
@@ -107,12 +169,12 @@ a { text-decoration: none; outline: none; }
 .breadcrumb-container span { color: var(--accent); }
 
 .offer-tag { color: var(--accent); font-weight: 800; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; text-transform: uppercase; font-size: 14px;}
-.offer-tag span { height: 2px; width: 40px; background: var(--accent); }
+.offer-tag span:empty { height: 2px; width: 40px; background: var(--accent); display: inline-block;} /* DÜZELTME */
 
 /* 5. Turlar Grid & Kart Yapısı */
 .section-title { text-align: center; margin-bottom: 50px; position: relative; }
 .subtitle { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
-.subtitle span { width: 40px; height: 2px; background-color: var(--primary); }
+.subtitle span:empty { width: 40px; height: 2px; background-color: var(--primary); display: inline-block;} /* DÜZELTME */
 .section-title h2 { font-size: 32px; font-weight: 700; color: var(--text-dark); margin: 0; }
 
 .tours-vertical-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 50px; }
@@ -120,11 +182,11 @@ a { text-decoration: none; outline: none; }
 .tour-v-card {
     background: #fff; border-radius: 12px; border: 1px solid var(--border-color);
     box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden;
-    display: flex; flex-direction: column; transition: 0.3s;
+    display: flex; flex-direction: column; transition: 0.3s; height: 100%;
 }
 .tour-v-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(15, 61, 122, 0.1); }
 
-.tour-v-img { position: relative; height: 220px; overflow: hidden; }
+.tour-v-img { position: relative; height: 220px; overflow: hidden; flex-shrink: 0;}
 .tour-v-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .tour-v-card:hover .tour-v-img img { transform: scale(1.1); }
 
@@ -133,9 +195,10 @@ a { text-decoration: none; outline: none; }
     color: #fff; padding: 5px 12px; border-radius: 4px; font-weight: 700; font-size: 11px; z-index: 2;
 }
 
-.tour-v-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
-.tour-v-body h3 { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 10px; }
-.tour-v-body p { font-size: 14px; color: #666; margin-bottom: 20px; line-height: 1.6; height: 70px; overflow: hidden; }
+/* ÇEVİRİ İÇİN ESNEK YAPILDI */
+.tour-v-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; position: relative; padding-bottom: 70px;}
+.tour-v-body h3 { font-size: 20px; color: var(--primary); font-weight: 800; margin-bottom: 10px; line-height: 1.3;}
+.tour-v-body p { font-size: 14px; color: #666; margin-bottom: 20px; line-height: 1.6; flex-grow: 1;}
 .tag { font-size: 11px; color: #888; font-weight: 700; display: block; margin-bottom: 5px; text-transform: uppercase;}
 
 /* 6. Tur Sekmeleri */
@@ -154,7 +217,7 @@ a { text-decoration: none; outline: none; }
 .v-mini-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .v-mini-gallery img { width: 100%; height: 60px; object-fit: cover; border-radius: 3px; }
 
-.btn-tour-v { background: var(--primary) !important; color: #fff !important; text-align: center; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 13px; margin-top: auto; transition: 0.3s; }
+.btn-tour-v { position: absolute; bottom: 25px; left: 25px; right: 25px; background: var(--primary) !important; color: #fff !important; text-align: center; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 13px; transition: 0.3s; }
 .btn-tour-v:hover { background: var(--accent) !important; }
 
 /* 7. Footer */
@@ -204,10 +267,15 @@ a { text-decoration: none; outline: none; }
     .nav-title { font-weight: 800; color: var(--primary); font-size: 20px; }
     .close-menu { font-size: 24px; color: var(--text-gray); cursor: pointer; }
 
+    /* Mobilde Dil Seçici Ayarı */
+    .lang-menu { margin-left: 0; margin-top: 20px; width: 100%; }
+    .lang-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 1px solid #eee; margin-top: 10px !important; display: none; }
+    .lang-menu:hover .lang-dropdown { display: block; }
+
     .main-nav ul { flex-direction: column; align-items: flex-start; gap: 0; width: 100%; }
     .main-nav ul li { width: 100%; border-bottom: 1px solid #f0f0f0; }
     .main-nav ul li a { display: block; padding: 15px 0; font-size: 16px; width: 100%; color: var(--primary) !important; }
-    .main-nav ul li a::after { display: none; }
+    .main-nav ul li a::after { display: none !important; }
     .nav-cta { border-radius: 8px !important; margin-top: 20px; text-align: center; }
 
     .tours-vertical-grid { grid-template-columns: repeat(2, 1fr); }

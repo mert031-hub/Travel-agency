@@ -17,13 +17,13 @@
         <div class="topbar-container">
             <div class="topbar-left">
                 <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000"
-                        style="color:white; text-decoration:none;">+90 532 000 00 00</a></span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone-link">+90 532 000
+                        00 00</a></span>
             </div>
             <div class="topbar-right">
-                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
                 <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
-                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
+                        class="fab fa-whatsapp"></i> <span data-lang="topbar_whatsapp">WhatsApp Destek</span></a>
             </div>
         </div>
     </div>
@@ -42,13 +42,29 @@
                     <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
                 </div>
                 <ul>
-                    <li><a href="index.html">ANA SAYFA</a></li>
-                    <li><a href="hakkimizda.html">HAKKIMIZDA</a></li>
-                    <li><a href="hizmetler.html" class="active">HİZMETLERİMİZ</a></li>
-                    <li><a href="araclarimiz.html">ARAÇLARIMIZ</a></li>
-                    <li><a href="turlar.html">TURLAR</a></li>
-                    <li><a href="iletisim.html" class="nav-cta">İLETİŞİM</a></li>
+                    <li><a href="index.html" data-lang="nav_home">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html" data-lang="nav_about">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html" class="active" data-lang="nav_services">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html" data-lang="nav_vehicles">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta" data-lang="nav_contact">İLETİŞİM</a></li>
                 </ul>
+
+                <div class="lang-menu">
+                    <div class="selected-lang">
+                        <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
+                        <span id="currentLangText">TR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="lang-dropdown">
+                        <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe
+                        </li>
+                        <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                        </li>
+                        <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
     </header>
@@ -57,10 +73,11 @@
         style="background-image: url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1920&q=80');">
         <div class="container">
             <div class="hero-text">
-                <span class="offer-tag">VIP AYRICALIĞI <span></span></span>
-                <h1>Hizmetlerimizde Sınır Tanımıyoruz</h1>
+                <span class="offer-tag"><span data-lang="srv_page_tag">VIP AYRICALIĞI</span> <span></span></span>
+                <h1 data-lang="srv_page_title">Hizmetlerimizde Sınır Tanımıyoruz</h1>
                 <div class="breadcrumb">
-                    <a href="index.html">Ana Sayfa</a> / <span>Hizmetlerimiz</span>
+                    <a href="index.html" data-lang="nav_home">Ana Sayfa</a> / <span
+                        data-lang="nav_services">Hizmetlerimiz</span>
                 </div>
             </div>
         </div>
@@ -73,19 +90,22 @@
                 <div class="service-detail-img">
                     <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
                         alt="Ercan Havalimanı Transfer">
-                    <div class="img-overlay-info">VIP TRANSFER</div>
+                    <div class="img-overlay-info" data-lang="srv_page_1_badge">VIP TRANSFER</div>
                 </div>
                 <div class="service-detail-content">
                     <div class="content-header">
                         <span class="number">01</span>
-                        <h2>Ercan Havalimanı VIP Transfer</h2>
+                        <h2 data-lang="srv_page_1_title">Ercan Havalimanı VIP Transfer</h2>
                     </div>
-                    <p>Kıbrıs'a adım attığınız ilk andan itibaren ayrıcalıklı olduğunuzu hissedin. Ercan Havalimanı'ndan
+                    <p data-lang="srv_page_1_p1">Kıbrıs'a adım attığınız ilk andan itibaren ayrıcalıklı olduğunuzu
+                        hissedin. Ercan Havalimanı'ndan
                         Girne, Lefkoşa, Magosa veya Bafra bölgesindeki otelinize lüks Mercedes Vito araçlarımızla
                         kesintisiz ve konforlu bir şekilde ulaştırıyoruz.</p>
-                    <p>Günün her saati (7/24) önceden rezervasyon yaparak uçak rötar dertlerini düşünmeden güvenle
+                    <p data-lang="srv_page_1_p2">Günün her saati (7/24) önceden rezervasyon yaparak uçak rötar
+                        dertlerini düşünmeden güvenle
                         seyahat edebilirsiniz. Şoförünüz sizi isminizle karşılar.</p>
-                    <a href="iletisim.html" class="btn-primary">TEKLİF AL <i class="fas fa-arrow-right"></i></a>
+                    <a href="iletisim.html" class="btn-primary"><span data-lang="srv_page_1_btn">TEKLİF AL</span> <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
 
@@ -93,19 +113,22 @@
                 <div class="service-detail-img">
                     <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80"
                         alt="Şoförlü Araç Tahsisi">
-                    <div class="img-overlay-info">ÖZEL TAHSİS</div>
+                    <div class="img-overlay-info" data-lang="srv_page_2_badge">ÖZEL TAHSİS</div>
                 </div>
                 <div class="service-detail-content">
                     <div class="content-header">
                         <span class="number">02</span>
-                        <h2>Şoförlü Araç Tahsisi</h2>
+                        <h2 data-lang="srv_page_2_title">Şoförlü Araç Tahsisi</h2>
                     </div>
-                    <p>İş toplantılarınız, özel davetleriniz veya gün boyu sürecek ada içi ziyaretleriniz için
+                    <p data-lang="srv_page_2_p1">İş toplantılarınız, özel davetleriniz veya gün boyu sürecek ada içi
+                        ziyaretleriniz için
                         profesyonel şoförlü VIP araç kiralama hizmeti sunuyoruz. Sadece rotanızı belirleyin, gerisini
                         bize bırakın.</p>
-                    <p>Tam donanımlı, Wi-Fi erişimli ve ikramlı araçlarımızla şoförümüz sizi dilediğiniz yerde beklesin.
+                    <p data-lang="srv_page_2_p2">Tam donanımlı, Wi-Fi erişimli ve ikramlı araçlarımızla şoförümüz sizi
+                        dilediğiniz yerde beklesin.
                         Zaman yönetimi tamamen sizin elinizde.</p>
-                    <a href="iletisim.html" class="btn-primary">DETAYLI BİLGİ <i class="fas fa-arrow-right"></i></a>
+                    <a href="iletisim.html" class="btn-primary"><span data-lang="srv_page_2_btn">DETAYLI BİLGİ</span> <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
 
@@ -113,18 +136,21 @@
                 <div class="service-detail-img">
                     <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=800&q=80"
                         alt="VIP Karşılama">
-                    <div class="img-overlay-info">KARŞILAMA</div>
+                    <div class="img-overlay-info" data-lang="srv_page_3_badge">KARŞILAMA</div>
                 </div>
                 <div class="service-detail-content">
                     <div class="content-header">
                         <span class="number">03</span>
-                        <h2>VIP Karşılama ve Asistanlık</h2>
+                        <h2 data-lang="srv_page_3_title">VIP Karşılama ve Asistanlık</h2>
                     </div>
-                    <p>Özel misafirlerinizi veya şirket yetkililerinizi sizin adınıza en prestijli şekilde karşılıyoruz.
+                    <p data-lang="srv_page_3_p1">Özel misafirlerinizi veya şirket yetkililerinizi sizin adınıza en
+                        prestijli şekilde karşılıyoruz.
                         İsim veya şirket logolu özel tabelalarla karşılama yapıyor, bagaj asistanlığı sağlıyoruz.</p>
-                    <p>İlk intibanın ne kadar önemli olduğunu biliyoruz. Misafirlerinize kendilerini özel hissettirecek
+                    <p data-lang="srv_page_3_p2">İlk intibanın ne kadar önemli olduğunu biliyoruz. Misafirlerinize
+                        kendilerini özel hissettirecek
                         kusursuz bir operasyon yürütüyoruz.</p>
-                    <a href="iletisim.html" class="btn-primary">REZERVASYON <i class="fas fa-arrow-right"></i></a>
+                    <a href="iletisim.html" class="btn-primary"><span data-lang="srv_page_3_btn">REZERVASYON</span> <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
 
@@ -135,18 +161,19 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <a href="index.html" class="footer-logo">VIP KIBRIS</a>
-                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli, konforlu ve zamanında ulaşım.</p>
+                <p data-lang="footer_desc">KKTC geneline VIP transfer ve turizm hizmeti. Güvenli, konforlu ve zamanında
+                    ulaşım.</p>
             </div>
             <div class="footer-col">
-                <h3>HIZLI MENÜ</h3>
+                <h3 data-lang="footer_menu_title">HIZLI MENÜ</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="hakkimizda.html">Hakkımızda</a></li>
-                    <li><a href="hizmetler.html">Hizmetler</a></li>
+                    <li><a href="index.html" data-lang="nav_home">Ana Sayfa</a></li>
+                    <li><a href="hakkimizda.html" data-lang="nav_about">Hakkımızda</a></li>
+                    <li><a href="iletisim.html" data-lang="nav_contact">İletişim</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>İLETİŞİM</h3>
+                <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
@@ -154,13 +181,15 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> <span data-lang="footer_copyright">Tüm Hakları
+                    Saklıdır.</span></p>
         </div>
     </footer>
 
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
+    <script src="/Js/lang.js"></script>
     <script src="/Js/main.js"></script>
 </body>
 

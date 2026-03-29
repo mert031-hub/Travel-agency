@@ -21,9 +21,9 @@
                         00</a></span>
             </div>
             <div class="topbar-right">
-                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
                 <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
-                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
+                        class="fab fa-whatsapp"></i> <span data-lang="topbar_whatsapp">WhatsApp Destek</span></a>
             </div>
         </div>
     </div>
@@ -42,25 +42,42 @@
                     <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
                 </div>
                 <ul>
-                    <li><a href="index.html">ANA SAYFA</a></li>
-                    <li><a href="hakkimizda.html">HAKKIMIZDA</a></li>
-                    <li><a href="hizmetler.html">HİZMETLERİMİZ</a></li>
-                    <li><a href="araclarimiz.html">ARAÇLARIMIZ</a></li>
-                    <li><a href="turlar.html">TURLAR</a></li>
-                    <li><a href="iletisim.html" class="nav-cta active">İLETİŞİM</a></li>
+                    <li><a href="index.html" data-lang="nav_home">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html" data-lang="nav_about">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html" data-lang="nav_services">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html" data-lang="nav_vehicles">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta active" data-lang="nav_contact">İLETİŞİM</a></li>
                 </ul>
+
+                <div class="lang-menu">
+                    <div class="selected-lang">
+                        <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
+                        <span id="currentLangText">TR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="lang-dropdown">
+                        <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe
+                        </li>
+                        <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                        </li>
+                        <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
     </header>
 
     <section class="contact-hero">
         <div class="container">
-            <span class="offer-tag">BİZE ULAŞIN <span></span></span>
-            <h1>İletişim</h1>
+            <span class="offer-tag"><span data-lang="contact_page_tag">BİZE ULAŞIN</span> <span></span></span>
+            <h1 data-lang="contact_page_h1">İletişim</h1>
             <div class="breadcrumb-container">
-                <a href="index.html">Ana Sayfa</a> / <span>İletişim</span>
+                <a href="index.html" data-lang="nav_home">Ana Sayfa</a> / <span data-lang="nav_contact">İletişim</span>
             </div>
-            <p>Sorularınız, rezervasyon talepleriniz ve özel turlarınız için bize 7/24 ulaşabilirsiniz.</p>
+            <p data-lang="contact_page_p">Sorularınız, rezervasyon talepleriniz ve özel turlarınız için bize 7/24
+                ulaşabilirsiniz.</p>
         </div>
     </section>
 
@@ -72,15 +89,15 @@
                     <div class="contact-info-item">
                         <div class="c-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="c-text">
-                            <h3>Adresimiz</h3>
-                            <p>Girne Limanı Mevkii, No:45 <br> Girne / KKTC</p>
+                            <h3 data-lang="contact_address_title">Adresimiz</h3>
+                            <p data-lang="contact_address_desc">Girne Limanı Mevkii, No:45 <br> Girne / KKTC</p>
                         </div>
                     </div>
 
                     <div class="contact-info-item">
                         <div class="c-icon"><i class="fas fa-phone-alt"></i></div>
                         <div class="c-text">
-                            <h3>Telefon & WhatsApp</h3>
+                            <h3 data-lang="contact_phone_title">Telefon & WhatsApp</h3>
                             <p><a href="tel:+905320000000">+90 532 000 00 00</a></p>
                             <p><a href="https://wa.me/905320000000">+90 532 000 00 00</a></p>
                         </div>
@@ -89,7 +106,7 @@
                     <div class="contact-info-item">
                         <div class="c-icon"><i class="fas fa-envelope"></i></div>
                         <div class="c-text">
-                            <h3>E-Posta</h3>
+                            <h3 data-lang="contact_email_title">E-Posta</h3>
                             <p><a href="mailto:info@vipkibristravel.com">info@vipkibristravel.com</a></p>
                             <p><a href="mailto:destek@vipkibristravel.com">destek@vipkibristravel.com</a></p>
                         </div>
@@ -103,36 +120,40 @@
                 </div>
 
                 <div class="contact-form-side">
-                    <h3>Mesaj Gönderin</h3>
+                    <h3 data-lang="contact_form_title">Mesaj Gönderin</h3>
                     <form action="#" class="contact-form-clean">
                         <div class="form-row-grid">
                             <div class="input-block">
-                                <label>Adınız Soyadınız</label>
-                                <input type="text" placeholder="Örn: Ahmet Yılmaz" required>
+                                <label data-lang="contact_label_name">Adınız Soyadınız</label>
+                                <input type="text" placeholder="Örn: Ahmet Yılmaz"
+                                    data-lang-placeholder="contact_ph_name" required>
                             </div>
                             <div class="input-block">
-                                <label>Telefon Numaranız</label>
-                                <input type="tel" placeholder="05XX XXX XX XX" required>
+                                <label data-lang="contact_label_phone">Telefon Numaranız</label>
+                                <input type="tel" placeholder="05XX XXX XX XX" data-lang-placeholder="contact_ph_phone"
+                                    required>
                             </div>
                         </div>
                         <div class="input-block">
-                            <label>E-Posta Adresiniz</label>
-                            <input type="email" placeholder="ornek@mail.com">
+                            <label data-lang="contact_label_email">E-Posta Adresiniz</label>
+                            <input type="email" placeholder="ornek@mail.com" data-lang-placeholder="contact_ph_email">
                         </div>
                         <div class="input-block">
-                            <label>Konu</label>
+                            <label data-lang="contact_label_subject">Konu</label>
                             <select>
-                                <option>Transfer Rezervasyonu</option>
-                                <option>Tur Bilgisi</option>
-                                <option>Şikayet / Öneri</option>
-                                <option>Diğer</option>
+                                <option data-lang="contact_opt_1">Transfer Rezervasyonu</option>
+                                <option data-lang="contact_opt_2">Tur Bilgisi</option>
+                                <option data-lang="contact_opt_3">Şikayet / Öneri</option>
+                                <option data-lang="contact_opt_4">Diğer</option>
                             </select>
                         </div>
                         <div class="input-block">
-                            <label>Mesajınız</label>
-                            <textarea rows="5" placeholder="Size nasıl yardımcı olabiliriz?" required></textarea>
+                            <label data-lang="contact_label_message">Mesajınız</label>
+                            <textarea rows="5" placeholder="Size nasıl yardımcı olabiliriz?"
+                                data-lang-placeholder="contact_ph_message" required></textarea>
                         </div>
-                        <button type="submit" class="btn-send">MESAJI GÖNDER <i class="fas fa-paper-plane"></i></button>
+                        <button type="submit" class="btn-send"><span data-lang="contact_btn_send">MESAJI GÖNDER</span>
+                            <i class="fas fa-paper-plane"></i></button>
                     </form>
                 </div>
 
@@ -150,17 +171,17 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <a href="index.html" class="footer-logo">VIP KIBRIS</a>
-                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
+                <p data-lang="footer_desc">KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
             </div>
             <div class="footer-col">
-                <h3>HIZLI MENÜ</h3>
+                <h3 data-lang="footer_menu_title">HIZLI MENÜ</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="turlar.html">Turlar</a></li>
+                    <li><a href="index.html" data-lang="nav_home">Ana Sayfa</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">Turlar</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>İLETİŞİM</h3>
+                <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
@@ -168,13 +189,15 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> <span data-lang="footer_copyright">Tüm Hakları
+                    Saklıdır.</span></p>
         </div>
     </footer>
 
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
+    <script src="/Js/lang.js"></script>
     <script src="/Js/main.js"></script>
 </body>
 

@@ -93,6 +93,68 @@ a, a:visited, a:hover, a:active {
     transform: translateY(-2px); 
 }
 
+/* ÇOKLU DİL SEÇİCİ (LANGUAGE SWITCHER) YENİ EKLENDİ */
+.lang-menu {
+    position: relative;
+    margin-left: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.selected-lang {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 50px;
+    background: var(--bg-light);
+    transition: 0.3s;
+}
+
+.selected-lang:hover { background: #e2e8f0; }
+.selected-lang img { border-radius: 3px; width: 20px; }
+.selected-lang i { font-size: 12px; transition: 0.3s; }
+
+.lang-menu:hover .selected-lang i { transform: rotate(180deg); }
+
+.lang-dropdown {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    background: #fff;
+    list-style: none !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.lang-menu:hover .lang-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-dropdown li {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+    color: var(--text-dark);
+}
+
+.lang-dropdown li img { width: 20px; border-radius: 3px; }
+.lang-dropdown li:hover { background: var(--bg-light); color: var(--primary); }
+
 /* Mobil Menü Butonu */
 .mobile-menu-btn { display: none; font-size: 26px; color: var(--primary); cursor: pointer; transition: 0.3s; }
 
@@ -114,13 +176,13 @@ a, a:visited, a:hover, a:active {
 .breadcrumb-container span { color: var(--accent); }
 
 .offer-tag { color: var(--accent); font-weight: 800; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; text-transform: uppercase; font-size: 14px;}
-.offer-tag span { height: 2px; width: 40px; background: var(--accent); }
+.offer-tag span:empty { height: 2px; width: 40px; background: var(--accent); display: inline-block;} /* DÜZELTME */
 
 /* 5. İletişim Wrapper & Bilgiler (TAMAMEN AYRILMIŞ TASARIM) */
 .contact-wrapper {
     display: grid;
     grid-template-columns: 1fr 1.6fr;
-    margin-top: 60px; /* ÇÖZÜM: Eksi değer silindi, kutular birbirinden belirgin şekilde AYRILDI */
+    margin-top: 60px; /* Kutular birbirinden belirgin şekilde AYRILDI */
     position: relative;
     z-index: 10;
     background: #fff;
@@ -223,6 +285,7 @@ a, a:visited, a:hover, a:active {
     .topbar { display: none; }
     .mobile-menu-btn { display: block; }
     
+    /* Mobil Yan Panel */
     .main-nav {
         position: fixed; top: 0; right: -100%; width: 300px; height: 100vh;
         background: #fff; z-index: 1002; transition: 0.4s ease-in-out;
@@ -233,14 +296,19 @@ a, a:visited, a:hover, a:active {
     .nav-title { font-weight: 800; color: var(--primary); font-size: 20px; }
     .close-menu { font-size: 24px; color: var(--text-gray); cursor: pointer; }
 
+    /* Mobilde Dil Seçici Ayarı */
+    .lang-menu { margin-left: 0; margin-top: 20px; width: 100%; }
+    .lang-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 1px solid #eee; margin-top: 10px !important; display: none; }
+    .lang-menu:hover .lang-dropdown { display: block; }
+
     .main-nav ul { flex-direction: column; align-items: flex-start; gap: 0; width: 100%;}
     .main-nav ul li { width: 100%; border-bottom: 1px solid #f0f0f0; }
     .main-nav ul li a { display: block; padding: 15px 0; font-size: 16px; width: 100%; color: var(--primary) !important; }
-    .main-nav ul li a::after { display: none; }
+    .main-nav ul li a::after { display: none !important; }
     .nav-cta { border-radius: 8px !important; margin-top: 20px; text-align: center; }
 
     /* İletişim Kartı Responsive (Mobilde Alt Alta ve AYRI) */
-    .contact-wrapper { grid-template-columns: 1fr; margin-top: 40px; border-radius: 15px; } /* Mobilde de 40px ile net şekilde ayrıldı */
+    .contact-wrapper { grid-template-columns: 1fr; margin-top: 40px; border-radius: 15px; } 
     .contact-info-side { border-radius: 15px 15px 0 0; padding: 40px 30px; }
     .contact-form-side { border-radius: 0 0 15px 15px; padding: 40px 30px; }
     

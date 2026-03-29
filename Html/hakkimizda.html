@@ -21,9 +21,9 @@
                         00 00</a></span>
             </div>
             <div class="topbar-right">
-                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
                 <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
-                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
+                        class="fab fa-whatsapp"></i> <span data-lang="topbar_whatsapp">WhatsApp Destek</span></a>
             </div>
         </div>
     </div>
@@ -42,13 +42,29 @@
                     <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
                 </div>
                 <ul>
-                    <li><a href="index.html">ANA SAYFA</a></li>
-                    <li><a href="hakkimizda.html" class="active">HAKKIMIZDA</a></li>
-                    <li><a href="hizmetler.html">HİZMETLERİMİZ</a></li>
-                    <li><a href="araclarimiz.html">ARAÇLARIMIZ</a></li>
-                    <li><a href="turlar.html">TURLAR</a></li>
-                    <li><a href="iletisim.html" class="nav-cta">İLETİŞİM</a></li>
+                    <li><a href="index.html" data-lang="nav_home">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html" class="active" data-lang="nav_about">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html" data-lang="nav_services">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html" data-lang="nav_vehicles">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta" data-lang="nav_contact">İLETİŞİM</a></li>
                 </ul>
+
+                <div class="lang-menu">
+                    <div class="selected-lang">
+                        <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
+                        <span id="currentLangText">TR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="lang-dropdown">
+                        <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe
+                        </li>
+                        <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                        </li>
+                        <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
     </header>
@@ -56,10 +72,10 @@
     <div class="about-hero"
         style="background-image: url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1920&q=80');">
         <div class="container">
-            <span class="offer-tag">VIP KIBRIS TRAVEL <span></span></span>
-            <h1>Hakkımızda</h1>
+            <span class="offer-tag"><span data-lang="about_page_title">VIP KIBRIS TRAVEL</span> <span></span></span>
+            <h1 data-lang="about_page_h1">Hakkımızda</h1>
             <div class="breadcrumb">
-                <a href="index.html">Ana Sayfa</a> / <span>Hakkımızda</span>
+                <a href="index.html" data-lang="nav_home">Ana Sayfa</a> / <span data-lang="nav_about">Hakkımızda</span>
             </div>
         </div>
     </div>
@@ -70,30 +86,33 @@
                 <div class="section-title-wrapper" style="text-align: left;">
                     <div class="title-top" style="justify-content: flex-start;">
                         <span class="line"></span>
-                        <span class="subtitle">BİZ KİMİZ?</span>
+                        <span class="subtitle" data-lang="about_sub">BİZ KİMİZ?</span>
                     </div>
-                    <h2>Kıbrıs'ta Yolculuğu Sanata Dönüştürüyoruz</h2>
+                    <h2 data-lang="about_h2">Kıbrıs'ta Yolculuğu Sanata Dönüştürüyoruz</h2>
                 </div>
-                <p><strong>VIP KIBRIS TRAVEL</strong> olarak, Kuzey Kıbrıs Türk Cumhuriyeti'nde (KKTC) uzun yıllardır
+                <p data-lang="about_p1"><strong>VIP KIBRIS TRAVEL</strong> olarak, Kuzey Kıbrıs Türk Cumhuriyeti'nde
+                    (KKTC) uzun yıllardır
                     turizm, ulaşım ve VIP transfer sektöründe öncü bir rol üstlenmekteyiz. Amacımız, adaya ayak
                     bastığınız ilk andan itibaren size sadece bir transfer hizmeti değil, prestijli bir yaşam tarzı
                     sunmaktır.</p>
-                <p>Ercan Havalimanı transferleri ve özel turlarımızla; bireysel misafirlerimizden kurumsal şirket
+                <p data-lang="about_p2">Ercan Havalimanı transferleri ve özel turlarımızla; bireysel misafirlerimizden
+                    kurumsal şirket
                     yöneticilerine kadar geniş bir yelpazede hizmet sunuyoruz. Filomuzda bulunan lüks Mercedes
                     araçlarımız ve alanında uzman ekibimizle 7 gün 24 saat kesintisiz hizmet sağlıyoruz.</p>
 
                 <div class="mission-vision-grid mt-50">
                     <div class="mv-item">
                         <i class="fas fa-bullseye"></i>
-                        <h4>Misyonumuz</h4>
-                        <p>Güvenliği ve kaliteyi en ön planda tutarak, ulaşım sektöründe fark yaratan, misafir
-                            memnuniyeti odaklı hizmetler sunmak.
-                        </p>
+                        <h4 data-lang="about_miss_title">Misyonumuz</h4>
+                        <p data-lang="about_miss_desc">Güvenliği ve kaliteyi en ön planda tutarak, ulaşım sektöründe
+                            fark yaratan, misafir
+                            memnuniyeti odaklı hizmetler sunmak.</p>
                     </div>
                     <div class="mv-item">
                         <i class="fas fa-eye"></i>
-                        <h4>Vizyonumuz</h4>
-                        <p>Kuzey Kıbrıs'ın turizm ve transfer sektöründe akla gelen ilk, en yenilikçi ve en güvenilir
+                        <h4 data-lang="about_vis_title">Vizyonumuz</h4>
+                        <p data-lang="about_vis_desc">Kuzey Kıbrıs'ın turizm ve transfer sektöründe akla gelen ilk, en
+                            yenilikçi ve en güvenilir
                             VIP markası olmak.</p>
                     </div>
                 </div>
@@ -104,18 +123,20 @@
                     <div class="tursab-logo">
                         <img src="https://www.tursab.org.tr/assets/img/logo/tursab-logo.png" alt="Türsab">
                     </div>
-                    <h4>Resmi Onaylı Acente</h4>
-                    <p>Firmamız TÜRSAB ve KKTC Turizm Bakanlığı tarafından yetkilendirilmiş profesyonel bir seyahat
+                    <h4 data-lang="about_cert_title">Resmi Onaylı Acente</h4>
+                    <p data-lang="about_cert_desc">Firmamız TÜRSAB ve KKTC Turizm Bakanlığı tarafından yetkilendirilmiş
+                        profesyonel bir seyahat
                         acentesidir.</p>
                     <div class="verify-badge">
-                        <i class="fas fa-check-circle"></i> SİTEYİ DOĞRULA
+                        <i class="fas fa-check-circle"></i> <span data-lang="about_cert_btn">SİTEYİ DOĞRULA</span>
                     </div>
                 </div>
 
                 <div class="quick-contact-card">
-                    <h3>Yardıma mı ihtiyacınız var?</h3>
-                    <p>7/24 Operasyon ekibimiz sorularınızı yanıtlamaya hazır.</p>
-                    <a href="tel:+905320000000" class="btn-side-call"><i class="fas fa-phone-alt"></i> Hemen Ara</a>
+                    <h3 data-lang="about_help_title">Yardıma mı ihtiyacınız var?</h3>
+                    <p data-lang="about_help_desc">7/24 Operasyon ekibimiz sorularınızı yanıtlamaya hazır.</p>
+                    <a href="tel:+905320000000" class="btn-side-call"><i class="fas fa-phone-alt"></i> <span
+                            data-lang="about_help_btn">Hemen Ara</span></a>
                 </div>
             </div>
         </div>
@@ -124,14 +145,15 @@
     <section class="offer-section" style="margin-top: 0;">
         <div class="container offer-wrapper">
             <div class="offer-left">
-                <span class="offer-tag">GÜVEN VE KALİTE <span></span></span>
-                <h2>Kalitemizi Belgeliyoruz</h2>
-                <p>Tüm araçlarımız yolcu taşımacılığı belgelerine ve KKTC yüksek güvenlik standartlarına sahiptir.</p>
+                <span class="offer-tag"><span data-lang="about_trust_tag">GÜVEN VE KALİTE</span> <span></span></span>
+                <h2 data-lang="about_trust_title">Kalitemizi Belgeliyoruz</h2>
+                <p data-lang="about_trust_desc">Tüm araçlarımız yolcu taşımacılığı belgelerine ve KKTC yüksek güvenlik
+                    standartlarına sahiptir.</p>
             </div>
             <div class="offer-right">
                 <div class="experience-box">
                     <span class="number">10+</span>
-                    <span class="text">Yıllık Tecrübe</span>
+                    <span class="text" data-lang="about_exp_year">Yıllık Tecrübe</span>
                 </div>
             </div>
         </div>
@@ -141,18 +163,19 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <a href="index.html" class="footer-logo">VIP KIBRIS</a>
-                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli, konforlu ve zamanında ulaşım.</p>
+                <p data-lang="footer_desc">KKTC geneline VIP transfer ve turizm hizmeti. Güvenli, konforlu ve zamanında
+                    ulaşım.</p>
             </div>
             <div class="footer-col">
-                <h3>HIZLI MENÜ</h3>
+                <h3 data-lang="footer_menu_title">HIZLI MENÜ</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="hizmetler.html">Hizmetler</a></li>
-                    <li><a href="turlar.html">Turlar</a></li>
+                    <li><a href="index.html" data-lang="nav_home">Ana Sayfa</a></li>
+                    <li><a href="hizmetler.html" data-lang="nav_services">Hizmetler</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">Turlar</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>İLETİŞİM</h3>
+                <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
@@ -160,13 +183,15 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> <span data-lang="footer_copyright">Tüm Hakları
+                    Saklıdır.</span></p>
         </div>
     </footer>
 
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
+    <script src="/Js/lang.js"></script>
     <script src="/Js/main.js"></script>
 </body>
 

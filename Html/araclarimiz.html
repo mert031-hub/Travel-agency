@@ -17,13 +17,13 @@
         <div class="topbar-container">
             <div class="topbar-left">
                 <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone">+90 532 000 00
-                        00</a></span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone-link">+90 532 000
+                        00 00</a></span>
             </div>
             <div class="topbar-right">
-                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
                 <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
-                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
+                        class="fab fa-whatsapp"></i> <span data-lang="topbar_whatsapp">WhatsApp Destek</span></a>
             </div>
         </div>
     </div>
@@ -42,13 +42,29 @@
                     <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
                 </div>
                 <ul>
-                    <li><a href="index.html">ANA SAYFA</a></li>
-                    <li><a href="hakkimizda.html">HAKKIMIZDA</a></li>
-                    <li><a href="hizmetler.html">HİZMETLERİMİZ</a></li>
-                    <li><a href="araclarimiz.html" class="active">ARAÇLARIMIZ</a></li>
-                    <li><a href="turlar.html">TURLAR</a></li>
-                    <li><a href="iletisim.html" class="nav-cta">İLETİŞİM</a></li>
+                    <li><a href="index.html" data-lang="nav_home">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html" data-lang="nav_about">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html" data-lang="nav_services">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html" class="active" data-lang="nav_vehicles">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta" data-lang="nav_contact">İLETİŞİM</a></li>
                 </ul>
+
+                <div class="lang-menu">
+                    <div class="selected-lang">
+                        <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
+                        <span id="currentLangText">TR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="lang-dropdown">
+                        <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe
+                        </li>
+                        <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                        </li>
+                        <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
     </header>
@@ -57,13 +73,13 @@
         style="background-image: url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1920&q=80');">
         <div class="container">
             <div class="hero-text">
-                <span class="offer-tag">LÜKS ARAÇ FİLOMUZ <span></span></span>
-                <h1>VIP Araçlarımız</h1>
+                <span class="offer-tag"><span data-lang="veh_page_title">LÜKS ARAÇ FİLOMUZ</span> <span></span></span>
+                <h1 data-lang="veh_page_h1">VIP Araçlarımız</h1>
 
                 <div class="breadcrumb-container">
-                    <a href="index.html">Ana Sayfa</a> / <span>Araçlarımız</span>
+                    <a href="index.html" data-lang="nav_home">Ana Sayfa</a> / <span
+                        data-lang="nav_vehicles">Araçlarımız</span>
                 </div>
-
             </div>
         </div>
     </div>
@@ -71,8 +87,9 @@
     <section class="section-padding transparent-bg-effect">
         <div class="container">
             <div class="section-title">
-                <span class="subtitle"><span></span> KONFORUNUZ İÇİN <span></span></span>
-                <h2>Geniş ve Modern Araç Filomuz</h2>
+                <span class="subtitle"><span></span> <span data-lang="veh_page_sub">KONFORUNUZ İÇİN</span>
+                    <span></span></span>
+                <h2 data-lang="veh_page_h2">Geniş ve Modern Araç Filomuz</h2>
             </div>
 
             <div class="vehicles-list-wrapper">
@@ -84,14 +101,18 @@
                                 alt="Mercedes Vito">
                         </div>
                         <div class="v-content-side">
-                            <span class="tag">MERCEDES MARKA</span>
-                            <h3>MERCEDES VITO VIP (6+1)</h3>
-                            <p>Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu seçenek. Geniş bagaj
+                            <span class="tag" data-lang="veh1_tag">MERCEDES MARKA</span>
+                            <h3 data-lang="veh1_title">MERCEDES VITO VIP (6+1)</h3>
+                            <p data-lang="veh1_desc">Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu
+                                seçenek. Geniş bagaj
                                 hacmi ve deri koltuk tasarımıyla prestiji hissedin.</p>
                             <div class="quick-specs">
-                                <span><i class="fas fa-users"></i> 6+1 Kişi</span>
-                                <span><i class="fas fa-suitcase"></i> 5 Bagaj</span>
-                                <span><i class="fas fa-snowflake"></i> Klima</span>
+                                <span><i class="fas fa-users"></i> <span data-lang="veh1_spec_pax">6+1
+                                        Kişi</span></span>
+                                <span><i class="fas fa-suitcase"></i> <span data-lang="veh1_spec_lug">5
+                                        Bagaj</span></span>
+                                <span><i class="fas fa-snowflake"></i> <span
+                                        data-lang="veh1_spec_ac">Klima</span></span>
                             </div>
                         </div>
                     </div>
@@ -99,19 +120,20 @@
                     <div class="vehicle-tabs">
                         <div class="tab-header">
                             <button class="tab-btn active" onclick="openTab(event, 'rez-1')"><i
-                                    class="fas fa-calendar-check"></i> REZERVASYON YAP</button>
+                                    class="fas fa-calendar-check"></i> <span data-lang="tab_rez">REZERVASYON
+                                    YAP</span></button>
                             <button class="tab-btn" onclick="openTab(event, 'gal-1')"><i class="fas fa-images"></i>
-                                ARAÇ RESİMLERİ</button>
+                                <span data-lang="tab_gal">ARAÇ RESİMLERİ</span></button>
                             <button class="tab-btn" onclick="openTab(event, 'com-1')"><i class="fas fa-comments"></i>
-                                MÜŞTERİ YORUMLARI</button>
+                                <span data-lang="tab_com">MÜŞTERİ YORUMLARI</span></button>
                         </div>
                         <div class="tab-content-wrapper">
                             <div id="rez-1" class="tab-content active">
                                 <form class="inline-rez-form">
-                                    <input type="text" placeholder="Ad Soyad" required>
-                                    <input type="tel" placeholder="Telefon" required>
+                                    <input type="text" placeholder="Ad Soyad" data-lang-placeholder="pl_name" required>
+                                    <input type="tel" placeholder="Telefon" data-lang-placeholder="pl_phone" required>
                                     <input type="date" required>
-                                    <button type="submit" class="btn-primary">TEKLİF AL</button>
+                                    <button type="submit" class="btn-primary" data-lang="btn_offer">TEKLİF AL</button>
                                 </form>
                             </div>
                             <div id="gal-1" class="tab-content">
@@ -131,8 +153,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
                                             class="fas fa-star"></i><i class="fas fa-star"></i><i
                                             class="fas fa-star"></i></div>
-                                    <p>"Araç çok temizdi, şoför bey bizi kapıda karşıladı. Teşekkürler." - <strong>Ahmet
-                                            Y.</strong></p>
+                                    <p data-lang="com1_text">"Araç çok temizdi, şoför bey bizi kapıda karşıladı.
+                                        Teşekkürler." - Ahmet Y.</p>
                                 </div>
                             </div>
                         </div>
@@ -146,14 +168,18 @@
                                 alt="Mercedes Sprinter">
                         </div>
                         <div class="v-content-side">
-                            <span class="tag">MERCEDES MARKA</span>
-                            <h3>MERCEDES SPRINTER VIP (15+1)</h3>
-                            <p>Geniş gruplar, düğün organizasyonları ve casino turları için ideal, yüksek tavanlı ve TV
+                            <span class="tag" data-lang="veh2_tag">MERCEDES MARKA</span>
+                            <h3 data-lang="veh2_title">MERCEDES SPRINTER VIP (15+1)</h3>
+                            <p data-lang="veh2_desc">Geniş gruplar, düğün organizasyonları ve casino turları için ideal,
+                                yüksek tavanlı ve TV
                                 üniteli VIP minibüsümüz.</p>
                             <div class="quick-specs">
-                                <span><i class="fas fa-users"></i> 15+1 Kişi</span>
-                                <span><i class="fas fa-suitcase"></i> 15 Bagaj</span>
-                                <span><i class="fas fa-tv"></i> Eğlence Paketi</span>
+                                <span><i class="fas fa-users"></i> <span data-lang="veh2_spec_pax">15+1
+                                        Kişi</span></span>
+                                <span><i class="fas fa-suitcase"></i> <span data-lang="veh2_spec_lug">15
+                                        Bagaj</span></span>
+                                <span><i class="fas fa-tv"></i> <span data-lang="veh2_spec_tv">Eğlence
+                                        Paketi</span></span>
                             </div>
                         </div>
                     </div>
@@ -161,19 +187,20 @@
                     <div class="vehicle-tabs">
                         <div class="tab-header">
                             <button class="tab-btn active" onclick="openTab(event, 'rez-2')"><i
-                                    class="fas fa-calendar-check"></i> REZERVASYON YAP</button>
+                                    class="fas fa-calendar-check"></i> <span data-lang="tab_rez">REZERVASYON
+                                    YAP</span></button>
                             <button class="tab-btn" onclick="openTab(event, 'gal-2')"><i class="fas fa-images"></i>
-                                ARAÇ RESİMLERİ</button>
+                                <span data-lang="tab_gal">ARAÇ RESİMLERİ</span></button>
                             <button class="tab-btn" onclick="openTab(event, 'com-2')"><i class="fas fa-comments"></i>
-                                MÜŞTERİ YORUMLARI</button>
+                                <span data-lang="tab_com">MÜŞTERİ YORUMLARI</span></button>
                         </div>
                         <div class="tab-content-wrapper">
                             <div id="rez-2" class="tab-content active">
                                 <form class="inline-rez-form">
-                                    <input type="text" placeholder="Ad Soyad" required>
-                                    <input type="tel" placeholder="Telefon" required>
+                                    <input type="text" placeholder="Ad Soyad" data-lang-placeholder="pl_name" required>
+                                    <input type="tel" placeholder="Telefon" data-lang-placeholder="pl_phone" required>
                                     <input type="date" required>
-                                    <button type="submit" class="btn-primary">TEKLİF AL</button>
+                                    <button type="submit" class="btn-primary" data-lang="btn_offer">TEKLİF AL</button>
                                 </form>
                             </div>
                             <div id="gal-2" class="tab-content">
@@ -193,8 +220,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
                                             class="fas fa-star"></i><i class="fas fa-star"></i><i
                                             class="fas fa-star"></i></div>
-                                    <p>"Grup olarak çok memnun kaldık, araç içi ikramlar harikaydı." - <strong>Mehmet
-                                            K.</strong></p>
+                                    <p data-lang="com2_text">"Grup olarak çok memnun kaldık, araç içi ikramlar
+                                        harikaydı." - Mehmet K.</p>
                                 </div>
                             </div>
                         </div>
@@ -209,18 +236,18 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <a href="index.html" class="footer-logo">VIP KIBRIS</a>
-                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
+                <p data-lang="footer_desc">KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
             </div>
             <div class="footer-col">
-                <h3>HIZLI MENÜ</h3>
+                <h3 data-lang="footer_menu_title">HIZLI MENÜ</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="hakkimizda.html">Hakkımızda</a></li>
-                    <li><a href="iletisim.html">İletişim</a></li>
+                    <li><a href="index.html" data-lang="nav_home">Ana Sayfa</a></li>
+                    <li><a href="hakkimizda.html" data-lang="nav_about">Hakkımızda</a></li>
+                    <li><a href="iletisim.html" data-lang="nav_contact">İletişim</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>İLETİŞİM</h3>
+                <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
@@ -228,13 +255,15 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> <span data-lang="footer_copyright">Tüm Hakları
+                    Saklıdır.</span></p>
         </div>
     </footer>
 
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
+    <script src="/Js/lang.js"></script>
     <script src="/Js/main.js"></script>
 
     <script>

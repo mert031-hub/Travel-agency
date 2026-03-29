@@ -17,13 +17,13 @@
         <div class="topbar-container">
             <div class="topbar-left">
                 <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone">+90 532 000 00
-                        00</a></span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone-link">+90 532 000
+                        00 00</a></span>
             </div>
             <div class="topbar-right">
-                <span><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
+                <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
                 <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
-                        class="fab fa-whatsapp"></i> WhatsApp Destek</a>
+                        class="fab fa-whatsapp"></i> <span data-lang="topbar_whatsapp">WhatsApp Destek</span></a>
             </div>
         </div>
     </div>
@@ -42,60 +42,80 @@
                     <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
                 </div>
                 <ul>
-                    <li><a href="index.html">ANA SAYFA</a></li>
-                    <li><a href="hakkimizda.html">HAKKIMIZDA</a></li>
-                    <li><a href="hizmetler.html">HİZMETLERİMİZ</a></li>
-                    <li><a href="araclarimiz.html">ARAÇLARIMIZ</a></li>
-                    <li><a href="turlar.html" class="active">TURLAR</a></li>
-                    <li><a href="iletisim.html" class="nav-cta">İLETİŞİM</a></li>
+                    <li><a href="index.html" data-lang="nav_home">ANA SAYFA</a></li>
+                    <li><a href="hakkimizda.html" data-lang="nav_about">HAKKIMIZDA</a></li>
+                    <li><a href="hizmetler.html" data-lang="nav_services">HİZMETLERİMİZ</a></li>
+                    <li><a href="araclarimiz.html" data-lang="nav_vehicles">ARAÇLARIMIZ</a></li>
+                    <li><a href="turlar.html" class="active" data-lang="nav_tours">TURLAR</a></li>
+                    <li><a href="iletisim.html" class="nav-cta" data-lang="nav_contact">İLETİŞİM</a></li>
                 </ul>
+
+                <div class="lang-menu">
+                    <div class="selected-lang">
+                        <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
+                        <span id="currentLangText">TR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="lang-dropdown">
+                        <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe
+                        </li>
+                        <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                        </li>
+                        <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
     </header>
 
     <section class="tours-hero">
         <div class="container">
-            <span class="offer-tag">KIBRIS'I KEŞFEDİN <span></span></span>
-            <h1>Özel Kıbrıs Turları</h1>
+            <span class="offer-tag"><span data-lang="tour_page_tag">KIBRIS'I KEŞFEDİN</span> <span></span></span>
+            <h1 data-lang="tour_page_h1">Özel Kıbrıs Turları</h1>
 
             <div class="breadcrumb-container">
-                <a href="index.html">Ana Sayfa</a> / <span>Turlar</span>
+                <a href="index.html" data-lang="nav_home">Ana Sayfa</a> / <span data-lang="nav_tours">Turlar</span>
             </div>
 
-            <p>Lüks araçlarımızla adanın binlerce yıllık tarihini konforla keşfedin.</p>
+            <p data-lang="tour_page_p">Lüks araçlarımızla adanın binlerce yıllık tarihini konforla keşfedin.</p>
         </div>
     </section>
 
     <section class="section-padding bg-light">
         <div class="container">
             <div class="section-title">
-                <span class="subtitle"><span></span> POPÜLER ROTALAR <span></span></span>
-                <h2>Kıbrıs Kültür ve Doğa Turları</h2>
+                <span class="subtitle"><span></span> <span data-lang="tour_page_sub">POPÜLER ROTALAR</span>
+                    <span></span></span>
+                <h2 data-lang="tour_page_h2">Kıbrıs Kültür ve Doğa Turları</h2>
             </div>
 
             <div class="tours-vertical-grid">
 
                 <div class="tour-v-card">
                     <div class="tour-v-img">
-                        <div class="tour-badge">VIP Tur</div>
+                        <div class="tour-badge" data-lang="t1_badge">VIP Tur</div>
                         <img src="https://images.unsplash.com/photo-1596765792070-6535d4efdb60?auto=format&fit=crop&w=800&q=80"
                             alt="Girne">
                     </div>
                     <div class="tour-v-body">
-                        <span class="tag">Girne Bölgesi</span>
-                        <h3>Girne & Bellapais</h3>
-                        <p>Limanın büyüleyici atmosferi ve Bellapais Manastırı'nın eşsiz mimarisi.</p>
+                        <span class="tag" data-lang="t1_tag">Girne Bölgesi</span>
+                        <h3 data-lang="t1_title">Girne & Bellapais</h3>
+                        <p data-lang="t1_desc">Limanın büyüleyici atmosferi ve Bellapais Manastırı'nın eşsiz mimarisi.
+                        </p>
 
                         <div class="tour-v-tabs">
                             <div class="t-v-tab-header">
-                                <button class="tv-btn active" onclick="openTvTab(event, 'g-yer-1')">YERLER</button>
-                                <button class="tv-btn" onclick="openTvTab(event, 'g-gal-1')">GALERİ</button>
+                                <button class="tv-btn active" onclick="openTvTab(event, 'g-yer-1')"
+                                    data-lang="tab_places">YERLER</button>
+                                <button class="tv-btn" onclick="openTvTab(event, 'g-gal-1')"
+                                    data-lang="tab_gallery">GALERİ</button>
                             </div>
                             <div id="g-yer-1" class="tv-tab-content active">
                                 <ul class="v-tour-list">
-                                    <li>Girne Kalesi</li>
-                                    <li>Eski Yat Limanı</li>
-                                    <li>Bellapais Manastırı</li>
+                                    <li data-lang="t1_l1">Girne Kalesi</li>
+                                    <li data-lang="t1_l2">Eski Yat Limanı</li>
+                                    <li data-lang="t1_l3">Bellapais Manastırı</li>
                                 </ul>
                             </div>
                             <div id="g-gal-1" class="tv-tab-content">
@@ -107,31 +127,34 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="iletisim.html" class="btn-tour-v">TEKLİF AL</a>
+                        <a href="iletisim.html" class="btn-tour-v" data-lang="btn_tour_offer">TEKLİF AL</a>
                     </div>
                 </div>
 
                 <div class="tour-v-card">
                     <div class="tour-v-img">
-                        <div class="tour-badge">En Çok Tercih Edilen</div>
+                        <div class="tour-badge" data-lang="t2_badge">En Çok Tercih Edilen</div>
                         <img src="https://images.unsplash.com/photo-1614713568393-0182c6bb75c4?auto=format&fit=crop&w=800&q=80"
                             alt="Magosa">
                     </div>
                     <div class="tour-v-body">
-                        <span class="tag">Magosa Bölgesi</span>
-                        <h3>Magosa & Maraş</h3>
-                        <p>Antik Salamis harabeleri ve kapalı Maraş'ın gizemli tarihine tanıklık edin.</p>
+                        <span class="tag" data-lang="t2_tag">Magosa Bölgesi</span>
+                        <h3 data-lang="t2_title">Magosa & Maraş</h3>
+                        <p data-lang="t2_desc">Antik Salamis harabeleri ve kapalı Maraş'ın gizemli tarihine tanıklık
+                            edin.</p>
 
                         <div class="tour-v-tabs">
                             <div class="t-v-tab-header">
-                                <button class="tv-btn active" onclick="openTvTab(event, 'm-yer-2')">YERLER</button>
-                                <button class="tv-btn" onclick="openTvTab(event, 'm-gal-2')">GALERİ</button>
+                                <button class="tv-btn active" onclick="openTvTab(event, 'm-yer-2')"
+                                    data-lang="tab_places">YERLER</button>
+                                <button class="tv-btn" onclick="openTvTab(event, 'm-gal-2')"
+                                    data-lang="tab_gallery">GALERİ</button>
                             </div>
                             <div id="m-yer-2" class="tv-tab-content active">
                                 <ul class="v-tour-list">
-                                    <li>Salamis Antik Kenti</li>
-                                    <li>Lala Mustafa Paşa</li>
-                                    <li>Kapalı Maraş</li>
+                                    <li data-lang="t2_l1">Salamis Antik Kenti</li>
+                                    <li data-lang="t2_l2">Lala Mustafa Paşa</li>
+                                    <li data-lang="t2_l3">Kapalı Maraş</li>
                                 </ul>
                             </div>
                             <div id="m-gal-2" class="tv-tab-content">
@@ -143,30 +166,33 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="iletisim.html" class="btn-tour-v">TEKLİF AL</a>
+                        <a href="iletisim.html" class="btn-tour-v" data-lang="btn_tour_offer">TEKLİF AL</a>
                     </div>
                 </div>
 
                 <div class="tour-v-card">
                     <div class="tour-v-img">
+                        <div class="tour-badge" data-lang="t3_badge">Başkent</div>
                         <img src="https://images.unsplash.com/photo-1601618146869-d6e275211979?auto=format&fit=crop&w=800&q=80"
                             alt="Lefkoşa">
                     </div>
                     <div class="tour-v-body">
-                        <span class="tag">Başkent</span>
-                        <h3>Lefkoşa Kültür</h3>
-                        <p>Dünyanın bölünmüş tek başkentinde Osmanlı ve Lüzinyan izlerini sürün.</p>
+                        <span class="tag" data-lang="t3_tag">Başkent</span>
+                        <h3 data-lang="t3_title">Lefkoşa Kültür</h3>
+                        <p data-lang="t3_desc">Dünyanın bölünmüş tek başkentinde Osmanlı ve Lüzinyan izlerini sürün.</p>
 
                         <div class="tour-v-tabs">
                             <div class="t-v-tab-header">
-                                <button class="tv-btn active" onclick="openTvTab(event, 'l-yer-3')">YERLER</button>
-                                <button class="tv-btn" onclick="openTvTab(event, 'l-gal-3')">GALERİ</button>
+                                <button class="tv-btn active" onclick="openTvTab(event, 'l-yer-3')"
+                                    data-lang="tab_places">YERLER</button>
+                                <button class="tv-btn" onclick="openTvTab(event, 'l-gal-3')"
+                                    data-lang="tab_gallery">GALERİ</button>
                             </div>
                             <div id="l-yer-3" class="tv-tab-content active">
                                 <ul class="v-tour-list">
-                                    <li>Büyük Han</li>
-                                    <li>Selimiye Camii</li>
-                                    <li>Arasta Çarşısı</li>
+                                    <li data-lang="t3_l1">Büyük Han</li>
+                                    <li data-lang="t3_l2">Selimiye Camii</li>
+                                    <li data-lang="t3_l3">Arasta Çarşısı</li>
                                 </ul>
                             </div>
                             <div id="l-gal-3" class="tv-tab-content">
@@ -176,31 +202,33 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="iletisim.html" class="btn-tour-v">TEKLİF AL</a>
+                        <a href="iletisim.html" class="btn-tour-v" data-lang="btn_tour_offer">TEKLİF AL</a>
                     </div>
                 </div>
 
                 <div class="tour-v-card">
                     <div class="tour-v-img">
-                        <div class="tour-badge">Doğa</div>
+                        <div class="tour-badge" data-lang="t4_badge">Doğa</div>
                         <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
                             alt="Karpaz">
                     </div>
                     <div class="tour-v-body">
-                        <span class="tag">Karpaz Bölgesi</span>
-                        <h3>Karpaz & Altınkum</h3>
-                        <p>Adanın en bakir doğası, hür eşekleri ve muhteşem Altınkum plajı.</p>
+                        <span class="tag" data-lang="t4_tag">Karpaz Bölgesi</span>
+                        <h3 data-lang="t4_title">Karpaz & Altınkum</h3>
+                        <p data-lang="t4_desc">Adanın en bakir doğası, hür eşekleri ve muhteşem Altınkum plajı.</p>
 
                         <div class="tour-v-tabs">
                             <div class="t-v-tab-header">
-                                <button class="tv-btn active" onclick="openTvTab(event, 'k-yer-4')">YERLER</button>
-                                <button class="tv-btn" onclick="openTvTab(event, 'k-gal-4')">GALERİ</button>
+                                <button class="tv-btn active" onclick="openTvTab(event, 'k-yer-4')"
+                                    data-lang="tab_places">YERLER</button>
+                                <button class="tv-btn" onclick="openTvTab(event, 'k-gal-4')"
+                                    data-lang="tab_gallery">GALERİ</button>
                             </div>
                             <div id="k-yer-4" class="tv-tab-content active">
                                 <ul class="v-tour-list">
-                                    <li>Apostolos Andreas</li>
-                                    <li>Altın Kum Plajı</li>
-                                    <li>Dipkarpaz Köyü</li>
+                                    <li data-lang="t4_l1">Apostolos Andreas</li>
+                                    <li data-lang="t4_l2">Altın Kum Plajı</li>
+                                    <li data-lang="t4_l3">Dipkarpaz Köyü</li>
                                 </ul>
                             </div>
                             <div id="k-gal-4" class="tv-tab-content">
@@ -210,7 +238,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="iletisim.html" class="btn-tour-v">TEKLİF AL</a>
+                        <a href="iletisim.html" class="btn-tour-v" data-lang="btn_tour_offer">TEKLİF AL</a>
                     </div>
                 </div>
 
@@ -222,17 +250,17 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <a href="index.html" class="footer-logo">VIP KIBRIS</a>
-                <p>KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
+                <p data-lang="footer_desc">KKTC geneline VIP transfer ve turizm hizmeti. Güvenli ve konforlu ulaşım.</p>
             </div>
             <div class="footer-col">
-                <h3>HIZLI MENÜ</h3>
+                <h3 data-lang="footer_menu_title">HIZLI MENÜ</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="turlar.html">Turlar</a></li>
+                    <li><a href="index.html" data-lang="nav_home">Ana Sayfa</a></li>
+                    <li><a href="turlar.html" data-lang="nav_tours">Turlar</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>İLETİŞİM</h3>
+                <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
@@ -240,13 +268,15 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> Tüm Hakları Saklıdır.</p>
+            <p>&copy; 2026 <span>VIP KIBRIS TRAVEL</span> <span data-lang="footer_copyright">Tüm Hakları
+                    Saklıdır.</span></p>
         </div>
     </footer>
 
     <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
+    <script src="/Js/lang.js"></script>
     <script src="/Js/main.js"></script>
 
     <script>
