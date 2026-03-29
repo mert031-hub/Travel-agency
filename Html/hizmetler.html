@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hizmetler - VIP KIBRIS TRAVEL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/Css/hizmetler.css">
@@ -48,23 +48,25 @@
                     <li><a href="araclarimiz.html" data-lang="nav_vehicles">ARAÇLARIMIZ</a></li>
                     <li><a href="turlar.html" data-lang="nav_tours">TURLAR</a></li>
                     <li><a href="iletisim.html" class="nav-cta" data-lang="nav_contact">İLETİŞİM</a></li>
-                </ul>
 
-                <div class="lang-menu">
-                    <div class="selected-lang">
-                        <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
-                        <span id="currentLangText">TR</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <ul class="lang-dropdown">
-                        <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe
-                        </li>
-                        <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
-                        </li>
-                        <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
-                        </li>
-                    </ul>
-                </div>
+                    <li class="lang-item-desktop">
+                        <div class="lang-menu">
+                            <div class="selected-lang">
+                                <img src="https://flagcdn.com/w20/tr.png" alt="TR" id="currentFlag">
+                                <span id="currentLangText">TR</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <ul class="lang-dropdown">
+                                <li onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR">
+                                    Türkçe</li>
+                                <li onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN">
+                                    English</li>
+                                <li onclick="changeLanguage('ru')"><img src="https://flagcdn.com/w20/ru.png" alt="RU">
+                                    Русский</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
             </nav>
         </div>
     </header>
