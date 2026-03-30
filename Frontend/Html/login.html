@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sisteme Giriş - VIP Kıbrıs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f3d7a 0%, #1e5ba3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: #0f3d7a;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 14px;
+            color: #888;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #0f3d7a;
+            box-shadow: 0 0 5px rgba(15, 61, 122, 0.3);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #0f3d7a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #0a2955;
+            transform: translateY(-2px);
+        }
+
+        .btn-login:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h2>Yönetici Girişi</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Kullanıcı Adı" required autocomplete="off">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Şifre" required>
+            </div>
+            <button type="submit" class="btn-login" id="loginBtn">Giriş Yap</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kontrol Ediliyor...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        kullaniciAdi: document.getElementById('username').value,
+                        sifre: document.getElementById('password').value
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.basari) {
+                    Swal.fire({ icon: 'success', title: 'Hoş Geldiniz', text: 'Yönlendiriliyorsunuz...', showConfirmButton: false, timer: 1500 });
+                    setTimeout(() => window.location.href = '/admin', 1500);
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Hata', text: data.mesaj, confirmButtonColor: '#0f3d7a' });
+                    btn.innerHTML = 'Giriş Yap';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Hata', text: 'Sunucuya bağlanılamadı.', confirmButtonColor: '#0f3d7a' });
+                btn.innerHTML = 'Giriş Yap';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

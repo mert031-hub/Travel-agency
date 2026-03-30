@@ -98,7 +98,8 @@
         /* Butonlar */
         .btn,
         .tab-btn,
-        .btn-refresh {
+        .btn-refresh,
+        .btn-logout {
             cursor: pointer;
             transition: var(--transition);
             user-select: none;
@@ -111,7 +112,8 @@
 
         .btn:active,
         .tab-btn:active,
-        .btn-refresh:active {
+        .btn-refresh:active,
+        .btn-logout:active {
             transform: scale(0.92);
         }
 
@@ -242,6 +244,23 @@
             z-index: 10;
         }
 
+        /* Çıkış Yap Butonu Stili */
+        .btn-logout {
+            background: var(--danger);
+            color: white;
+            padding: 0 25px;
+            height: 45px;
+            border-radius: 8px;
+            font-weight: 600;
+            gap: 8px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
         .tag {
             padding: 4px 8px;
             border-radius: 6px;
@@ -348,6 +367,7 @@
                     onkeyup="tabloyuFiltrele()">
             </div>
             <button onclick="verileriYukle()" class="btn-refresh"><i class="fas fa-sync-alt"></i> Yenile</button>
+            <button onclick="cikisYap()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
         </div>
 
         <div class="main-card">

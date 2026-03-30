@@ -1,6 +1,6 @@
 /* =========================================
    VIP KIBRIS TRAVEL - ANA SAYFA (INDEX) CSS
-   (TÜM SAYFA YAPISI KORUNMUŞ TAM DOSYA)
+   (TAŞMA VE İÇ İÇE GEÇME SORUNU GİDERİLDİ)
 ========================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -46,7 +46,7 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
 .top-whatsapp-btn, .top-whatsapp-btn:visited { color: #fff !important; font-weight: 600; }
 .top-whatsapp-btn:hover { color: var(--accent) !important; opacity: 0.8; }
 
-/* 3. Header & Navigation (Dil Seçici UL İçine Entegre Edildi) */
+/* 3. Header & Navigation */
 .main-header {
     background-color: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
@@ -132,10 +132,13 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
 
 .mobile-menu-btn { display: none; font-size: 26px; color: var(--primary); cursor: pointer; transition: 0.3s; }
 
-/* 4. Hero Slider Bölümü */
-.hero-section { position: relative; height: 80vh; min-height: 600px; width: 100%; }
-.heroSwiper { height: 100%; width: 100%; }
-.hero-slide { background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; position: relative; }
+/* =========================================
+   4. HERO BÖLÜMÜ (KRİTİK DÜZELTME)
+   Yükseklik artık section'da değil, swiper'da.
+========================================= */
+.hero-section { position: relative; width: 100%; display: block; }
+.heroSwiper { height: 80vh; min-height: 600px; width: 100%; }
+.hero-slide { background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; position: relative; height: 100%; }
 .hero-slide::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); }
 .slide-content { position: relative; z-index: 2; text-align: center; color: #fff; max-width: 800px; padding: 0 20px; opacity: 0; transform: translateY(30px); transition: all 0.6s ease-in-out; }
 .swiper-slide-active .slide-content { opacity: 1; transform: translateY(0); }
@@ -144,14 +147,81 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
 .swiper-button-next, .swiper-button-prev { color: #fff !important; }
 .swiper-pagination-bullet-active { background: var(--accent) !important; }
 
-/* 5. Rezervasyon Formu */
-.hero-booking-wrapper { position: absolute; bottom: -40px; left: 0; right: 0; margin: 0 auto; z-index: 100; width: 100%; max-width: 950px; padding: 0 20px; }
-.hero-booking-form { display: flex; background: rgba(255, 255, 255, 0.98); padding: 15px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); gap: 10px; }
-.form-group { display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 4px; padding: 0 15px; flex: 1; min-width: 0; }
-.form-group i { color: var(--primary); margin-right: 10px; flex-shrink: 0; }
-.form-group input { border: none; outline: none; padding: 15px 0; width: 100%; font-family: 'Poppins', sans-serif; font-size: 13px; color: var(--text-dark); text-overflow: ellipsis; background: transparent; }
-.btn-primary { background-color: var(--primary); color: #fff; border: none; padding: 0 35px; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; height: 50px; white-space: nowrap; }
-.btn-primary:hover { background-color: var(--accent); color: var(--primary); }
+/* 5. YENİ REZERVASYON FORMU */
+.hero-booking-wrapper { 
+    position: absolute; 
+    bottom: -40px; 
+    left: 0; 
+    right: 0; 
+    margin: 0 auto; 
+    z-index: 100; 
+    width: 100%; 
+    max-width: 1200px; 
+    padding: 0 20px; 
+}
+.hero-booking-form { 
+    display: flex; 
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.98); 
+    padding: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+    gap: 12px; 
+    align-items: center;
+}
+.form-group { 
+    display: flex; 
+    align-items: center; 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    padding: 0 15px; 
+    flex: 1 1 calc(16.66% - 12px); 
+    min-width: 150px; 
+    position: relative;
+    background: #fff;
+    transition: 0.3s;
+}
+.form-group:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 5px rgba(15, 61, 122, 0.2);
+}
+.form-group i { 
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    flex-shrink: 0; 
+}
+.form-group input { 
+    border: none; 
+    outline: none; 
+    padding: 15px 5px 15px 30px; 
+    width: 100%; 
+    font-family: 'Poppins', sans-serif; 
+    font-size: 13px; 
+    color: var(--text-dark); 
+    text-overflow: ellipsis; 
+    background: transparent; 
+}
+.btn-primary { 
+    flex: 1 1 calc(16.66% - 12px);
+    background-color: var(--primary); 
+    color: #fff; 
+    border: none; 
+    padding: 0; 
+    border-radius: 8px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    height: 50px; 
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn-primary:hover { background-color: var(--accent); color: var(--primary); transform: translateY(-2px); }
 
 /* 6. Ortak Başlıklar */
 .section-title { text-align: center; margin-bottom: 50px; position: relative; }
@@ -225,10 +295,16 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
 .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 990; opacity: 0; visibility: hidden; transition: 0.3s; }
 .menu-overlay.active { opacity: 1; visibility: visible; }
 
+/* TABLET (1024px) */
 @media (max-width: 1024px) {
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .hero-booking-form .form-group, 
+    .hero-booking-form .btn-primary {
+        flex: 1 1 calc(33.33% - 12px); 
+    }
 }
 
+/* BÜYÜK MOBİL VE TABLET DİKEY (992px) */
 @media (max-width: 992px) {
     body { padding-top: 72px; }
     .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 0; }
@@ -246,7 +322,6 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
     .nav-title { font-weight: 800; color: var(--primary); font-size: 18px; }
     .close-menu { font-size: 22px; color: var(--text-gray); cursor: pointer; }
 
-    /* Mobilde Dil Seçici Ayarı */
     .lang-item-desktop { margin-left: 0; margin-top: 15px; width: 100%; }
     .selected-lang { width: 100%; justify-content: space-between; padding: 12px; }
     .lang-dropdown { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 1px solid #eee; margin-top: 5px !important; display: none; }
@@ -258,9 +333,9 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
     .main-nav ul li a::after { display: none !important; }
     .nav-cta { border-radius: 8px !important; margin-top: 15px; text-align: center; }
 
-    /* Form mobilde hero'nun içinde değil, altında düzgün durmalı */
+    /* YENİ: Formun mobilde düzgün oturması için */
     .hero-booking-wrapper { position: relative; bottom: 0; margin: -30px auto 30px; padding: 0 15px; }
-    .hero-booking-form { flex-direction: column; gap: 10px; }
+    
     .mt-100 { margin-top: 50px; }
     
     .offer-wrapper { flex-direction: column; gap: 40px; }
@@ -274,13 +349,25 @@ a { text-decoration: none; outline: none; transition: var(--transition); }
     .services-carousel-container .swiper-button-next { width: 35px; height: 35px; }
 }
 
+/* KÜÇÜK MOBİL (768px ve altı) */
 @media (max-width: 768px) {
     .grid-3 { grid-template-columns: 1fr; }
-    .hero-section { height: 50vh; min-height: 400px; }
+    
+    /* YENİ: Yükseklik hero-section'dan alındı, sadece Swiper'a verildi */
+    .heroSwiper { height: 50vh; min-height: 400px; }
+    
     .slide-content h2 { font-size: 28px; }
     .slide-content p { font-size: 16px; }
     .section-title h2 { font-size: 22px; }
     .section-padding { padding: 40px 0; }
     .offer-left h2 { font-size: 28px; text-align: center; }
     .offer-tag, .offer-left p { justify-content: center; text-align: center; }
+
+    /* Form tamamen alt alta dizilir ve hiçbir şeyin içine girmez */
+    .hero-booking-form { flex-direction: column; padding: 20px; }
+    .hero-booking-form .form-group, 
+    .hero-booking-form .btn-primary {
+        flex: 1 1 100%; 
+        width: 100%;
+    }
 }

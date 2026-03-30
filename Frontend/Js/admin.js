@@ -1,5 +1,5 @@
 /* =========================================
-   VIP KIBRIS TRAVEL - ADMIN JS (VER: 2.4)
+   VIP KIBRIS TRAVEL - ADMIN JS (VER: 2.5)
 ========================================= */
 
 let currentTab = 'active';
@@ -7,24 +7,36 @@ let tumVeriler = [];
 
 window.onload = verileriYukle;
 
+// YENİ: Yetki Kontrolü Yapan Ortak İstek Fonksiyonu
+async function guvenliFetch(url, options = {}) {
+    const res = await fetch(url, options);
+    if (res.status === 401) { // 401: Yetkisiz erişim (Session bitmiş)
+        window.location.href = '/login';
+        throw new Error('Oturum süresi doldu.');
+    }
+    return res;
+}
+
 async function verileriYukle() {
     const tbody = document.getElementById('tableBody');
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
     if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
 
     try {
-        const sRes = await fetch('/api/admin/stats');
+        const sRes = await guvenliFetch('/api/admin/stats');
         const stats = await sRes.json();
         document.getElementById('statTotal').innerText = stats.toplam || 0;
         document.getElementById('statNew').innerText = stats.okunmamis || 0;
         document.getElementById('statTrash').innerText = stats.cop || 0;
 
         const url = currentTab === 'active' ? '/api/admin/reservations' : '/api/admin/trash';
-        const res = await fetch(url);
+        const res = await guvenliFetch(url);
         tumVeriler = await res.json();
         tabloyuCiz(tumVeriler);
     } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red; padding:20px;">Bağlantı hatası.</td></tr>';
+        if (e.message !== 'Oturum süresi doldu.') {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red; padding:20px;">Bağlantı hatası.</td></tr>';
+        }
     } finally {
         if (refreshBtnIcon) refreshBtnIcon.classList.remove('fa-spin');
     }
@@ -112,7 +124,7 @@ async function mesajGoster(encodedMsg, id, encodedNote) {
     });
 
     if (isConfirmed && text !== undefined) {
-        const res = await fetch(`/api/admin/reservations/${id}/note`, {
+        const res = await guvenliFetch(`/api/admin/reservations/${id}/note`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ not: text })
@@ -131,12 +143,20 @@ function tabDegistir(t) {
     verileriYukle();
 }
 
-async function durumDegistir(id) { await fetch(`/api/admin/reservations/${id}/toggle-read`, { method: 'PUT' }); verileriYukle(); }
+async function durumDegistir(id) { await guvenliFetch(`/api/admin/reservations/${id}/toggle-read`, { method: 'PUT' }); verileriYukle(); }
+
 async function kayitSil(id) {
     const confirm = await Swal.fire({ title: 'Emin misiniz?', text: "Çöpe taşınacak.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c' });
     if (confirm.isConfirmed) {
-        await fetch(`/api/admin/reservations/${id}`, { method: 'DELETE' });
+        await guvenliFetch(`/api/admin/reservations/${id}`, { method: 'DELETE' });
         verileriYukle();
     }
 }
-async function geriYukle(id) { await fetch(`/api/admin/trash/${id}/restore`, { method: 'PUT' }); verileriYukle(); }
+
+async function geriYukle(id) { await guvenliFetch(`/api/admin/trash/${id}/restore`, { method: 'PUT' }); verileriYukle(); }
+
+// YENİ: Çıkış Yap Fonksiyonu
+window.cikisYap = async function () {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+};

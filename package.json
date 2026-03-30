@@ -2,10 +2,10 @@
   "name": "kibris-seyehat",
   "version": "1.0.0",
   "main": "index.js",
- "scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js"
-},
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mert031-hub/Travel-agency.git"
@@ -23,7 +23,11 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.1.0",
     "mongoose": "^9.3.3",
+    "morgan": "^1.10.1",
     "resend": "^6.9.4"
   },
   "devDependencies": {

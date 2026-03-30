@@ -127,6 +127,15 @@ document.addEventListener('DOMContentLoaded', function () {
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true, offset: 50, disable: false });
     }
 
+    // --- TELEFON ALANLARINA HARF GİRİŞİNİ ANLIK ENGELLEME ---
+    const phoneInputs = document.querySelectorAll('input[type="tel"], #heroPhone');
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', function (e) {
+            // Sadece rakam ve en baştaki '+' işaretine izin verir, gerisini anında siler
+            this.value = this.value.replace(/(?!^\+)[^\d]/g, '');
+        });
+    });
+
     /* ==============================================================
         5. API ENTEGRASYONU & VALIDATION (KONTROLLER)
     ============================================================== */
@@ -144,16 +153,14 @@ document.addEventListener('DOMContentLoaded', function () {
             data.telefon = cleanPhone;
         }
 
-        // --- 2. AD SOYAD KONTROLÜ (Hero form hariç zorunlu) ---
-        if (!data.formTipi.includes('Hero')) {
-            if (!data.adSoyad || data.adSoyad.trim().length < 3) {
-                Swal.fire({ icon: 'warning', title: 'İsim Gerekli', text: 'Lütfen adınızı ve soyadınızı giriniz.' });
-                return;
-            }
-            if (/[0-9]/.test(data.adSoyad)) {
-                Swal.fire({ icon: 'warning', title: 'Hata', text: 'İsim alanı rakam içeremez.' });
-                return;
-            }
+        // --- 2. AD SOYAD KONTROLÜ ---
+        if (!data.adSoyad || data.adSoyad.trim().length < 3) {
+            Swal.fire({ icon: 'warning', title: 'İsim Gerekli', text: 'Lütfen adınızı ve soyadınızı giriniz.' });
+            return;
+        }
+        if (/[0-9]/.test(data.adSoyad)) {
+            Swal.fire({ icon: 'warning', title: 'Hata', text: 'İsim alanı rakam içeremez.' });
+            return;
         }
 
         // --- 3. E-POSTA KONTROLÜ ---
@@ -165,16 +172,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // --- 4. BOŞ ALAN KONTROLÜ (Sadece Hero Form için) ---
+        // --- 4. BOŞ ALAN KONTROLÜ (Hero Form için ekstra kontrol) ---
         if (data.formTipi.includes('Hero') && (!data.alinisNoktasi || !data.birakilisNoktasi || !data.tarih)) {
-            Swal.fire({ icon: 'info', title: 'Eksik Bilgi', text: 'Lütfen tüm alanları doldurunuz.' });
+            Swal.fire({ icon: 'info', title: 'Eksik Bilgi', text: 'Lütfen nereden, nereye ve tarih alanlarını doldurunuz.' });
             return;
         }
 
-        const btn = formElement.querySelector('button[type="submit"]');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
-        btn.disabled = true;
+        // Butonu bul (hem type="submit" hem type="button" için uyumlu)
+        const btn = formElement.querySelector('button');
+        let originalText = "";
+
+        if (btn) {
+            originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
+            btn.disabled = true;
+        }
 
         try {
             const response = await fetch('/api/teklif-al', {
@@ -189,37 +201,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     icon: 'success',
                     title: 'Başarılı!',
-                    text: result.mesaj,
+                    text: result.mesaj || 'Talebiniz alınmıştır.',
                     confirmButtonColor: '#0f3d7a'
                 });
                 formElement.reset();
             } else {
-                Swal.fire({ icon: 'error', title: 'Hata!', text: result.mesaj });
+                Swal.fire({ icon: 'error', title: 'Hata!', text: result.mesaj || 'İşlem başarısız.' });
             }
         } catch (error) {
             console.error('API Gönderim Hatası:', error);
             Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor, lütfen tekrar deneyin.' });
         } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
     }
 
     // A) HERO FORM (Ana Sayfa Üst Kısım)
-    const heroForm = document.querySelector('.hero-booking-form');
-    if (heroForm) {
-        heroForm.removeAttribute('action');
-        heroForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const inputs = heroForm.querySelectorAll('input');
-            await veriGonder({
-                alinisNoktasi: inputs[0].value,
-                birakilisNoktasi: inputs[1].value,
-                tarih: inputs[2].value,
-                formTipi: 'Hızlı Fiyat Sor '
-            }, heroForm);
-        });
-    }
+    // HTML'deki onclick olayının bu fonksiyona ulaşabilmesi için window objesine (global scope) ekliyoruz.
+    window.gonderHeroForm = async function () {
+        const form = document.getElementById('heroForm');
+        if (!form) return;
+
+        const adSoyad = document.getElementById('heroName').value;
+        const telefon = document.getElementById('heroPhone').value;
+        const alinisNoktasi = document.getElementById('heroFrom').value;
+        const birakilisNoktasi = document.getElementById('heroTo').value;
+        const tarih = document.getElementById('heroDate').value;
+
+        // Verileri veriGonder fonksiyonumuza iletiyoruz
+        await veriGonder({
+            adSoyad: adSoyad,
+            telefon: telefon,
+            alinisNoktasi: alinisNoktasi,
+            birakilisNoktasi: birakilisNoktasi,
+            tarih: tarih,
+            mesaj: `Seçilen Tarih: ${tarih}`, // Tarih bilgisini admin panelindeki mesaja iliştiriyoruz
+            formTipi: 'Hızlı Fiyat Sor (Hero Form)'
+        }, form);
+    };
 
     // B) DETAYLI TEKLİF AL FORMU (Alt Kutu)
     const offerForm = document.querySelector('.offer-form-box form');
@@ -254,4 +276,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }, contactForm);
         });
     }
-}); // <--- DOMContentLoaded burada düzgünce kapanıyor.
+});

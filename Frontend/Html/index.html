@@ -100,22 +100,39 @@
         </div>
 
         <div class="hero-booking-wrapper" data-aos="fade-up" data-aos-delay="200">
-            <form action="iletisim.html" class="hero-booking-form">
+            <form id="heroForm" class="hero-booking-form">
+
                 <div class="form-group">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" placeholder="Alınış Noktası (Örn: Ercan Havalimanı)"
+                    <i class="fas fa-user text-primary" style="color: #0f3d7a;"></i>
+                    <input type="text" id="heroName" placeholder="Ad Soyad" required data-lang-placeholder="form_name">
+                </div>
+
+                <div class="form-group">
+                    <i class="fas fa-phone-alt text-primary" style="color: #0f3d7a;"></i>
+                    <input type="tel" id="heroPhone" placeholder="Telefon" required data-lang-placeholder="form_phone">
+                </div>
+
+                <div class="form-group">
+                    <i class="fas fa-map-marker-alt text-danger" style="color: #e74c3c;"></i>
+                    <input type="text" id="heroFrom" placeholder="Alınış (Örn: Ercan)" required
                         data-lang-placeholder="form_pickup">
                 </div>
+
                 <div class="form-group">
-                    <i class="fas fa-location-arrow"></i>
-                    <input type="text" placeholder="Bırakılış Noktası (Örn: Girne Otel)"
+                    <i class="fas fa-flag-checkered text-dark" style="color: #333;"></i>
+                    <input type="text" id="heroTo" placeholder="Bırakılış (Örn: Girne)" required
                         data-lang-placeholder="form_dropoff">
                 </div>
+
                 <div class="form-group">
-                    <i class="fas fa-calendar-alt"></i>
-                    <input type="date">
+                    <i class="fas fa-calendar-alt text-primary" style="color: #0f3d7a;"></i>
+                    <input type="date" id="heroDate" required>
                 </div>
-                <button type="submit" class="btn btn-primary" data-lang="form_btn_price">FİYAT SOR</button>
+
+                <button type="button" onclick="gonderHeroForm()" class="btn btn-primary" data-lang="form_btn_price">
+                    FİYAT SOR
+                </button>
+
             </form>
         </div>
     </section>
