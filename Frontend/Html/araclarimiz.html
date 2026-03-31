@@ -287,6 +287,66 @@
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
+
+        // --- YENİ EKLENEN KISIM: FORM BAĞLANTILARI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const rezForms = document.querySelectorAll('.inline-rez-form');
+
+            rezForms.forEach((form, index) => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const inputs = form.querySelectorAll('input');
+                    const adSoyad = inputs[0].value;
+                    const telefon = inputs[1].value;
+                    const tarih = inputs[2].value;
+
+                    // 0. index Vito, 1. index Sprinter formunu temsil ediyor
+                    const aracTipi = index === 0 ? 'MERCEDES VITO VIP (6+1)' : 'MERCEDES SPRINTER VIP (15+1)';
+
+                    const btn = form.querySelector('button');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
+                    btn.disabled = true;
+
+                    try {
+                        const response = await fetch('/api/teklif-al', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                adSoyad: adSoyad,
+                                telefon: telefon,
+                                tarih: tarih,
+                                alinisNoktasi: 'Belirtilmedi', // Sadece araç ve tarih seçiliyor
+                                birakilisNoktasi: 'Belirtilmedi',
+                                formTipi: 'Araç Sayfası Rezervasyonu',
+                                mesaj: `Seçilen Araç: ${aracTipi}\nSeçilen Tarih: ${tarih}`
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.basari) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarılı!',
+                                text: 'Rezervasyon talebiniz başarıyla alındı. Sizinle en kısa sürede iletişime geçeceğiz.',
+                                confirmButtonColor: '#0f3d7a'
+                            });
+                            form.reset();
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'Hata!', text: result.mesaj || 'İşlem başarısız.' });
+                        }
+                    } catch (error) {
+                        console.error('API Gönderim Hatası:', error);
+                        Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor, lütfen tekrar deneyin.' });
+                    } finally {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            });
+        });
     </script>
 </body>
 
