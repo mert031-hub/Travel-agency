@@ -1,5 +1,5 @@
 /* =========================================
-   VIP KIBRIS TRAVEL - ADMIN JS (VER: 2.5)
+   BUĞRA POLAT TURİZM - ADMIN JS (VER: 2.5)
 ========================================= */
 
 let currentTab = 'active';

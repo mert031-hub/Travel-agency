@@ -1,5 +1,5 @@
 /* =========================================
-   VIP KIBRIS TRAVEL - MAIN JAVASCRIPT
+   BUĞRA POLAT TURİZM - MAIN JAVASCRIPT
 ========================================= */
 
 const WHATSAPP_NUMBER = "905320000000";
@@ -275,5 +275,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 formTipi: 'İletişim Sayfası Mesajı'
             }, contactForm);
         });
+    }
+});
+/* =========================================
+   VIP PRELOADER KONTROLÜ (BUG-FREE)
+========================================= */
+
+// 1. Sayfa ilk açıldığında arkada scroll (kaydırma) yapılmasını kilitle
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('loading-lock');
+});
+
+// 2. Sayfadaki TÜM resimler ve dosyalar %100 yüklendiğinde çalışır
+window.addEventListener('load', function () {
+    const preloader = document.getElementById('vip-preloader');
+
+    if (preloader) {
+        // Kaydırma (scroll) kilidini aç
+        document.body.classList.remove('loading-lock');
+
+        // CSS ile yavaşça (fade-out) gizle
+        preloader.classList.add('preloader-hidden');
+
+        // CSS geçiş süresi (0.5s) bittikten sonra HTML'den tamamen kaldır
+        // (Bu işlem, gizli preloader'ın sitedeki butonlara tıklamayı engelleme bug'ını çözer)
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500);
     }
 });

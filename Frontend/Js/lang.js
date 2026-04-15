@@ -1,5 +1,5 @@
 /* =========================================
-   VIP KIBRIS TRAVEL - DİL SÖZLÜĞÜ (lang.js)
+   BUĞRA POLAT TURİZM - DİL SÖZLÜĞÜ (lang.js)
 ========================================= */
 
 const translations = {
@@ -110,11 +110,11 @@ const translations = {
         com2_text: "\"Grup olarak çok memnun kaldık, araç içi ikramlar harikaydı.\" - Mehmet K.",
 
         // --- HAKKIMIZDA SAYFASI ---
-        about_page_title: "VIP KIBRIS TRAVEL",
+        about_page_title: "BUĞRA POLAT TURİZM",
         about_page_h1: "Hakkımızda",
         about_sub: "BİZ KİMİZ?",
         about_h2: "Kıbrıs'ta Yolculuğu Sanata Dönüştürüyoruz",
-        about_p1: "<strong>VIP KIBRIS TRAVEL</strong> olarak, Kuzey Kıbrıs Türk Cumhuriyeti'nde (KKTC) uzun yıllardır turizm, ulaşım ve VIP transfer sektöründe öncü bir rol üstlenmekteyiz. Amacımız, adaya ayak bastığınız ilk andan itibaren size sadece bir transfer hizmeti değil, prestijli bir yaşam tarzı sunmaktır.",
+        about_p1: "<strong>BUĞRA POLAT TURİZM</strong> olarak, Kuzey Kıbrıs Türk Cumhuriyeti'nde (KKTC) uzun yıllardır turizm, ulaşım ve VIP transfer sektöründe öncü bir rol üstlenmekteyiz. Amacımız, adaya ayak bastığınız ilk andan itibaren size sadece bir transfer hizmeti değil, prestijli bir yaşam tarzı sunmaktır.",
         about_p2: "Ercan Havalimanı transferleri ve özel turlarımızla; bireysel misafirlerimizden kurumsal şirket yöneticilerine kadar geniş bir yelpazede hizmet sunuyoruz. Filomuzda bulunan lüks Mercedes araçlarımız ve alanında uzman ekibimizle 7 gün 24 saat kesintisiz hizmet sağlıyoruz.",
         about_miss_title: "Misyonumuz",
         about_miss_desc: "Güvenliği ve kaliteyi en ön planda tutarak, ulaşım sektöründe fark yaratan, misafir memnuniyeti odaklı hizmetler sunmak.",

@@ -201,7 +201,7 @@ app.post('/api/teklif-al', async (req, res) => {
         if (resend && process.env.RESEND_API_KEY) {
             try {
                 await resend.emails.send({
-                    from: 'VIP Kibris <onboarding@resend.dev>',
+                    from: 'BUGRA POLAT <onboarding@resend.dev>',
                     to: 'senin.kendimailadresin@gmail.com', // Bunu daha sonra güncellersin
                     subject: `🔔 Yeni Talep: ${req.body.adSoyad}`,
                     html: `<h3>Yeni Rezervasyon!</h3><p>Müşteri: ${req.body.adSoyad}</p><p>Tel: ${req.body.telefon}</p>`
