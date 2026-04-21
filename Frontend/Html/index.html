@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="/Frontend/Css/style.css">
+    <link rel="icon" type="image/jpeg" href="/Frontend/photo/favicon.jpeg">
+    <link rel="apple-touch-icon" href="/Frontend/photo/favicon.jpeg">
 </head>
 
 <body>
@@ -445,11 +447,36 @@
     <script src="/Frontend/Js/lang.js"></script>
     <script src="/Frontend/Js/main.js"></script>
 </body>
-<div id="vip-preloader">
-    <div class="preloader-inner">
-        <div class="vip-spinner"></div>
-        <div class="vip-text">BUĞRA POLAT TURİZM</div>
+<div id="bp-preloader">
+    <div class="bp-glass-panel">
+        <div class="bp-spinner"></div>
+        <div class="bp-brand">BUĞRA POLAT</div>
+        <div class="bp-sub">VIP TRANSFER & TURİZM</div>
     </div>
 </div>
+
+<script>
+    // ASLA TAKILI KALMAYAN GÜVENLİK KODU
+    (function () {
+        var preloader = document.getElementById('bp-preloader');
+        if (!preloader) return;
+
+        document.body.style.overflow = 'hidden'; // Kaydırmayı kilitle
+
+        function removePreloader() {
+            preloader.classList.add('preloader-hide');
+            document.body.style.overflow = ''; // Kilidi aç
+            setTimeout(function () { preloader.style.display = 'none'; }, 800);
+        }
+
+        // 1. İhtimal: Sayfa yüklenince 0.5 saniye bekle ve aç
+        window.addEventListener('load', function () {
+            setTimeout(removePreloader, 500);
+        });
+
+        // 2. İhtimal (GÜVENLİK): Sayfa takılsa bile 2.5 saniye sonra ZORLA aç!
+        setTimeout(removePreloader, 2500);
+    })();
+</script>
 
 </html>

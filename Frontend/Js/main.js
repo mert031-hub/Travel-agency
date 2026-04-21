@@ -277,30 +277,36 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-/* =========================================
-   VIP PRELOADER KONTROLÜ (BUG-FREE)
-========================================= */
-
-// 1. Sayfa ilk açıldığında arkada scroll (kaydırma) yapılmasını kilitle
+/* ======================================================
+   SAYFALAR ARASI YUMUŞAK GEÇİŞ (HIZLANDIRILDI)
+========================================================= */
 document.addEventListener('DOMContentLoaded', function () {
-    document.body.classList.add('loading-lock');
-});
+    const links = document.querySelectorAll('a[href]');
 
-// 2. Sayfadaki TÜM resimler ve dosyalar %100 yüklendiğinde çalışır
-window.addEventListener('load', function () {
-    const preloader = document.getElementById('vip-preloader');
+    links.forEach(link => {
+        link.addEventListener('click', function (e) {
+            const targetUrl = this.getAttribute('href');
 
-    if (preloader) {
-        // Kaydırma (scroll) kilidini aç
-        document.body.classList.remove('loading-lock');
+            if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1 || this.getAttribute('target') === '_blank') {
+                return;
+            }
 
-        // CSS ile yavaşça (fade-out) gizle
-        preloader.classList.add('preloader-hidden');
+            if (
+                targetUrl &&
+                !targetUrl.startsWith('#') &&
+                !targetUrl.startsWith('tel:') &&
+                !targetUrl.startsWith('mailto:') &&
+                !targetUrl.startsWith('javascript')
+            ) {
+                e.preventDefault();
 
-        // CSS geçiş süresi (0.5s) bittikten sonra HTML'den tamamen kaldır
-        // (Bu işlem, gizli preloader'ın sitedeki butonlara tıklamayı engelleme bug'ını çözer)
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 500);
-    }
+                document.body.classList.add('page-exit');
+
+                // Süre 400'den 300 milisaniyeye (0.3 saniye) düşürüldü. Çok daha atik!
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 300);
+            }
+        });
+    });
 });
