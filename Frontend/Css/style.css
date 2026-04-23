@@ -261,8 +261,7 @@ a {
 }
 
 /* =========================================
-   4. HERO BÖLÜMÜ (KRİTİK DÜZELTME)
-   Yükseklik artık section'da değil, swiper'da.
+   4. HERO BÖLÜMÜ
 ========================================= */
 .hero-section {
   position: relative;
@@ -372,7 +371,10 @@ a {
   font-size: 16px;
   flex-shrink: 0;
 }
-.form-group input {
+
+/* YENİ: Hem input hem de select etiketleri için ortak tasarım (Taşma Sorunu Çözümü) */
+.form-group input,
+.form-group select {
   border: none;
   outline: none;
   padding: 15px 5px 15px 30px;
@@ -381,8 +383,25 @@ a {
   font-size: 13px;
   color: var(--text-dark);
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   background: transparent;
 }
+
+/* YENİ: Sadece select (Açılır Liste) için lüks ikon ve boşluk ayarları */
+.form-group select {
+  cursor: pointer;
+  padding-right: 25px; /* Yeni VIP ok ikonu için sağdan boşluk */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Standart çirkin ok yerine VIP Lacivert Ok */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230f3d7a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 5px center;
+  background-size: 10px auto;
+}
+
 .btn-primary {
   flex: 1 1 calc(16.66% - 12px);
   background-color: var(--primary);
@@ -689,7 +708,8 @@ a {
   margin-bottom: 15px;
 }
 .offer-form-box input,
-.offer-form-box textarea {
+.offer-form-box textarea,
+.offer-form-box select {
   width: 100%;
   border: none;
   padding: 12px;
@@ -945,7 +965,6 @@ a {
     text-align: center;
   }
 
-  /* YENİ: Formun mobilde düzgün oturması için */
   .hero-booking-wrapper {
     position: relative;
     bottom: 0;
@@ -993,7 +1012,6 @@ a {
     grid-template-columns: 1fr;
   }
 
-  /* YENİ: Yükseklik hero-section'dan alındı, sadece Swiper'a verildi */
   .heroSwiper {
     height: 50vh;
     min-height: 400px;
@@ -1021,7 +1039,6 @@ a {
     text-align: center;
   }
 
-  /* Form tamamen alt alta dizilir ve hiçbir şeyin içine girmez */
   .hero-booking-form {
     flex-direction: column;
     padding: 20px;
@@ -1032,6 +1049,7 @@ a {
     width: 100%;
   }
 }
+
 /* =========================================
    BUZLU CAM (GLASSMORPHISM) VIP PRELOADER
 ========================================= */

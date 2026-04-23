@@ -3,17 +3,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs'); // Dosya silme/kontrol işlemleri için eklendi
+const fs = require('fs'); // Dosya silme/kontrol işlemleri için
 const helmet = require('helmet'); // Güvenlik kalkanı
 const morgan = require('morgan'); // HTTP istek loglayıcı
 const rateLimit = require('express-rate-limit'); // İstek sınırlayıcı
-const multer = require('multer'); // YENİ: Fotoğraf yükleme kütüphanesi
+const multer = require('multer'); // Fotoğraf yükleme kütüphanesi
 const { Resend } = require('resend');
 const session = require('express-session');
 
 const Reservation = require('./models/Reservation');
 
-// YENİ: Araçlar (Vehicles) için Veritabanı Şeması (Ayrı dosya açmamak için buraya eklendi)
+// --- ARAÇLAR (VEHICLES) İÇİN MONGODB ŞEMASI ---
 const vehicleSchema = new mongoose.Schema({
     aracAd: { type: String, required: true },
     aracOzellikler: { type: String, default: '' },
@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 5000;
 
 // --- 1. GÜVENLİK, İZLEME VE OTURUM (Middleware) ---
 
-// Helmet: HTTP başlıklarını güvenli hale getirir
+// Helmet: HTTP başlıklarını güvenli hale getirir. (Resimlerin görünmesi için CSP kapalı tutulmuştur)
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false
@@ -36,7 +36,7 @@ app.use(helmet({
 // Morgan: Gelen istekleri terminale detaylı basar
 app.use(morgan('dev'));
 
-// Rate Limit: 15 dakikada aynı IP'den en fazla 100 istek
+// Rate Limit: 15 dakikada aynı IP'den en fazla 100 istek (Sadece teklif formu için)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
@@ -76,21 +76,24 @@ const adminKontrol = (req, res, next) => {
 // --- YENİ: MULTER (FOTOĞRAF YÜKLEME) AYARLARI ---
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        // Resimlerin kaydedileceği fiziksel klasör
         const dir = path.join(__dirname, 'Frontend', 'Images', 'Cars');
-        // Klasör yoksa otomatik oluşturur
+
+        // Eğer böyle bir klasör yoksa, otomatik olarak oluşturur (Çökme önleyici)
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
         cb(null, dir);
     },
     filename: function (req, file, cb) {
+        // İki resim aynı isimde olursa çakışmasın diye zaman damgası ekliyoruz
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, 'arac-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage: storage });
 
-// Resend Başlatma
+// Resend (E-posta) Başlatma
 let resend;
 if (process.env.RESEND_API_KEY) {
     resend = new Resend(process.env.RESEND_API_KEY);
@@ -104,7 +107,6 @@ app.use(express.static(path.join(__dirname, 'Frontend')));
 app.use(express.static(path.join(__dirname, 'Frontend', 'Html')));
 
 // --- 3. ÖZEL ROTALAR VE GİRİŞ (AUTH) ---
-
 app.get('/login', (req, res) => {
     if (req.session.adminGirisYapti) return res.redirect('/admin');
     res.sendFile(path.join(__dirname, 'Frontend', 'Html', 'login.html'));
@@ -144,7 +146,7 @@ if (process.env.MONGODB_URI) {
         .catch((err) => console.error('❌ MongoDB Hatası:', err));
 }
 
-// --- 5. API UÇ NOKTALARI (CRM) ---
+// --- 5. API UÇ NOKTALARI (CRM VE REZERVASYON) ---
 
 // İstatistikler
 app.get('/api/admin/stats', adminKontrol, async (req, res) => {
@@ -176,6 +178,7 @@ app.get('/api/admin/trash', adminKontrol, async (req, res) => {
 app.put('/api/admin/reservations/:id/toggle-read', adminKontrol, async (req, res) => {
     try {
         const rez = await Reservation.findById(req.params.id);
+        if (!rez) return res.status(404).send();
         rez.isRead = !rez.isRead;
         await rez.save();
         res.json({ basari: true });
@@ -218,17 +221,23 @@ app.get('/api/admin/vehicles', adminKontrol, async (req, res) => {
     }
 });
 
-// Yeni Araç Ekle (Fotoğraf Dahil)
+// Yeni Araç Ekle (Fotoğraf Dahil) -> Formdaki input name='aracFoto' olmalıdır.
 app.post('/api/admin/vehicles', adminKontrol, upload.single('aracFoto'), async (req, res) => {
     try {
         const { aracAd, aracOzellikler } = req.body;
+        // Eğer fotoğraf yüklendiyse URL'sini oluştur, yüklenmediyse boş bırak
         const fotoUrl = req.file ? '/Frontend/Images/Cars/' + req.file.filename : '';
 
-        const yeniArac = new Vehicle({ aracAd, aracOzellikler, fotoUrl });
-        await yeniArac.save();
+        const yeniArac = new Vehicle({
+            aracAd: aracAd,
+            aracOzellikler: aracOzellikler,
+            fotoUrl: fotoUrl
+        });
 
+        await yeniArac.save();
         res.status(201).json({ basari: true, mesaj: "Araç başarıyla eklendi." });
     } catch (error) {
+        console.error("Araç ekleme hatası:", error);
         res.status(500).json({ basari: false, mesaj: "Araç eklenirken hata oluştu." });
     }
 });
@@ -242,37 +251,45 @@ app.put('/api/admin/vehicles/:id', adminKontrol, upload.single('aracFoto'), asyn
         arac.aracAd = req.body.aracAd || arac.aracAd;
         arac.aracOzellikler = req.body.aracOzellikler || arac.aracOzellikler;
 
-        // Yeni fotoğraf yüklendiyse eskisini silip yenisini kaydet
+        // Admin YENİ bir fotoğraf seçtiyse
         if (req.file) {
+            // Sunucudaki ESKİ fotoğrafı fiziksel olarak SİL (Çöp dosyaları engellemek için)
             if (arac.fotoUrl) {
                 const eskiFotoPath = path.join(__dirname, arac.fotoUrl);
-                if (fs.existsSync(eskiFotoPath)) fs.unlinkSync(eskiFotoPath);
+                if (fs.existsSync(eskiFotoPath)) {
+                    fs.unlinkSync(eskiFotoPath);
+                }
             }
+            // Yeni fotoğrafı veritabanına yaz
             arac.fotoUrl = '/Frontend/Images/Cars/' + req.file.filename;
         }
 
         await arac.save();
         res.json({ basari: true, mesaj: "Araç güncellendi." });
     } catch (error) {
+        console.error("Araç güncelleme hatası:", error);
         res.status(500).json({ basari: false, mesaj: "Araç güncellenirken hata oluştu." });
     }
 });
 
-// Araç Sil (Veritabanından ve Klasörden)
+// Araç Sil (Veritabanından ve Klasörden tamamen temizler)
 app.delete('/api/admin/vehicles/:id', adminKontrol, async (req, res) => {
     try {
         const arac = await Vehicle.findById(req.params.id);
         if (!arac) return res.status(404).json({ basari: false, mesaj: "Araç bulunamadı." });
 
-        // Aracın fotoğrafı varsa klasörden sil
+        // Aracın fotoğrafı varsa klasörden fiziksel olarak sil
         if (arac.fotoUrl) {
             const fotoPath = path.join(__dirname, arac.fotoUrl);
-            if (fs.existsSync(fotoPath)) fs.unlinkSync(fotoPath);
+            if (fs.existsSync(fotoPath)) {
+                fs.unlinkSync(fotoPath);
+            }
         }
 
         await Vehicle.findByIdAndDelete(req.params.id);
-        res.json({ basari: true, mesaj: "Araç tamamen silindi." });
+        res.json({ basari: true, mesaj: "Araç ve fotoğrafı tamamen silindi." });
     } catch (error) {
+        console.error("Araç silme hatası:", error);
         res.status(500).json({ basari: false, mesaj: "Silme işlemi başarısız." });
     }
 });
@@ -283,18 +300,31 @@ app.post('/api/teklif-al', async (req, res) => {
         const yeni = new Reservation(req.body);
         await yeni.save();
 
+        // Admin'e E-posta Bildirimi Gönder (İsteğe Bağlı)
         if (resend && process.env.RESEND_API_KEY) {
             try {
                 await resend.emails.send({
                     from: 'BUGRA POLAT <onboarding@resend.dev>',
-                    to: 'senin.kendimailadresin@gmail.com', // Bunu daha sonra güncellersin
-                    subject: `🔔 Yeni Talep: ${req.body.adSoyad}`,
-                    html: `<h3>Yeni Rezervasyon!</h3><p>Müşteri: ${req.body.adSoyad}</p><p>Tel: ${req.body.telefon}</p>`
+                    to: 'senin.kendimailadresin@gmail.com', // Daha sonra patronun veya kendi mailiniz ile değiştirin
+                    subject: `🔔 Yeni VIP Talep: ${req.body.adSoyad}`,
+                    html: `
+                        <h3>Yeni Rezervasyon Talebi!</h3>
+                        <p><strong>Müşteri:</strong> ${req.body.adSoyad}</p>
+                        <p><strong>Tel:</strong> ${req.body.telefon}</p>
+                        <p><strong>Nereden:</strong> ${req.body.alinisNoktasi || '-'}</p>
+                        <p><strong>Nereye:</strong> ${req.body.birakilisNoktasi || '-'}</p>
+                        <p><strong>Tarih:</strong> ${req.body.tarih || '-'}</p>
+                        <p><strong>Mesaj:</strong> ${req.body.mesaj || '-'}</p>
+                    `
                 });
-            } catch (e) { console.log("Mail gönderiminde takıldı."); }
+            } catch (e) {
+                console.log("Mail gönderiminde takıldı, ancak talep veritabanına yazıldı.");
+            }
         }
-        res.status(201).json({ basari: true, mesaj: "Alındı" });
-    } catch (e) { res.status(500).json({ basari: false }); }
+        res.status(201).json({ basari: true, mesaj: "Talebiniz başarıyla alındı." });
+    } catch (e) {
+        res.status(500).json({ basari: false, mesaj: "Sunucu hatası oluştu." });
+    }
 });
 
 // --- 6. HATA YÖNETİMİ (Catch-All) ---

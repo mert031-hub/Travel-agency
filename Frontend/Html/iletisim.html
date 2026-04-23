@@ -37,12 +37,12 @@
         <div class="topbar-container">
             <div class="topbar-left">
                 <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone">+90 532 000 00
-                        00</a></span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905338577240" class="topbar-phone">+90 533 857 72
+                        40</a></span>
             </div>
             <div class="topbar-right">
                 <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
-                <a href="https://wa.me/905320000000" target="_blank" class="top-whatsapp-btn"><i
+                <a href="https://wa.me/905338577240" target="_blank" class="top-whatsapp-btn"><i
                         class="fab fa-whatsapp"></i> <span data-lang="topbar_whatsapp">WhatsApp Destek</span></a>
             </div>
         </div>
@@ -113,7 +113,7 @@
                         <div class="c-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="c-text">
                             <h3 data-lang="contact_address_title">Adresimiz</h3>
-                            <p data-lang="contact_address_desc">Girne Limanı Mevkii, No:45 <br> Girne / KKTC</p>
+                            <p>ŞEHİT MEHMET KURT SOKAK DİAMONT APARTMANI C BLOK NO:3<br> Girne / KKTC</p>
                         </div>
                     </div>
 
@@ -121,8 +121,8 @@
                         <div class="c-icon"><i class="fas fa-phone-alt"></i></div>
                         <div class="c-text">
                             <h3 data-lang="contact_phone_title">Telefon & WhatsApp</h3>
-                            <p><a href="tel:+905320000000">+90 532 000 00 00</a></p>
-                            <p><a href="https://wa.me/905320000000">+90 532 000 00 00</a></p>
+                            <p><a href="tel:+905338577240">+90 533 857 72 40</a></p>
+                            <p><a href="https://wa.me/905338577240">+90 533 857 72 40</a></p>
                         </div>
                     </div>
 
@@ -187,8 +187,9 @@
 
     <div class="map-section">
         <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3257.69742512345!2d33.321!3d35.337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDIwJzEyLjAiTiAzM8KwMTknMTUuNiJF!5e0!3m2!1str!2str!4v1620000000000!5m2!1str!2str"
-            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3255.0260494534714!2d33.307273444087535!3d35.330174612576556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14de132c322d0b3d%3A0x2fabbc55924eb44e!2s%C5%9Eht.%20Mehmet%20Kurt%20Sk%2C%20Girne%2099300!5e0!3m2!1str!2str!4v1776936606346!5m2!1str!2str"
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
     <footer class="main-footer">
@@ -207,8 +208,9 @@
             <div class="footer-col">
                 <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
+                    <li><i class="fas fa-map-marker-alt"></i> Şehit Mehmet Kurt Sok. Diamont Apt. C Blok No:3 Girne</li>
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
-                    <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
+                    <li><i class="fas fa-phone-alt"></i> +90 533 857 72 40</li>
                 </ul>
             </div>
         </div>
@@ -218,8 +220,8 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/905320000000" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
+    <a href="https://wa.me/905338577240" class="whatsapp-fixed-left" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="tel:+905338577240" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/Frontend/Js/lang.js"></script>
@@ -234,25 +236,16 @@
 </div>
 
 <script>
-    // ASLA TAKILI KALMAYAN GÜVENLİK KODU
     (function () {
         var preloader = document.getElementById('bp-preloader');
         if (!preloader) return;
-
-        document.body.style.overflow = 'hidden'; // Kaydırmayı kilitle
-
+        document.body.style.overflow = 'hidden';
         function removePreloader() {
             preloader.classList.add('preloader-hide');
-            document.body.style.overflow = ''; // Kilidi aç
+            document.body.style.overflow = '';
             setTimeout(function () { preloader.style.display = 'none'; }, 800);
         }
-
-        // 1. İhtimal: Sayfa yüklenince 0.5 saniye bekle ve aç
-        window.addEventListener('load', function () {
-            setTimeout(removePreloader, 500);
-        });
-
-        // 2. İhtimal (GÜVENLİK): Sayfa takılsa bile 2.5 saniye sonra ZORLA aç!
+        window.addEventListener('load', function () { setTimeout(removePreloader, 500); });
         setTimeout(removePreloader, 2500);
     })();
 </script>

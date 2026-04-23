@@ -2,7 +2,7 @@
    BUĞRA POLAT TURİZM - MAIN JAVASCRIPT
 ========================================= */
 
-const WHATSAPP_NUMBER = "905320000000";
+const WHATSAPP_NUMBER = "905338577240";
 
 /**
  * Dil değiştirme fonksiyonu
@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
     if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
-
     if (mainNav) {
         const navLinks = mainNav.querySelectorAll('a');
         navLinks.forEach(link => {
@@ -131,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const phoneInputs = document.querySelectorAll('input[type="tel"], #heroPhone');
     phoneInputs.forEach(input => {
         input.addEventListener('input', function (e) {
-            // Sadece rakam ve en baştaki '+' işaretine izin verir, gerisini anında siler
             this.value = this.value.replace(/(?!^\+)[^\d]/g, '');
         });
     });
@@ -178,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Butonu bul (hem type="submit" hem type="button" için uyumlu)
         const btn = formElement.querySelector('button');
         let originalText = "";
 
@@ -189,19 +186,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
+            // BACKEND'E (ADMİN PANELİNE) İSTEK ATILAN YER
             const response = await fetch('/api/teklif-al', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-
             const result = await response.json();
 
             if (result.basari) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Başarılı!',
-                    text: result.mesaj || 'Talebiniz alınmıştır.',
+                    text: result.mesaj || 'Talebiniz alınmıştır, en kısa sürede dönüş yapılacaktır.',
                     confirmButtonColor: '#0f3d7a'
                 });
                 formElement.reset();
@@ -210,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (error) {
             console.error('API Gönderim Hatası:', error);
-            Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor, lütfen tekrar deneyin.' });
+            Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor, lütfen WhatsApp üzerinden ulaşın.' });
         } finally {
             if (btn) {
                 btn.innerHTML = originalText;
@@ -220,30 +217,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // A) HERO FORM (Ana Sayfa Üst Kısım)
-    // HTML'deki onclick olayının bu fonksiyona ulaşabilmesi için window objesine (global scope) ekliyoruz.
     window.gonderHeroForm = async function () {
         const form = document.getElementById('heroForm');
         if (!form) return;
-
         const adSoyad = document.getElementById('heroName').value;
         const telefon = document.getElementById('heroPhone').value;
         const alinisNoktasi = document.getElementById('heroFrom').value;
         const birakilisNoktasi = document.getElementById('heroTo').value;
         const tarih = document.getElementById('heroDate').value;
 
-        // Verileri veriGonder fonksiyonumuza iletiyoruz
         await veriGonder({
             adSoyad: adSoyad,
             telefon: telefon,
             alinisNoktasi: alinisNoktasi,
             birakilisNoktasi: birakilisNoktasi,
             tarih: tarih,
-            mesaj: `Seçilen Tarih: ${tarih}`, // Tarih bilgisini admin panelindeki mesaja iliştiriyoruz
-            formTipi: 'Hızlı Fiyat Sor (Hero Form)'
+            mesaj: `Seçilen Tarih: ${tarih}`,
+            formTipi: 'Hızlı Fiyat Sor (Ana Sayfa Hero Form)'
         }, form);
     };
 
-    // B) DETAYLI TEKLİF AL FORMU (Alt Kutu)
+    // B) DETAYLI TEKLİF AL FORMU (Ana Sayfa Alt Kutu)
     const offerForm = document.querySelector('.offer-form-box form');
     if (offerForm) {
         offerForm.removeAttribute('action');
@@ -255,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 telefon: offerForm.querySelector('input[type="tel"]').value,
                 yolcuSayisi: offerForm.querySelector('input[type="number"]').value,
                 mesaj: offerForm.querySelector('textarea').value,
-                formTipi: 'Detaylı Teklif Al Kutusu'
+                formTipi: 'Detaylı Teklif Al Formu'
             }, offerForm);
         });
     }
@@ -276,7 +270,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }, contactForm);
         });
     }
+
+    // D) ARAÇLARIMIZ SAYFASI ÖZEL VIP ARAÇ FORMLARI (YENİ EKLENDİ)
+    const vehicleForms = document.querySelectorAll('.vh-form');
+    vehicleForms.forEach(vForm => {
+        vForm.removeAttribute('action');
+        vForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const inputs = vForm.querySelectorAll('input');
+
+            // İlgili aracın ismini almak için DOM'da yukarı çıkıp başlığı buluyoruz
+            const card = vForm.closest('.vip-horiz-card');
+            const carName = card ? card.querySelector('.vh-title').innerText : 'VIP Araç';
+
+            await veriGonder({
+                adSoyad: inputs[0].value,
+                telefon: inputs[1].value,
+                tarih: inputs[2].value,
+                mesaj: `Araçlar sayfasından özel araç talebi.\nTalep Edilen Araç: ${carName}\nSeçilen Tarih: ${inputs[2].value}`,
+                formTipi: 'VIP Araç Rezervasyon Talebi'
+            }, vForm);
+        });
+    });
+
 });
+
 /* ======================================================
    SAYFALAR ARASI YUMUŞAK GEÇİŞ (HIZLANDIRILDI)
 ========================================================= */
@@ -296,13 +314,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 !targetUrl.startsWith('#') &&
                 !targetUrl.startsWith('tel:') &&
                 !targetUrl.startsWith('mailto:') &&
-                !targetUrl.startsWith('javascript')
+                !targetUrl.startsWith('javascript') &&
+                !targetUrl.startsWith('https://wa.me')
             ) {
                 e.preventDefault();
 
                 document.body.classList.add('page-exit');
 
-                // Süre 400'den 300 milisaniyeye (0.3 saniye) düşürüldü. Çok daha atik!
                 setTimeout(() => {
                     window.location.href = targetUrl;
                 }, 300);

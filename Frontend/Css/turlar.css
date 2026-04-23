@@ -5,6 +5,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700&display=swap");
+
 :root {
   --primary: #0f3d7a;
   --accent: #f39c12;
@@ -22,6 +23,7 @@
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: "Poppins", sans-serif;
   color: var(--text-dark);
@@ -42,12 +44,15 @@ a {
   margin: 0 auto;
   padding: 0 40px;
 }
+
 .section-padding {
   padding: 80px 0;
 }
+
 .bg-light {
   background-color: var(--bg-light);
 }
+
 .bg-white {
   background-color: var(--bg-white);
 }
@@ -60,6 +65,7 @@ a {
   font-size: 13px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .topbar-container {
   display: flex;
   justify-content: space-between;
@@ -67,31 +73,36 @@ a {
   margin: 0 auto;
   padding: 0 20px;
 }
+
 .topbar i {
   color: var(--accent);
   margin-right: 5px;
 }
+
 .topbar-phone-link,
 .topbar-phone-link:visited {
   color: #fff !important;
   text-decoration: none;
   font-weight: 600;
 }
+
 .topbar-phone-link:hover {
   color: var(--accent) !important;
 }
+
 .top-whatsapp-btn,
 .top-whatsapp-btn:visited {
   color: #fff !important;
   text-decoration: none;
   font-weight: 600;
 }
+
 .top-whatsapp-btn:hover {
   color: var(--accent) !important;
   opacity: 0.8;
 }
 
-/* 3. Header & Navigation (Dil Seçici Entegre Edildi) */
+/* 3. Header & Navigation */
 .main-header {
   background-color: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
@@ -101,6 +112,7 @@ a {
   z-index: 1000;
   padding: 15px 0;
 }
+
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -109,6 +121,7 @@ a {
   align-items: center;
   padding: 0 20px;
 }
+
 .logo {
   font-size: 26px;
   font-weight: 800;
@@ -125,6 +138,7 @@ a {
   margin: 0 !important;
   padding: 0 !important;
 }
+
 .nav-header-mobile {
   display: none;
 }
@@ -138,6 +152,7 @@ a {
   position: relative;
   padding: 5px 0;
 }
+
 .main-nav ul li a::after {
   content: "";
   position: absolute;
@@ -148,9 +163,11 @@ a {
   background-color: var(--accent);
   transition: width 0.3s ease;
 }
+
 .main-nav ul li a:hover {
   color: var(--accent) !important;
 }
+
 .main-nav ul li a:hover::after,
 .main-nav ul li a.active::after {
   width: 100%;
@@ -163,19 +180,22 @@ a {
   border-radius: 50px !important;
   display: inline-block;
 }
+
 .main-nav ul li a.nav-cta::after {
   display: none !important;
 }
+
 .main-nav ul li a.nav-cta:hover {
   background-color: var(--accent) !important;
   color: var(--primary) !important;
   transform: translateY(-2px);
 }
 
-/* Masaüstü Dil Menüsü Hizalaması */
+/* Masaüstü Dil Menüsü */
 .lang-item-desktop {
   margin-left: 10px;
 }
+
 .lang-menu {
   position: relative;
   cursor: pointer;
@@ -183,6 +203,7 @@ a {
   font-weight: 600;
   color: var(--primary);
 }
+
 .selected-lang {
   display: flex;
   align-items: center;
@@ -193,14 +214,17 @@ a {
   transition: 0.3s;
   border: 1px solid var(--border-color);
 }
+
 .selected-lang img {
   border-radius: 3px;
   width: 20px;
 }
+
 .selected-lang i {
   font-size: 12px;
   transition: 0.3s;
 }
+
 .lang-menu:hover .selected-lang i {
   transform: rotate(180deg);
 }
@@ -222,11 +246,13 @@ a {
   transition: 0.3s ease-in-out;
   z-index: 1000;
 }
+
 .lang-menu:hover .lang-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
+
 .lang-dropdown li {
   padding: 10px 20px;
   display: flex;
@@ -235,10 +261,12 @@ a {
   transition: 0.3s;
   color: var(--text-dark);
 }
+
 .lang-dropdown li img {
   width: 20px;
   border-radius: 3px;
 }
+
 .lang-dropdown li:hover {
   background: var(--bg-light);
   color: var(--primary);
@@ -267,12 +295,14 @@ a {
   color: #fff;
   text-align: center;
 }
+
 .tours-hero h1 {
   font-size: 48px;
   font-weight: 800;
   text-transform: uppercase;
   margin-bottom: 10px;
 }
+
 .tours-hero p {
   font-size: 18px;
   opacity: 0.9;
@@ -283,12 +313,15 @@ a {
   font-size: 14px;
   font-weight: 600;
 }
+
 .breadcrumb-container a {
   color: #fff !important;
 }
+
 .breadcrumb-container a:hover {
   color: var(--accent) !important;
 }
+
 .breadcrumb-container span {
   color: var(--accent);
   margin: 0 5px;
@@ -304,6 +337,7 @@ a {
   text-transform: uppercase;
   font-size: 14px;
 }
+
 .offer-tag span:last-child {
   height: 2px;
   width: 40px;
@@ -317,6 +351,7 @@ a {
   margin-bottom: 50px;
   position: relative;
 }
+
 .subtitle {
   display: flex;
   align-items: center;
@@ -327,6 +362,7 @@ a {
   color: var(--primary);
   text-transform: uppercase;
 }
+
 .subtitle span:first-child,
 .subtitle span:last-child {
   width: 40px;
@@ -334,6 +370,7 @@ a {
   background-color: var(--primary);
   display: inline-block;
 }
+
 .section-title h2 {
   font-size: 32px;
   font-weight: 700;
@@ -359,6 +396,7 @@ a {
   transition: 0.3s;
   height: 100%;
 }
+
 .tour-v-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 35px rgba(15, 61, 122, 0.1);
@@ -370,12 +408,14 @@ a {
   overflow: hidden;
   flex-shrink: 0;
 }
+
 .tour-v-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: 0.5s;
 }
+
 .tour-v-card:hover .tour-v-img img {
   transform: scale(1.1);
 }
@@ -401,6 +441,7 @@ a {
   position: relative;
   padding-bottom: 80px;
 }
+
 .tour-v-body h3 {
   font-size: 20px;
   color: var(--primary);
@@ -408,6 +449,7 @@ a {
   margin-bottom: 10px;
   line-height: 1.3;
 }
+
 .tour-v-body p {
   font-size: 14px;
   color: #666;
@@ -415,6 +457,7 @@ a {
   line-height: 1.6;
   flex-grow: 1;
 }
+
 .tag {
   font-size: 11px;
   color: #888;
@@ -432,10 +475,12 @@ a {
   border: 1px solid #eee;
   margin-bottom: 20px;
 }
+
 .t-v-tab-header {
   display: flex;
   border-bottom: 1px solid #eee;
 }
+
 .tv-btn {
   flex: 1;
   padding: 10px;
@@ -447,6 +492,7 @@ a {
   color: #888;
   transition: 0.3s;
 }
+
 .tv-btn.active {
   background: #fff;
   color: var(--primary);
@@ -456,6 +502,7 @@ a {
   padding: 15px;
   display: none;
 }
+
 .tv-tab-content.active {
   display: block;
   animation: fadeIn 0.4s;
@@ -466,6 +513,7 @@ a {
   padding: 0;
   margin: 0;
 }
+
 .v-tour-list li {
   font-size: 12px;
   color: #555;
@@ -473,6 +521,7 @@ a {
   display: flex;
   align-items: center;
 }
+
 .v-tour-list li::before {
   content: "✓";
   color: var(--accent);
@@ -485,6 +534,7 @@ a {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
+
 .v-mini-gallery img {
   width: 100%;
   height: 60px;
@@ -506,6 +556,7 @@ a {
   font-size: 13px;
   transition: 0.3s;
 }
+
 .btn-tour-v:hover {
   background: var(--accent) !important;
   transform: translateY(-2px);
@@ -517,6 +568,7 @@ a {
   color: #fff;
   padding: 80px 0 20px;
 }
+
 .footer-grid {
   display: flex;
   justify-content: space-between;
@@ -524,6 +576,7 @@ a {
   gap: 40px;
   margin-bottom: 40px;
 }
+
 .footer-logo {
   font-size: 26px;
   font-weight: 800;
@@ -531,11 +584,13 @@ a {
   display: block;
   margin-bottom: 20px;
 }
+
 .footer-links,
 .footer-contact {
   list-style: none;
   padding: 0;
 }
+
 .footer-links li a {
   color: #cbd5e0 !important;
   transition: 0.3s;
@@ -543,10 +598,12 @@ a {
   margin-bottom: 10px;
   display: block;
 }
+
 .footer-links li a:hover {
   color: var(--accent) !important;
   padding-left: 5px;
 }
+
 .footer-contact li {
   color: #cbd5e0;
   font-size: 14px;
@@ -555,9 +612,11 @@ a {
   align-items: center;
   gap: 10px;
 }
+
 .footer-contact i {
   color: var(--accent);
 }
+
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 20px;
@@ -584,6 +643,7 @@ a {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transition: 0.3s;
 }
+
 .phone-fixed-right {
   position: fixed;
   bottom: 30px;
@@ -601,6 +661,7 @@ a {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transition: 0.3s;
 }
+
 .whatsapp-fixed-left:hover,
 .phone-fixed-right:hover {
   transform: scale(1.1);
@@ -615,7 +676,7 @@ a {
   }
 }
 
-/* 9. Mobil Menü & Responsive (Eksiksiz) */
+/* 9. Mobil Menü & Responsive */
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -628,6 +689,7 @@ a {
   visibility: hidden;
   transition: 0.3s;
 }
+
 .menu-overlay.active {
   opacity: 1;
   visibility: visible;
@@ -651,7 +713,6 @@ a {
   .mobile-menu-btn {
     display: block;
   }
-
   .main-nav {
     position: fixed;
     top: 0;
@@ -686,8 +747,6 @@ a {
     color: var(--text-gray);
     cursor: pointer;
   }
-
-  /* Mobilde Dil Menüsü */
   .lang-item-desktop {
     margin-left: 0;
     margin-top: 15px;
@@ -711,7 +770,6 @@ a {
   .lang-menu:hover .lang-dropdown {
     display: block;
   }
-
   .main-nav ul {
     flex-direction: column;
     align-items: flex-start;
@@ -734,7 +792,6 @@ a {
     margin-top: 15px;
     text-align: center;
   }
-
   .tours-vertical-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
@@ -759,6 +816,7 @@ a {
     padding: 50px 0;
   }
 }
+
 /* =========================================
    BUZLU CAM (GLASSMORPHISM) VIP PRELOADER
 ========================================= */
@@ -768,7 +826,6 @@ a {
   left: 0;
   width: 100%;
   height: 100vh;
-  /* Arkada Kıbrıs Manzarası */
   background: url("/Frontend/photo/yenifoto1.jpg") center/cover no-repeat;
   z-index: 9999999;
   display: flex;
@@ -779,7 +836,6 @@ a {
     visibility 0.8s ease;
 }
 
-/* Manzarayı lacivert tonla karartıp asil bir hava katar */
 #bp-preloader::before {
   content: "";
   position: absolute;
@@ -787,10 +843,9 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(15, 61, 122, 0.7); /* Kurumsal Lacivert Overlay */
+  background: rgba(15, 61, 122, 0.7);
 }
 
-/* Lüks Buzlu Cam Paneli */
 .bp-glass-panel {
   position: relative;
   background: rgba(255, 255, 255, 0.05);
@@ -804,18 +859,16 @@ a {
   z-index: 2;
 }
 
-/* Altın Renkli Zarif Spinner */
 .bp-spinner {
   width: 45px;
   height: 45px;
   border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid #d4af37; /* Lüks Altın Sarısı */
+  border-top: 3px solid #d4af37;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
 }
 
-/* Marka İsmi */
 .bp-brand {
   color: #ffffff;
   font-family: "Times New Roman", serif;
@@ -826,9 +879,8 @@ a {
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Alt Başlık */
 .bp-sub {
-  color: #d4af37; /* Altın Sarısı */
+  color: #d4af37;
   font-family: "Segoe UI", sans-serif;
   font-size: 11px;
   letter-spacing: 4px;
@@ -841,7 +893,6 @@ a {
   }
 }
 
-/* JS ile tetiklenen gizleme kodu */
 .preloader-hide {
   opacity: 0 !important;
   visibility: hidden !important;

@@ -4,17 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kıbrıs VIP Transfer & Tarihi Turlar | BUĞRA POLAT TURİZM</title>
+    <title>Kıbrıs VIP Transfer & Özel Turlar | BUĞRA POLAT TURİZM</title>
     <meta name="description"
-        content="Kıbrıs VIP Transfer ve Mercedes Vito Tur hizmetleri. Ercan Havalimanı transfer ve Kıbrıs tarihi yerler turu.">
+        content="Buğra Polat Turizm ile Kıbrıs'ta 7/24 lüks, güvenilir ve konforlu VIP transfer hizmeti. Şoförlü lüks araç kiralama ve özel Kıbrıs turları.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="/Frontend/Css/style.css">
     <link rel="icon" type="image/jpeg" href="/Frontend/photo/favicon.jpeg">
     <link rel="apple-touch-icon" href="/Frontend/photo/favicon.jpeg">
-    <meta name="description"
-        content="Buğra Polat Turizm ile Kıbrıs'ta 7/24 lüks, güvenilir ve konforlu VIP transfer hizmeti. Şoförlü lüks araç kiralama ve özel Kıbrıs turları.">
     <meta name="keywords"
         content="Kıbrıs VIP transfer, Ercan havalimanı transfer, Girne VIP taksi, Kıbrıs lüks araç kiralama, Buğra Polat Turizm">
     <meta name="author" content="Buğra Polat Turizm">
@@ -31,6 +29,32 @@
     <meta name="twitter:description"
         content="Kıbrıs'ta ayrıcalıklı yolculuk. Ercan Havalimanı'ndan otelinize 7/24 lüks araçlarla VIP transfer hizmeti.">
     <meta name="twitter:image" content="https://SİZİN-SİTE-ADRESİNİZ.com/Frontend/photo/favicon.jpeg">
+
+    <style>
+        /* Select elementlerinin form içinde şık durması için özel CSS */
+        .hero-booking-form select {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 15px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        /* Tek araç gösterildiğinde kartın ortalanması için ekleme */
+        .single-vehicle-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .single-vehicle-container .vehicle-card {
+            max-width: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -41,8 +65,8 @@
         <div class="topbar-container">
             <div class="topbar-left">
                 <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905320000000" class="topbar-phone-link">+90 532 000
-                        00 00</a></span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905338577240" class="topbar-phone-link">+90 533 857
+                        72 40</a></span>
             </div>
             <div class="topbar-right">
                 <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
@@ -134,14 +158,35 @@
 
                 <div class="form-group">
                     <i class="fas fa-map-marker-alt text-danger" style="color: #e74c3c;"></i>
-                    <input type="text" id="heroFrom" placeholder="Alınış (Örn: Ercan)" required
-                        data-lang-placeholder="form_pickup">
+                    <select id="heroFrom" required>
+                        <option value="" disabled selected data-lang="form_pickup_opt">Alınış Noktası Seç...</option>
+                        <option value="Ercan Uluslararası Havalimanı" data-lang="loc_ercan">Ercan Havalimanı</option>
+                        <option value="Girne ve Çevresi" data-lang="loc_girne">Girne ve Çevresi</option>
+                        <option value="Bafra Oteller Bölgesi" data-lang="loc_bafra">Bafra Oteller Bölgesi</option>
+                        <option value="İskele / Karpaz" data-lang="loc_iskele">İskele / Karpaz</option>
+                        <option value="Lefkoşa Merkez" data-lang="loc_lefkosa">Lefkoşa Merkez</option>
+                        <option value="Magusa Merkez" data-lang="loc_magusa">Magusa Merkez</option>
+                        <option value="Güzelyurt / Lefke" data-lang="loc_guzelyurt">Güzelyurt / Lefke</option>
+                        <option value="Otelimden / Adresimden (Özel Belirteceğim)" data-lang="loc_hotel_from"
+                            style="font-weight: bold; color: #0f3d7a;">📍 Otelimden / Adresimden</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <i class="fas fa-flag-checkered text-dark" style="color: #333;"></i>
-                    <input type="text" id="heroTo" placeholder="Bırakılış (Örn: Girne)" required
-                        data-lang-placeholder="form_dropoff">
+                    <select id="heroTo" required>
+                        <option value="" disabled selected data-lang="form_dropoff_opt">Bırakılış Noktası Seç...
+                        </option>
+                        <option value="Ercan Uluslararası Havalimanı" data-lang="loc_ercan">Ercan Havalimanı</option>
+                        <option value="Girne ve Çevresi" data-lang="loc_girne">Girne ve Çevresi</option>
+                        <option value="Bafra Oteller Bölgesi" data-lang="loc_bafra">Bafra Oteller Bölgesi</option>
+                        <option value="İskele / Karpaz" data-lang="loc_iskele">İskele / Karpaz</option>
+                        <option value="Lefkoşa Merkez" data-lang="loc_lefkosa">Lefkoşa Merkez</option>
+                        <option value="Magusa Merkez" data-lang="loc_magusa">Magusa Merkez</option>
+                        <option value="Güzelyurt / Lefke" data-lang="loc_guzelyurt">Güzelyurt / Lefke</option>
+                        <option value="Otelime / Adresime (Özel Belirteceğim)" data-lang="loc_hotel_to"
+                            style="font-weight: bold; color: #0f3d7a;">📍 Otelime / Adresime</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -306,69 +351,85 @@
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <span class="subtitle"><span></span> <span data-lang="sec_tours_sub">TURLAR</span> <span></span></span>
-                <h2 data-lang="sec_tours_title">Kıbrıs'ın Tarihi ve Doğal Güzelliklerini Keşfedin</h2>
+                <h2 data-lang="tour_page_h2">Kıbrıs Kültür ve Doğa Turları</h2>
             </div>
+
             <div class="grid-3 tour-grid-extended">
                 <div class="tour-card" data-aos="fade-up" data-aos-delay="0">
                     <div class="card-img">
                         <img
-                            src="https://images.unsplash.com/photo-1582294154817-f57c570f7f3f?auto=format&fit=crop&w=800&q=80">
+                            src="https://images.unsplash.com/photo-1596765792070-6535d4efdb60?auto=format&fit=crop&w=800&q=80">
                         <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span
-                                    data-lang="tour_1_badge">TARİHİ GİRNE</span></span></div>
+                                    data-lang="t1_badge">VIP Tur</span></span></div>
                     </div>
                     <div class="card-body">
-                        <h3 data-lang="tour_1_title">GİRNE TURU</h3>
-                        <p data-lang="tour_1_desc">Girne Kalesi, Bellapais Manastırı ve Eski Liman'ın eşsiz atmosferi.
-                        </p>
+                        <h3 data-lang="t1_title">Girne & Bellapais</h3>
+                        <p data-lang="t1_desc">Liman atmosferi ve eşsiz mimari keşfi.</p>
                         <a href="#" data-wp-msg="wp_msg_tour_girne" class="circle-icon green"><i
                                 class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
+
                 <div class="tour-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="card-img">
                         <img
-                            src="https://images.unsplash.com/photo-1596522354195-e84ae3c98731?auto=format&fit=crop&w=800&q=80">
+                            src="https://images.unsplash.com/photo-1614713568393-0182c6bb75c4?auto=format&fit=crop&w=800&q=80">
                         <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span
-                                    data-lang="tour_2_badge">ANTİK SALAMİS</span></span></div>
+                                    data-lang="t2_badge">Popüler</span></span></div>
                     </div>
                     <div class="card-body">
-                        <h3 data-lang="tour_2_title">MAGOSA TURU</h3>
-                        <p data-lang="tour_2_desc">Salamis Antik Kenti ve Kapalı Maraş'ın gizemli tarihine tanıklık
-                            edin.</p>
+                        <h3 data-lang="t2_title">Mağusa & Maraş</h3>
+                        <p data-lang="t2_desc">Antik kalıntılar ve hayalet şehir gizemi.</p>
                         <a href="#" data-wp-msg="wp_msg_tour_magosa" class="circle-icon green"><i
                                 class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
+
                 <div class="tour-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="card-img">
                         <img
                             src="https://images.unsplash.com/photo-1601618146869-d6e275211979?auto=format&fit=crop&w=800&q=80">
                         <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span
-                                    data-lang="tour_3_badge">BAŞKENT KÜLTÜR</span></span>
-                        </div>
+                                    data-lang="t3_badge">Başkent</span></span></div>
                     </div>
                     <div class="card-body">
-                        <h3 data-lang="tour_3_title">LEFKOŞA TURU</h3>
-                        <p data-lang="tour_3_desc">Büyük Han ve Selimiye Camii rotasıyla başkentin kültürel dokusunu
-                            yaşayın.</p>
+                        <h3 data-lang="t3_title">Lefkoşa Kültür Turu</h3>
+                        <p data-lang="t3_desc">Osmanlı ve Lüzinyan izlerini keşfedin.</p>
                         <a href="#" data-wp-msg="wp_msg_default" class="circle-icon green"><i
                                 class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
-                <div class="tour-card" data-aos="fade-up" data-aos-delay="300">
+
+                <div class="tour-card" data-aos="fade-up" data-aos-delay="0">
                     <div class="card-img">
                         <img
-                            src="https://images.unsplash.com/photo-1499696803273-09756c9a3ce1?auto=format&fit=crop&w=800&q=80">
+                            src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80">
                         <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span
-                                    data-lang="tour_4_badge">MAVİ KÖŞK</span></span></div>
+                                    data-lang="t4_badge">Doğa</span></span></div>
                     </div>
                     <div class="card-body">
-                        <h3 data-lang="tour_4_title">GÜZELYURT TURU</h3>
-                        <p data-lang="tour_4_desc">Mavi Köşk, St. Mamas Manastırı ve Soli Antik Kenti keşfi.</p>
+                        <h3 data-lang="t4_title">Karpaz & Altınkum</h3>
+                        <p data-lang="t4_desc">Bakir doğa, hür eşekler ve kristal deniz.</p>
                         <a href="#" data-wp-msg="wp_msg_default" class="circle-icon green"><i
                                 class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
+
+                <div class="tour-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-img">
+                        <img
+                            src="https://images.unsplash.com/photo-1523315841019-3359d9f5835b?auto=format&fit=crop&w=800&q=80">
+                        <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span
+                                    data-lang="t5_badge">Sakin</span></span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3 data-lang="t5_title">Güzelyurt & Lefke</h3>
+                        <p data-lang="t5_desc">Narenciye bahçeleri ve antik saraylar.</p>
+                        <a href="#" data-wp-msg="wp_msg_default" class="circle-icon green"><i
+                                class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -380,7 +441,7 @@
                     <span></span></span>
                 <h2 data-lang="sec_vehicles_title">SİZİN İHTİYAÇLARINIZ İÇİN HAZIRIZ</h2>
             </div>
-            <div class="grid-3">
+            <div class="single-vehicle-container">
                 <div class="vehicle-card" data-aos="fade-up" data-aos-delay="0">
                     <div class="card-img">
                         <img
@@ -392,35 +453,7 @@
                         <span class="tag" data-lang="veh_1_badge">VİP ARAÇ</span>
                         <h3 data-lang="veh_1_title">MERCEDES VİTO</h3>
                         <p data-lang="veh_1_desc">Deneyimli şoförlerimizle konforu en üst seviyede yaşayın.</p>
-                        <a href="tel:+905320000000" class="circle-icon"><i class="fas fa-phone-alt"></i></a>
-                    </div>
-                </div>
-                <div class="vehicle-card" data-aos="fade-up" data-aos-delay="150">
-                    <div class="card-img">
-                        <img
-                            src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80">
-                        <div class="img-bar"><span data-lang="veh_2_badge">MERCEDES SPRINTER</span><span><i
-                                    class="fas fa-users"></i> 15+1</span></div>
-                    </div>
-                    <div class="card-body">
-                        <span class="tag" data-lang="veh_2_badge">VİP MİNİBÜS</span>
-                        <h3 data-lang="veh_2_title">VİP SPRİNTER</h3>
-                        <p data-lang="veh_2_desc">Geniş gruplar için ideal, donanımlı ve lüks araç çözümü.</p>
-                        <a href="tel:+905320000000" class="circle-icon"><i class="fas fa-phone-alt"></i></a>
-                    </div>
-                </div>
-                <div class="vehicle-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card-img">
-                        <img
-                            src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80">
-                        <div class="img-bar"><span data-lang="veh_3_badge">ULTRA LUX</span><span><i
-                                    class="fas fa-users"></i> 4+1</span></div>
-                    </div>
-                    <div class="card-body">
-                        <span class="tag" data-lang="veh_3_badge">MAYBACH</span>
-                        <h3 data-lang="veh_3_title">MAYBACH VİTO</h3>
-                        <p data-lang="veh_3_desc">Özel misafirleriniz için tamamen VIP tasarlanmış eşsiz bir araç.</p>
-                        <a href="tel:+905320000000" class="circle-icon"><i class="fas fa-phone-alt"></i></a>
+                        <a href="tel:+905338577240" class="circle-icon"><i class="fas fa-phone-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -444,20 +477,21 @@
             <div class="footer-col" data-aos="fade-up" data-aos-delay="200">
                 <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
+                    <li><i class="fas fa-map-marker-alt"></i> Şehit Mehmet Kurt Sok. Diamont Apt. C Blok No:3 Girne</li>
                     <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
-                    <li><i class="fas fa-phone-alt"></i> +90 532 000 00 00</li>
+                    <li><i class="fas fa-phone-alt"></i> +90 533 857 72 40</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 <span>BUĞRA POLAT TURİZM</span> <span data-lang="footer_copyright">Tüm Hakları
-                    Saklıdır.</span></p>
+            <p>© 2026 <span>BUĞRA POLAT TURİZM</span> <span data-lang="footer_copyright">Tüm Hakları Saklıdır.</span>
+            </p>
         </div>
     </footer>
 
     <a href="#" data-wp-msg="wp_msg_default" class="whatsapp-fixed-left" target="_blank"><i
             class="fab fa-whatsapp"></i></a>
-    <a href="tel:+905320000000" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
+    <a href="tel:+905338577240" class="phone-fixed-right"><i class="fas fa-phone-alt"></i></a>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -474,25 +508,16 @@
 </div>
 
 <script>
-    // ASLA TAKILI KALMAYAN GÜVENLİK KODU
     (function () {
         var preloader = document.getElementById('bp-preloader');
         if (!preloader) return;
-
-        document.body.style.overflow = 'hidden'; // Kaydırmayı kilitle
-
+        document.body.style.overflow = 'hidden';
         function removePreloader() {
             preloader.classList.add('preloader-hide');
-            document.body.style.overflow = ''; // Kilidi aç
+            document.body.style.overflow = '';
             setTimeout(function () { preloader.style.display = 'none'; }, 800);
         }
-
-        // 1. İhtimal: Sayfa yüklenince 0.5 saniye bekle ve aç
-        window.addEventListener('load', function () {
-            setTimeout(removePreloader, 500);
-        });
-
-        // 2. İhtimal (GÜVENLİK): Sayfa takılsa bile 2.5 saniye sonra ZORLA aç!
+        window.addEventListener('load', function () { setTimeout(removePreloader, 500); });
         setTimeout(removePreloader, 2500);
     })();
 </script>

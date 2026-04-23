@@ -23,9 +23,22 @@ const translations = {
         hero_desc_1: "Mercedes Vito araçlarımızla Ercan Havalimanı transferleri ve özel Kıbrıs turları.",
         hero_title_2: "Tatil Yolculuğunuz Başlasın",
         hero_desc_2: "Ercan'dan otelinize zamanında, güvenli ve konforlu VIP ulaşım.",
-        form_pickup: "Alınış Noktası (Örn: Ercan Havalimanı)",
-        form_dropoff: "Bırakılış Noktası (Örn: Girne Otel)",
+        form_pickup: "Alınış Noktası Seçiniz...",
+        form_dropoff: "Bırakılış Noktası Seçiniz...",
         form_btn_price: "FİYAT SOR",
+
+        // LOKASYONLAR
+        form_pickup_opt: "Alınış Noktası Seç...",
+        form_dropoff_opt: "Bırakılış Noktası Seç...",
+        loc_ercan: "Ercan Havalimanı",
+        loc_girne: "Girne ve Çevresi",
+        loc_bafra: "Bafra Oteller Bölgesi",
+        loc_iskele: "İskele / Karpaz",
+        loc_lefkosa: "Lefkoşa Merkez",
+        loc_magusa: "Magusa Merkez",
+        loc_guzelyurt: "Güzelyurt / Lefke",
+        loc_hotel_from: "Otelimden / Adresimden",
+        loc_hotel_to: "Otelime / Adresime",
 
         sec_services_sub: "HİZMETLERİMİZ",
         sec_services_title: "Siz Değerli Misafirlerimize Sunduğumuz Çözümler",
@@ -56,21 +69,7 @@ const translations = {
         form_message: "Mesajınız",
         form_btn_offer: "TEKLİF AL",
 
-        sec_tours_sub: "TURLAR",
-        sec_tours_title: "Kıbrıs'ın Tarihi ve Doğal Güzelliklerini Keşfedin",
-        tour_1_badge: "TARİHİ GİRNE",
-        tour_1_title: "GİRNE TURU",
-        tour_1_desc: "Girne Kalesi, Bellapais Manastırı ve Eski Liman'ın eşsiz atmosferi.",
-        tour_2_badge: "ANTİK SALAMİS",
-        tour_2_title: "MAGOSA TURU",
-        tour_2_desc: "Salamis Antik Kenti ve Kapalı Maraş'ın gizemli tarihine tanıklık edin.",
-        tour_3_badge: "BAŞKENT KÜLTÜR",
-        tour_3_title: "LEFKOŞA TURU",
-        tour_3_desc: "Büyük Han ve Selimiye Camii rotasıyla başkentin kültürel dokusunu yaşayın.",
-        tour_4_badge: "MAVİ KÖŞK",
-        tour_4_title: "GÜZELYURT TURU",
-        tour_4_desc: "Mavi Köşk, St. Mamas Manastırı ve Soli Antik Kenti keşfi.",
-
+        // --- ARAÇLARIMIZ SAYFASI ---
         sec_vehicles_sub: "ARAÇLARIMIZ",
         sec_vehicles_title: "SİZİN İHTİYAÇLARINIZ İÇİN HAZIRIZ",
         veh_1_badge: "VİP ARAÇ",
@@ -83,7 +82,6 @@ const translations = {
         veh_3_title: "MAYBACH VİTO",
         veh_3_desc: "Özel misafirleriniz için tamamen VIP tasarlanmış eşsiz bir araç.",
 
-        // --- ARAÇLARIMIZ SAYFASI ---
         veh_page_title: "LÜKS ARAÇ FİLOMUZ",
         veh_page_h1: "VIP Araçlarımız",
         veh_page_sub: "KONFORUNUZ İÇİN",
@@ -114,8 +112,8 @@ const translations = {
         about_page_h1: "Hakkımızda",
         about_sub: "BİZ KİMİZ?",
         about_h2: "Kıbrıs'ta Yolculuğu Sanata Dönüştürüyoruz",
-        about_p1: "<strong>BUĞRA POLAT TURİZM</strong> olarak, Kuzey Kıbrıs Türk Cumhuriyeti'nde (KKTC) uzun yıllardır turizm, ulaşım ve VIP transfer sektöründe öncü bir rol üstlenmekteyiz. Amacımız, adaya ayak bastığınız ilk andan itibaren size sadece bir transfer hizmeti değil, prestijli bir yaşam tarzı sunmaktır.",
-        about_p2: "Ercan Havalimanı transferleri ve özel turlarımızla; bireysel misafirlerimizden kurumsal şirket yöneticilerine kadar geniş bir yelpazede hizmet sunuyoruz. Filomuzda bulunan lüks Mercedes araçlarımız ve alanında uzman ekibimizle 7 gün 24 saat kesintisiz hizmet sağlıyoruz.",
+        about_p1: "10 Yıllık iş tecrübesi ile <strong>BUĞRA POLAT TURİZM</strong> olarak siz değerli misafirlerimize güvenilir güler yüzlü kadromuz ile hizmet vermekten mutluluk duyarız.",
+        about_p2: "Ercan Havalimanı transferleri ve özel turlarımızla; 7 gün 24 saat kesintisiz ve ayrıcalıklı bir seyahat deneyimi sunuyoruz.",
         about_miss_title: "Misyonumuz",
         about_miss_desc: "Güvenliği ve kaliteyi en ön planda tutarak, ulaşım sektöründe fark yaratan, misafir memnuniyeti odaklı hizmetler sunmak.",
         about_vis_title: "Vizyonumuz",
@@ -149,12 +147,17 @@ const translations = {
         srv_page_3_p1: "Özel misafirlerinizi veya şirket yetkililerinizi sizin adınıza en prestijli şekilde karşılıyoruz. İsim veya şirket logolu özel tabelalarla karşılama yapıyor, bagaj asistanlığı sağlıyoruz.",
         srv_page_3_p2: "İlk intibanın ne kadar önemli olduğunu biliyoruz. Misafirlerinize kendilerini özel hissettirecek kusursuz bir operasyon yürütüyoruz.",
         srv_page_3_btn: "REZERVASYON",
+
         // --- TURLAR SAYFASI ---
         tour_page_tag: "KIBRIS'I KEŞFEDİN",
         tour_page_h1: "Özel Kıbrıs Turları",
         tour_page_p: "Lüks araçlarımızla adanın binlerce yıllık tarihini konforla keşfedin.",
         tour_page_sub: "POPÜLER ROTALAR",
         tour_page_h2: "Kıbrıs Kültür ve Doğa Turları",
+        sec_tours_sub: "TURLAR",
+
+        tour_anywhere_title: "Siz Rotayı Çizin, Biz Götürelim!",
+        tour_anywhere_desc: "KKTC sınırları içerisinde her noktadan alınıp, dilediğiniz her noktaya özel planlanmış güzergahlarla VIP ulaşım sağlıyoruz.",
 
         t1_badge: "VIP Tur",
         t1_tag: "Girne Bölgesi",
@@ -173,7 +176,7 @@ const translations = {
         t2_l3: "Kapalı Maraş",
 
         t3_badge: "Başkent",
-        t3_tag: "Başkent",
+        t3_tag: "Lefkoşa Bölgesi",
         t3_title: "Lefkoşa Kültür",
         t3_desc: "Dünyanın bölünmüş tek başkentinde Osmanlı ve Lüzinyan izlerini sürün.",
         t3_l1: "Büyük Han",
@@ -188,16 +191,24 @@ const translations = {
         t4_l2: "Altın Kum Plajı",
         t4_l3: "Dipkarpaz Köyü",
 
+        t5_badge: "Sakin",
+        t5_tag: "Batı Bölgesi",
+        t5_title: "Güzelyurt & Lefke",
+        t5_desc: "Narenciye bahçeleri ve antik saraylar.",
+        t5_l1: "Soli Antik Kenti",
+        t5_l2: "Vuni Sarayı",
+        t5_l3: "St. Mamas Manastırı",
+
         tab_places: "YERLER",
         tab_gallery: "GALERİ",
         btn_tour_offer: "TEKLİF AL",
+
         // --- İLETİŞİM SAYFASI ---
         contact_page_tag: "BİZE ULAŞIN",
         contact_page_h1: "İletişim",
         contact_page_p: "Sorularınız, rezervasyon talepleriniz ve özel turlarınız için bize 7/24 ulaşabilirsiniz.",
-
         contact_address_title: "Adresimiz",
-        contact_address_desc: "Girne Limanı Mevkii, No:45 <br> Girne / KKTC",
+        contact_address_desc: "ŞEHİT MEHMET KURT SOKAK DİAMONT APARTMANI C BLOK NO:3<br> Girne / KKTC",
         contact_phone_title: "Telefon & WhatsApp",
         contact_email_title: "E-Posta",
 
@@ -216,7 +227,7 @@ const translations = {
         contact_label_message: "Mesajınız",
         contact_ph_message: "Size nasıl yardımcı olabiliriz?",
         contact_btn_send: "MESAJI GÖNDER",
-        //WP MESSAGE
+
         wp_msg_default: "Merhaba, VIP Transfer hizmetleriniz hakkında bilgi almak istiyorum.",
         wp_msg_srv1: "Merhaba, Otel Transfer hizmetiniz hakkında bilgi alabilir miyim?",
         wp_msg_srv2: "Merhaba, Şoförlü Araç Tahsisi hakkında bilgi alabilir miyim?",
@@ -242,9 +253,21 @@ const translations = {
         hero_desc_1: "Ercan Airport transfers and private Cyprus tours with our Mercedes Vito vehicles.",
         hero_title_2: "Let Your Holiday Journey Begin",
         hero_desc_2: "On-time, safe, and comfortable VIP transportation from Ercan to your hotel.",
-        form_pickup: "Pick-up Location (e.g., Ercan Airport)",
-        form_dropoff: "Drop-off Location (e.g., Kyrenia Hotel)",
+        form_pickup: "Select Pick-up Location...",
+        form_dropoff: "Select Drop-off Location...",
         form_btn_price: "GET A QUOTE",
+
+        form_pickup_opt: "Pick-up Location...",
+        form_dropoff_opt: "Drop-off Location...",
+        loc_ercan: "Ercan Airport",
+        loc_girne: "Kyrenia & Surroundings",
+        loc_bafra: "Bafra Hotels Zone",
+        loc_iskele: "Iskele / Karpaz",
+        loc_lefkosa: "Nicosia Center",
+        loc_magusa: "Famagusta Center",
+        loc_guzelyurt: "Morphou / Lefka",
+        loc_hotel_from: "From my Hotel / Address",
+        loc_hotel_to: "To my Hotel / Address",
 
         sec_services_sub: "OUR SERVICES",
         sec_services_title: "Solutions We Offer to Our Valued Guests",
@@ -274,21 +297,6 @@ const translations = {
         form_passengers: "Passengers",
         form_message: "Your Message",
         form_btn_offer: "GET QUOTE",
-
-        sec_tours_sub: "TOURS",
-        sec_tours_title: "Discover the Historical and Natural Beauties of Cyprus",
-        tour_1_badge: "HISTORIC KYRENIA",
-        tour_1_title: "KYRENIA TOUR",
-        tour_1_desc: "The unique atmosphere of Kyrenia Castle, Bellapais Monastery, and the Old Harbour.",
-        tour_2_badge: "ANTIQUE SALAMIS",
-        tour_2_title: "FAMAGUSTA TOUR",
-        tour_2_desc: "Witness the mysterious history of the Ancient City of Salamis and Varosha.",
-        tour_3_badge: "CAPITAL CULTURE",
-        tour_3_title: "NICOSIA TOUR",
-        tour_3_desc: "Experience the cultural texture of the capital with the Great Inn and Selimiye Mosque route.",
-        tour_4_badge: "BLUE HOUSE",
-        tour_4_title: "MORPHOU TOUR",
-        tour_4_desc: "Discovery of the Blue House, St. Mamas Monastery, and the Ancient City of Soli.",
 
         sec_vehicles_sub: "OUR FLEET",
         sec_vehicles_title: "WE ARE READY FOR YOUR NEEDS",
@@ -331,8 +339,8 @@ const translations = {
         about_page_h1: "About Us",
         about_sub: "WHO ARE WE?",
         about_h2: "We Transform Journey into Art in Cyprus",
-        about_p1: "As <strong>VIP CYPRUS TRAVEL</strong>, we have been taking a leading role in the tourism, transportation, and VIP transfer sector in the Turkish Republic of Northern Cyprus (TRNC) for many years. Our goal is to offer you not just a transfer service, but a prestigious lifestyle from the very first moment you step on the island.",
-        about_p2: "With our Ercan Airport transfers and private tours; we offer a wide range of services from individual guests to corporate company executives. We provide uninterrupted 24/7 service with our luxury Mercedes vehicles in our fleet and our expert team.",
+        about_p1: "With 10 years of business experience, as <strong>BUĞRA POLAT TURİZM</strong>, we are happy to serve our valued guests with our reliable and smiling staff.",
+        about_p2: "With our Ercan Airport transfers and private tours, we offer an uninterrupted and privileged travel experience 24/7.",
         about_miss_title: "Our Mission",
         about_miss_desc: "To provide guest satisfaction-oriented services that make a difference in the transportation sector by prioritizing safety and quality.",
         about_vis_title: "Our Vision",
@@ -348,7 +356,6 @@ const translations = {
         about_trust_desc: "All our vehicles have passenger transport certificates and TRNC high security standards.",
         about_exp_year: "Years of Experience",
 
-        // --- SERVICES PAGE ---
         srv_page_tag: "VIP PRIVILEGE",
         srv_page_title: "We Know No Limits in Our Services",
         srv_page_1_badge: "VIP TRANSFER",
@@ -366,12 +373,17 @@ const translations = {
         srv_page_3_p1: "We welcome your special guests or company officials on your behalf in the most prestigious way. We welcome with special signs with names or company logos and provide luggage assistance.",
         srv_page_3_p2: "We know how important the first impression is. We carry out a flawless operation that will make your guests feel special.",
         srv_page_3_btn: "RESERVATION",
+
         // --- TOURS PAGE ---
         tour_page_tag: "DISCOVER CYPRUS",
         tour_page_h1: "Private Cyprus Tours",
         tour_page_p: "Discover the island's thousands of years of history in comfort with our luxury vehicles.",
         tour_page_sub: "POPULAR ROUTES",
         tour_page_h2: "Cyprus Culture and Nature Tours",
+        sec_tours_sub: "TOURS",
+
+        tour_anywhere_title: "You Draw the Route, We'll Take You!",
+        tour_anywhere_desc: "We provide VIP transportation from any point within the TRNC to any destination you desire with custom-planned routes.",
 
         t1_badge: "VIP Tour",
         t1_tag: "Kyrenia Region",
@@ -390,7 +402,7 @@ const translations = {
         t2_l3: "Closed Varosha",
 
         t3_badge: "Capital",
-        t3_tag: "Capital",
+        t3_tag: "Nicosia Region",
         t3_title: "Nicosia Culture",
         t3_desc: "Trace the Ottoman and Lusignan footprints in the world's only divided capital.",
         t3_l1: "Great Inn (Büyük Han)",
@@ -405,16 +417,24 @@ const translations = {
         t4_l2: "Golden Beach",
         t4_l3: "Dipkarpaz Village",
 
+        t5_badge: "Serene",
+        t5_tag: "West Coast",
+        t5_title: "Morphou & Lefka",
+        t5_desc: "Citrus orchards and ancient palaces.",
+        t5_l1: "Soli Ancient City",
+        t5_l2: "Vuni Palace",
+        t5_l3: "St. Mamas Monastery",
+
         tab_places: "PLACES",
         tab_gallery: "GALLERY",
         btn_tour_offer: "GET QUOTE",
+
         // --- CONTACT PAGE ---
         contact_page_tag: "CONTACT US",
         contact_page_h1: "Contact",
         contact_page_p: "You can reach us 24/7 for your questions, reservation requests and private tours.",
-
         contact_address_title: "Our Address",
-        contact_address_desc: "Kyrenia Harbour Area, No:45 <br> Kyrenia / TRNC",
+        contact_address_desc: "SEHIT MEHMET KURT ST. DIAMONT APTS. C BLOCK NO:3<br> Kyrenia / TRNC",
         contact_phone_title: "Phone & WhatsApp",
         contact_email_title: "E-Mail",
 
@@ -433,7 +453,7 @@ const translations = {
         contact_label_message: "Your Message",
         contact_ph_message: "How can we help you?",
         contact_btn_send: "SEND MESSAGE",
-        //WP MESSAGE
+
         wp_msg_default: "Hello, I would like to get information about your VIP Transfer services.",
         wp_msg_srv1: "Hello, could I get information about your Hotel Transfer service?",
         wp_msg_srv2: "Hello, could I get information about Chauffeured Vehicle Allocation?",
@@ -459,9 +479,21 @@ const translations = {
         hero_desc_1: "Трансферы из аэропорта Эрджан и частные туры по Кипру на наших Mercedes Vito.",
         hero_title_2: "Пусть Начнется Ваше Путешествие",
         hero_desc_2: "Своевременный, безопасный и комфортный VIP-трансфер из Эрджана в ваш отель.",
-        form_pickup: "Место отправления (напр., Аэропорт Эрджан)",
-        form_dropoff: "Место назначения (напр., Отель Кирения)",
+        form_pickup: "Выберите место отправления...",
+        form_dropoff: "Выберите место назначения...",
         form_btn_price: "УЗНАТЬ ЦЕНУ",
+
+        form_pickup_opt: "Место отправления...",
+        form_dropoff_opt: "Место назначения...",
+        loc_ercan: "Аэропорт Эрджан",
+        loc_girne: "Кирения и окрестности",
+        loc_bafra: "Зона отелей Бафра",
+        loc_iskele: "Искеле / Карпаз",
+        loc_lefkosa: "Центр Никосии",
+        loc_magusa: "Центр Фамагусты",
+        loc_guzelyurt: "Морфу / Лефка",
+        loc_hotel_from: "Из отеля / адреса",
+        loc_hotel_to: "В отель / адрес",
 
         sec_services_sub: "НАШИ УСЛУГИ",
         sec_services_title: "Решения, которые мы предлагаем нашим дорогим гостям",
@@ -491,21 +523,6 @@ const translations = {
         form_passengers: "Пассажиры",
         form_message: "Ваше сообщение",
         form_btn_offer: "ПОЛУЧИТЬ ЦЕНУ",
-
-        sec_tours_sub: "ТУРЫ",
-        sec_tours_title: "Откройте для себя исторические и природные красоты Кипра",
-        tour_1_badge: "ИСТОРИЧЕСКАЯ КИРЕНИЯ",
-        tour_1_title: "ТУР ПО КИРЕНИИ",
-        tour_1_desc: "Уникальная атмосфера Киренийского замка, аббатства Беллапаис и Старой гавани.",
-        tour_2_badge: "АНТИЧНЫЙ САЛАМИН",
-        tour_2_title: "ТУР В ФАМАГУСТУ",
-        tour_2_desc: "Станьте свидетелем загадочной истории древнего города Саламин и Вароши.",
-        tour_3_badge: "КУЛЬТУРА СТОЛИЦЫ",
-        tour_3_title: "ТУР ПО НИКОСИИ",
-        tour_3_desc: "Окунитесь в культурную атмосферу столицы по маршруту Бюйюк-Хан и мечети Селимие.",
-        tour_4_badge: "СИНИЙ ДОМ",
-        tour_4_title: "ТУР В МОРФУ",
-        tour_4_desc: "Знакомство с Голубым домом, монастырем Св. Мамаса и древним городом Соли.",
 
         sec_vehicles_sub: "НАШ АВТОПАРК",
         sec_vehicles_title: "МЫ ГОТОВЫ К ВАШИМ ПОТРЕБНОСТЯМ",
@@ -548,8 +565,8 @@ const translations = {
         about_page_h1: "О Нас",
         about_sub: "КТО МЫ?",
         about_h2: "Мы Превращаем Путешествие в Искусство на Кипре",
-        about_p1: "Как <strong>VIP CYPRUS TRAVEL</strong>, мы уже много лет играем ведущую роль в секторе туризма, транспорта и VIP-трансферов в Турецкой Республике Северного Кипра (ТРСК). Наша цель - предложить вам не просто услугу трансфера, а престижный образ жизни с первого момента вашего пребывания на острове.",
-        about_p2: "Благодаря нашим трансферам из аэропорта Эрджан и частным турам мы предлагаем широкий спектр услуг от индивидуальных гостей до руководителей корпоративных компаний. Мы предоставляем бесперебойное круглосуточное обслуживание с нашими роскошными автомобилями Mercedes в нашем автопарке и нашей командой экспертов.",
+        about_p1: "Обладая 10-летним опытом работы, компания <strong>BUĞRA POLAT TURİZM</strong> рада обслуживать наших дорогих гостей с помощью нашего надежного и приветливого персонала.",
+        about_p2: "С нашими трансферами из аэропорта Эрджан и частными турами мы предлагаем бесперебойный и привилегированный опыт путешествий 24/7.",
         about_miss_title: "Наша Миссия",
         about_miss_desc: "Предоставлять услуги, ориентированные на удовлетворение потребностей гостей, которые меняют ситуацию в транспортном секторе, ставя во главу угла безопасность и качество.",
         about_vis_title: "Наше Видение",
@@ -565,7 +582,6 @@ const translations = {
         about_trust_desc: "Все наши автомобили имеют сертификаты пассажирских перевозок и соответствуют высоким стандартам безопасности ТРСК.",
         about_exp_year: "Лет Опыта",
 
-        // --- SERVICES PAGE ---
         srv_page_tag: "VIP ПРИВИЛЕГИЯ",
         srv_page_title: "Мы Не Знаем Границ в Наших Услугах",
         srv_page_1_badge: "VIP ТРАНСФЕР",
@@ -583,12 +599,17 @@ const translations = {
         srv_page_3_p1: "Мы от вашего имени встретим ваших особых гостей или представителей компании самым престижным образом. Мы встречаем со специальными табличками с именами или логотипами компаний и помогаем с багажом.",
         srv_page_3_p2: "Мы знаем, как важно первое впечатление. Мы проводим безупречную операцию, которая заставит ваших гостей почувствовать себя особенными.",
         srv_page_3_btn: "БРОНИРОВАНИЕ",
+
         // --- TOURS PAGE ---
         tour_page_tag: "ОТКРОЙТЕ ДЛЯ СЕБЯ КИПР",
         tour_page_h1: "Частные Туры по Кипру",
         tour_page_p: "Откройте для себя тысячелетнюю историю острова с комфортом на наших роскошных автомобилях.",
         tour_page_sub: "ПОПУЛЯРНЫЕ МАРШРУТЫ",
         tour_page_h2: "Туры по Культуре и Природе Кипра",
+        sec_tours_sub: "ТУРЫ",
+
+        tour_anywhere_title: "Вы Выбираете Маршрут, Мы Везем!",
+        tour_anywhere_desc: "Мы предоставляем VIP-транспорт из любой точки ТРСК в любое желаемое вами место по индивидуально спланированным маршрутам.",
 
         t1_badge: "VIP Тур",
         t1_tag: "Регион Кирения",
@@ -607,7 +628,7 @@ const translations = {
         t2_l3: "Закрытая Вароша",
 
         t3_badge: "Столица",
-        t3_tag: "Столица",
+        t3_tag: "Регион Никосия",
         t3_title: "Культура Никосии",
         t3_desc: "Пройдите по османским и лузиньянским следам в единственной в мире разделенной столице.",
         t3_l1: "Бюйюк-Хан",
@@ -622,16 +643,24 @@ const translations = {
         t4_l2: "Золотой Пляж",
         t4_l3: "Деревня Дипкарпаз",
 
+        t5_badge: "Тихий",
+        t5_tag: "Западное побережье",
+        t5_title: "Морфу и Лефка",
+        t5_desc: "Цитрусовые сады и древние дворцы.",
+        t5_l1: "Город Соли",
+        t5_l2: "Дворец Вуни",
+        t5_l3: "Монастырь Св. Мамаса",
+
         tab_places: "МЕСТА",
         tab_gallery: "ГАЛЕРЕЯ",
         btn_tour_offer: "ПОЛУЧИТЬ ЦЕНУ",
+
         // --- CONTACT PAGE ---
         contact_page_tag: "СВЯЖИТЕСЬ С НАМИ",
         contact_page_h1: "Контакты",
         contact_page_p: "Вы можете связаться с нами 24/7 по вопросам, запросам на бронирование и частным турам.",
-
         contact_address_title: "Наш Адрес",
-        contact_address_desc: "Район Гавани Кирении, №:45 <br> Кирения / ТРСК",
+        contact_address_desc: "УЛ. ШЕХИТ МЕХМЕТ КУРТ, АПАРТАМЕНТЫ ДИАМОНТ, БЛОК C, №:3<br> Кирения / ТРСК",
         contact_phone_title: "Телефон и WhatsApp",
         contact_email_title: "Эл. почта",
 
@@ -650,7 +679,7 @@ const translations = {
         contact_label_message: "Ваше Сообщение",
         contact_ph_message: "Чем мы можем вам помочь?",
         contact_btn_send: "ОТПРАВИТЬ",
-        //WP MESSAGE
+
         wp_msg_default: "Здравствуйте, я хотел бы получить информацию о ваших услугах VIP-трансфера.",
         wp_msg_srv1: "Здравствуйте, могу ли я получить информацию об услуге трансфера в отель?",
         wp_msg_srv2: "Здравствуйте, могу ли я получить информацию об аренде автомобиля с водителем?",
