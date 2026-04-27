@@ -11,9 +11,29 @@
     <link rel="apple-touch-icon" href="/Frontend/photo/favicon.jpeg">
     <meta name="description"
         content="Buğra Polat Turizm ile Kıbrıs'ta her noktaya lüks VIP turlar. Siz rotayı çizin, biz götürelim.">
+    <style>
+        #bp-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Sayfanın arka plan rengiyle aynı yapın */
+            z-index: 999999;
+            display: flex !important;
+        }
+    </style>
 </head>
 
 <body>
+
+    <div id="bp-preloader">
+        <div class="bp-glass-panel">
+            <div class="bp-spinner"></div>
+            <div class="bp-brand">BUĞRA POLAT</div>
+            <div class="bp-sub">ÖZEL KIBRIS TURLARI</div>
+        </div>
+    </div>
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
@@ -349,13 +369,6 @@
         }
     </script>
 </body>
-<div id="bp-preloader">
-    <div class="bp-glass-panel">
-        <div class="bp-spinner"></div>
-        <div class="bp-brand">BUĞRA POLAT</div>
-        <div class="bp-sub">ÖZEL KIBRIS TURLARI</div>
-    </div>
-</div>
 
 <script>
     (function () {

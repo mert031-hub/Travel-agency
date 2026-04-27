@@ -1,5 +1,5 @@
 /* =========================================
-   BUĞRA POLAT TURİZM - ADMIN CSS
+   BUĞRA POLAT TURİZM - ADMIN CSS (TAM UYUMLU VERSİYON)
 ========================================= */
 :root {
   --primary: #0f3d7a;
@@ -240,7 +240,6 @@ td {
   font-weight: 600;
   gap: 8px;
   white-space: nowrap;
-  z-index: 10;
 }
 
 .btn-logout {
@@ -252,7 +251,6 @@ td {
   font-weight: 600;
   gap: 8px;
   white-space: nowrap;
-  z-index: 10;
 }
 
 .btn-logout:hover {
@@ -329,7 +327,7 @@ td {
 }
 
 /* =========================================
-   ARAÇ YÖNETİMİ (YENİ EKLENENLER)
+   ARAÇ YÖNETİMİ & MODAL
 ========================================= */
 .btn-add-vehicle {
   background: var(--primary);
@@ -379,23 +377,10 @@ td {
 .vehicle-details {
   padding: 20px;
 }
-
 .vehicle-details h4 {
   margin: 0 0 10px 0;
   color: var(--primary);
   font-size: 18px;
-}
-
-.vehicle-details p {
-  margin: 0 0 15px 0;
-  color: #666;
-  font-size: 13px;
-  line-height: 1.5;
-  height: 40px;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 
 .vehicle-actions {
@@ -430,7 +415,7 @@ td {
   background: #c0392b;
 }
 
-/* Özel Modal (Araç Ekleme Formu İçin) */
+/* Özel Modal */
 .custom-modal-overlay {
   position: fixed;
   top: 0;
@@ -482,7 +467,6 @@ td {
   margin: 0;
   color: var(--primary);
 }
-
 .btn-close-modal {
   background: none;
   border: none;
@@ -491,10 +475,19 @@ td {
   cursor: pointer;
 }
 
+/* YENİ: Modal İçin Grid Yapısı (Araç Adı, Marka ve Sıra Numarası Yanyana) */
+.form-row-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(180px, 1fr)
+  ); /* Esnek 3'lü yapı */
+  gap: 15px;
+}
+
 .form-group {
   margin-bottom: 20px;
 }
-
 .form-group label {
   display: block;
   margin-bottom: 8px;
@@ -504,6 +497,7 @@ td {
 }
 
 .form-group input[type="text"],
+.form-group input[type="number"],
 .form-group textarea {
   width: 100%;
   padding: 12px;
@@ -514,9 +508,60 @@ td {
   outline: none;
 }
 
-.form-group input[type="text"]:focus,
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--primary);
+}
+
+/* YENİ: Dinamik Özellik (Tag) ve Yorum Sistemi Stilleri */
+.dynamic-feature-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.dynamic-feature-input input {
+  flex: 1;
+  margin: 0;
+}
+.btn-add-feature {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-add-feature:hover {
+  background: #0b2e5c;
+}
+
+.feature-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature-tag {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: #444;
+  white-space: normal; /* Uzun müşteri yorumlarının taşmasını önler */
+  word-break: break-word; /* Kelime taşmalarını önler */
 }
 
 /* Sürükle Bırak Fotoğraf Alanı */
@@ -533,7 +578,6 @@ td {
 .upload-area:hover {
   background: rgba(15, 61, 122, 0.08);
 }
-
 .upload-area i {
   font-size: 40px;
   color: var(--primary);
@@ -554,7 +598,6 @@ td {
   object-fit: cover;
   display: block;
 }
-
 .btn-remove-img {
   position: absolute;
   top: 10px;
@@ -566,6 +609,56 @@ td {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+}
+
+/* =========================================
+   GALERİ (ÇOKLU RESİM) ÖNİZLEME STİLLERİ (YENİ)
+========================================= */
+.gallery-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.gallery-item {
+  position: relative;
+  width: 100px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #eee;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove-gal {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--danger);
+  color: white;
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.btn-remove-gal:hover {
+  background: #c0392b;
+  transform: scale(1.1);
 }
 
 .modal-footer {
@@ -584,4 +677,75 @@ td {
   font-weight: 600;
   cursor: pointer;
   font-size: 15px;
+}
+
+/* =======================================================
+   MOBİL İÇİN EFSANEVİ UYUMLULUK DÜZELTMELERİ
+======================================================= */
+@media (max-width: 992px) {
+  /* Admin Paneli Tablosunu "Kart Görünümüne" Çevirir */
+  .responsive-table thead {
+    display: none;
+  }
+
+  .responsive-table tbody tr {
+    display: block;
+    background: #fff;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    padding: 10px 15px;
+  }
+
+  .responsive-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f9f9f9;
+    padding: 12px 0;
+    text-align: right;
+  }
+
+  .responsive-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* HTML'de yazdığımız data-label'ı mobil hücrenin soluna etiket olarak basar */
+  .responsive-table td::before {
+    content: attr(data-label);
+    font-weight: 800;
+    color: var(--primary);
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-right: 15px;
+    text-align: left;
+  }
+
+  .msg-cell {
+    max-width: 100%;
+    text-align: right;
+  }
+  .route-cell div {
+    justify-content: flex-end;
+  }
+  .form-row-grid {
+    grid-template-columns: 1fr;
+    gap: 15px; /* Mobilde yapışmamaları için aralık bırakıldı */
+  }
+}
+
+@media (max-width: 768px) {
+  /* Global buton düzeltmeleri */
+  .hero-booking-form button,
+  .btn-primary,
+  .btn-offer {
+    padding: 16px 20px !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    border-radius: 10px !important;
+    height: auto !important;
+    line-height: normal !important;
+    width: 100% !important;
+  }
 }

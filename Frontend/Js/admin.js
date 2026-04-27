@@ -1,11 +1,13 @@
 /* =========================================
-   BUĞRA POLAT TURİZM - ADMIN JS (VER: 3.1 - TAG SİSTEMLİ)
+   BUĞRA POLAT TURİZM - ADMIN JS (FULL DİNAMİK)
 ========================================= */
 
 let currentTab = 'active';
 let tumVeriler = [];
-let tumAraclar = []; // Araçları tutacağımız dizi
-let aktifOzellikler = []; // YENİ: Eklenen araç özelliklerini tutacak dizi
+let tumAraclar = [];
+let aktifOzellikler = [];
+let aktifYorumlar = []; // YENİ: Müşteri yorumlarını hafızada tutacak dizi
+let secilenGaleriDosyalari = [];
 
 window.onload = verileriYukle;
 
@@ -77,20 +79,21 @@ function tabloyuCiz(liste) {
 
         tbody.innerHTML += `
             <tr class="${rowClass}">
-                <td>${tarih}</td>
-                <td><strong>${item.adSoyad || 'İsimsiz'}</strong><br><small style="color:#666">${item.telefon || '-'}</small></td>
-                <td class="route-cell">
+                <td data-label="Tarih">${tarih}</td>
+                <td data-label="Müşteri"><strong>${item.adSoyad || 'İsimsiz'}</strong><br><small style="color:#666">${item.telefon || '-'}</small></td>
+                <td class="route-cell" data-label="Güzergah">
                     <div><i class="fas fa-map-marker-alt text-danger"></i> ${item.alinisNoktasi || '-'}</div>
                     <div><i class="fas fa-flag-checkered text-dark"></i> ${item.birakilisNoktasi || '-'}</div>
                 </td>
-                <td onclick="mesajGoster('${msgEscaped}', '${item._id}', '${noteEscaped}')" class="msg-cell">
+                <td onclick="mesajGoster('${msgEscaped}', '${item._id}', '${noteEscaped}')" class="msg-cell" data-label="Mesaj">
                     <div class="msg-preview" title="Detay için tıkla">${msgPreview}</div>
                     <span class="note-tag">${item.adminNotu ? `<i class="fas fa-sticky-note"></i> ${item.adminNotu.substring(0, 25)}...` : '<i class="fas fa-plus-circle"></i> Not ekle'}</span>
                 </td>
-                <td><span class="tag ${item.formTipi?.includes('Hero') ? 'tag-hero' : 'tag-contact'}">${item.formTipi || 'Genel'}</span></td>
-                <td>
+                <td data-label="Tip"><span class="tag ${item.formTipi?.includes('Hero') ? 'tag-hero' : 'tag-contact'}">${item.formTipi || 'Genel'}</span></td>
+                <td data-label="İşlemler">
                     <div class="action-flex">
-                        ${currentTab === 'active' ? `
+                        ${currentTab === 'active' ?
+                `
                             <button onclick="durumDegistir('${item._id}')" class="btn btn-blue" title="Görülme Durumu"><i class="fas ${item.isRead ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
                             <a href="${wpLink}" target="_blank" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                             <button onclick="kayitSil('${item._id}')" class="btn btn-red" title="Çöpe At"><i class="fas fa-trash"></i></button>
@@ -106,14 +109,12 @@ function tabloyuCiz(liste) {
 function tabloyuFiltrele() {
     const q = document.getElementById('searchInput').value.toLocaleLowerCase('tr-TR');
 
-    // Eğer araçlar sekmesindeysek araçları filtrele
     if (currentTab === 'vehicles') {
         const filtrelenmisAraclar = tumAraclar.filter(i => (i.aracAd || '').toLocaleLowerCase('tr-TR').includes(q));
         araclariCiz(filtrelenmisAraclar);
         return;
     }
 
-    // Değilse rezervasyonları filtrele
     const filtrelenmis = tumVeriler.filter(i => {
         return (i.adSoyad || '').toLocaleLowerCase('tr-TR').includes(q) ||
             (i.telefon || '').includes(q) ||
@@ -132,7 +133,6 @@ async function mesajGoster(encodedMsg, id, encodedNote) {
         html: `
             <div class="modern-msg-title">Müşteriden Gelen Mesaj</div>
             <div class="modern-msg-content">${msg}</div>
-            
             <div class="modern-msg-title">Admin Özel Notu</div>
             <textarea id="swal-note" class="modern-note-area" rows="4" placeholder="Müşteriyle ilgili notlarınızı buraya yazın...">${note !== 'undefined' ? note : ''}</textarea>
         `,
@@ -169,7 +169,6 @@ window.cikisYap = async function () {
     window.location.href = '/login';
 };
 
-
 // --- 2. SEKME (TAB) YÖNETİMİ ---
 function tabDegistir(t) {
     currentTab = t;
@@ -194,9 +193,7 @@ function tabDegistir(t) {
     }
 }
 
-
 // --- 3. ARAÇ YÖNETİMİ SİSTEMİ KODLARI ---
-
 async function araclariYukle() {
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
     if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
@@ -205,9 +202,14 @@ async function araclariYukle() {
         const res = await guvenliFetch('/api/admin/vehicles');
         if (res.ok) {
             tumAraclar = await res.json();
+            tumAraclar.sort((a, b) => {
+                const siraA = a.aracSira || 999;
+                const siraB = b.aracSira || 999;
+                return siraA - siraB;
+            });
             araclariCiz(tumAraclar);
         } else {
-            document.getElementById('vehicleGrid').innerHTML = '<p style="color:#666; width:100%; text-align:center;">Araçlar yüklenemedi. Backend API adresinizi kontrol edin (/api/admin/vehicles).</p>';
+            document.getElementById('vehicleGrid').innerHTML = '<p style="color:#666; width:100%; text-align:center;">Araçlar yüklenemedi.</p>';
         }
     } catch (e) {
         console.error("Araç yükleme hatası:", e);
@@ -229,7 +231,6 @@ function araclariCiz(liste) {
         const foto = arac.fotoUrl || '/Frontend/Images/default-car.jpg';
         const aracVerisi = btoa(unescape(encodeURIComponent(JSON.stringify(arac))));
 
-        // Özellikleri arayüzde kart üzerinde şık göstermek için
         let ozellikHtml = '';
         if (arac.aracOzellikler) {
             const ozDizisi = arac.aracOzellikler.split(',');
@@ -242,13 +243,17 @@ function araclariCiz(liste) {
             ozellikHtml = '<span style="color:#999; font-size:12px;">Özellik eklenmemiş</span>';
         }
 
+        const siraRozeti = arac.aracSira ? `<div style="position:absolute; top:10px; right:10px; background:#0f3d7a; color:#fff; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px;">Sıra: ${arac.aracSira}</div>` : '';
+
         grid.innerHTML += `
-            <div class="vehicle-card">
+            <div class="vehicle-card" style="position:relative;">
+                ${siraRozeti}
                 <div class="vehicle-img-box">
                     <img src="${foto}" alt="${arac.aracAd}">
                 </div>
                 <div class="vehicle-details">
                     <h4>${arac.aracAd}</h4>
+                    <p style="font-size:12px; color:#888; margin-top:-5px; margin-bottom:10px;">${arac.aracMarka || ''}</p>
                     <div style="margin-bottom:15px; display:flex; flex-wrap:wrap; gap:4px;">${ozellikHtml}</div>
                     <div class="vehicle-actions">
                         <button class="btn-edit-veh" onclick="aracDuzenleModalAc('${aracVerisi}')"><i class="fas fa-edit"></i> Düzenle</button>
@@ -264,6 +269,7 @@ function araclariCiz(liste) {
 const vehicleModal = document.getElementById('vehicleModal');
 const vehicleForm = document.getElementById('vehicleForm');
 const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('aracFotoInput');
 const imagePreviewBox = document.getElementById('imagePreviewBox');
 const previewImg = document.getElementById('previewImg');
 const btnSaveVehicle = document.getElementById('btnSaveVehicle');
@@ -271,12 +277,25 @@ const btnSaveVehicle = document.getElementById('btnSaveVehicle');
 function aracModalAc() {
     vehicleForm.reset();
     document.getElementById('aracId').value = '';
+    if (document.getElementById('aracSira')) document.getElementById('aracSira').value = '';
+
+    // YENİ ALANLARI SIFIRLA
+    if (document.getElementById('aracMarka')) document.getElementById('aracMarka').value = '';
+    if (document.getElementById('aracAciklama')) document.getElementById('aracAciklama').value = '';
+
     document.getElementById('modalTitle').innerText = 'Yeni Araç Ekle';
     btnSaveVehicle.innerHTML = '<i class="fas fa-save"></i> Aracı Kaydet';
 
-    // YENİ: Özellikleri Sıfırla
     aktifOzellikler = [];
     ozellikleriEkranaCiz();
+
+    // MÜŞTERİ YORUMLARINI SIFIRLA
+    aktifYorumlar = [];
+    yorumlariEkranaCiz();
+
+    // GALERİYİ SIFIRLA
+    secilenGaleriDosyalari = [];
+    document.getElementById('galleryPreviewBox').innerHTML = '';
 
     fotoKaldir();
     vehicleModal.classList.add('active');
@@ -287,12 +306,27 @@ function aracDuzenleModalAc(encodedData) {
 
     document.getElementById('aracId').value = arac._id;
     document.getElementById('aracAd').value = arac.aracAd;
+    if (document.getElementById('aracSira')) document.getElementById('aracSira').value = arac.aracSira || '';
+
+    // YENİ ALANLARI DOLDUR
+    if (document.getElementById('aracMarka')) document.getElementById('aracMarka').value = arac.aracMarka || '';
+    if (document.getElementById('aracAciklama')) document.getElementById('aracAciklama').value = arac.aracAciklama || '';
+
     document.getElementById('modalTitle').innerText = 'Aracı Düzenle';
     btnSaveVehicle.innerHTML = '<i class="fas fa-sync"></i> Güncelle';
 
-    // YENİ: Eski veritabanı stringini (Örn: "15 Kişi, Deri Koltuk") parçalayıp etiketlere dönüştür
     aktifOzellikler = arac.aracOzellikler ? arac.aracOzellikler.split(',').map(o => o.trim()).filter(o => o) : [];
     ozellikleriEkranaCiz();
+
+    // MÜŞTERİ YORUMLARINI DOLDUR
+    try {
+        aktifYorumlar = arac.aracYorumlar ? JSON.parse(arac.aracYorumlar) : [];
+    } catch (e) { aktifYorumlar = []; }
+    yorumlariEkranaCiz();
+
+    // DÜZENLEME MODUNDA SEÇİLİ GALERİ RESİMLERİNİ SIFIRLA
+    secilenGaleriDosyalari = [];
+    document.getElementById('galleryPreviewBox').innerHTML = '';
 
     if (arac.fotoUrl) {
         previewImg.src = arac.fotoUrl;
@@ -309,8 +343,7 @@ function aracModalKapat() {
     vehicleModal.classList.remove('active');
 }
 
-// --- YENİ: DİNAMİK ÖZELLİK (TAG) SİSTEMİ FONKSİYONLARI ---
-
+// --- DİNAMİK ÖZELLİK (TAG) SİSTEMİ FONKSİYONLARI ---
 function ozellikEkle() {
     const input = document.getElementById('yeniOzellikInput');
     const val = input.value.trim();
@@ -318,7 +351,7 @@ function ozellikEkle() {
     if (val && !aktifOzellikler.includes(val)) {
         aktifOzellikler.push(val);
         ozellikleriEkranaCiz();
-        input.value = ''; // Kutuyu temizle
+        input.value = '';
     }
 }
 
@@ -329,10 +362,9 @@ function ozellikSil(index) {
 
 function ozellikleriEkranaCiz() {
     const container = document.getElementById('featureTagsContainer');
-    if (!container) return; // Güvenlik kontrolü
+    if (!container) return;
 
     container.innerHTML = '';
-
     aktifOzellikler.forEach((ozellik, i) => {
         container.innerHTML += `
             <div class="feature-tag">
@@ -342,12 +374,76 @@ function ozellikleriEkranaCiz() {
         `;
     });
 
-    // Formun sunucuya göndereceği gizli veriyi güncelle
     const gizliInput = document.getElementById('aracOzelliklerGizli');
     if (gizliInput) gizliInput.value = aktifOzellikler.join(', ');
 }
 
-// Fotoğraf Seçimi ve Önizleme
+// --- YENİ: MÜŞTERİ YORUMLARI SİSTEMİ ---
+window.yorumEkle = function () {
+    const isimInput = document.getElementById('yeniYorumIsim');
+    const metinInput = document.getElementById('yeniYorumMetin');
+    const isim = isimInput.value.trim();
+    const metin = metinInput.value.trim();
+
+    if (isim && metin) {
+        aktifYorumlar.push({ isim, metin });
+        yorumlariEkranaCiz();
+        isimInput.value = '';
+        metinInput.value = '';
+    }
+};
+
+window.yorumSil = function (index) {
+    aktifYorumlar.splice(index, 1);
+    yorumlariEkranaCiz();
+};
+
+window.yorumlariEkranaCiz = function () {
+    const container = document.getElementById('yorumlarContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+    aktifYorumlar.forEach((yorum, i) => {
+        container.innerHTML += `
+            <div class="feature-tag" style="display:flex; justify-content:space-between; width:100%; background:#fff; border-left:3px solid #f39c12; padding:10px;">
+                <div style="flex:1;"><strong>${yorum.isim}:</strong> ${yorum.metin}</div>
+                <i class="fas fa-trash" style="color:#e74c3c; cursor:pointer; margin-left:15px; align-self:center;" onclick="yorumSil(${i})" title="Sil"></i>
+            </div>
+        `;
+    });
+
+    const gizliInput = document.getElementById('aracYorumlarGizli');
+    if (gizliInput) gizliInput.value = JSON.stringify(aktifYorumlar);
+};
+
+// --- ANA KAPAK FOTOĞRAFI SÜRÜKLE-BIRAK DESTEĞİ ---
+if (dropZone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = "#0f3d7a";
+            dropZone.style.background = "#f0f4f8";
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = "#cbd5e1";
+            dropZone.style.background = "#f8fafc";
+        });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            fotoOnizlemeYap(fileInput);
+        }
+    });
+}
+
 function fotoOnizlemeYap(input) {
     const file = input.files[0];
     if (file) {
@@ -368,19 +464,63 @@ function fotoKaldir() {
     dropZone.style.display = 'block';
 }
 
-// Backend'e Gönderim
+/* ==============================================================
+   ÇOKLU GALERİ RESMİ İŞLEMLERİ
+============================================================== */
+window.galeriOnizlemeYap = function (input) {
+    if (input.files) {
+        Array.from(input.files).forEach(file => {
+            secilenGaleriDosyalari.push(file);
+        });
+        galeriEkranaCiz();
+    }
+    input.value = '';
+}
+
+window.galeriEkranaCiz = function () {
+    const box = document.getElementById('galleryPreviewBox');
+    box.innerHTML = '';
+
+    secilenGaleriDosyalari.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            box.innerHTML += `
+                <div class="gallery-item">
+                    <img src="${e.target.result}" alt="Galeri">
+                    <button type="button" class="btn-remove-gal" onclick="galeriResimSil(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+        }
+        reader.readAsDataURL(file);
+    });
+}
+
+window.galeriResimSil = function (index) {
+    secilenGaleriDosyalari.splice(index, 1);
+    galeriEkranaCiz();
+}
+
+// --- Backend'e Gönderim ---
 async function aracKaydet(e) {
     e.preventDefault();
     const btn = document.getElementById('btnSaveVehicle');
     const originalText = btn.innerHTML;
+
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...';
     btn.disabled = true;
 
     try {
         const formEl = document.getElementById('vehicleForm');
-        const formData = new FormData(formEl); // File ve gizli özellik inputu dahil her şeyi alır
-        const id = document.getElementById('aracId').value;
+        const formData = new FormData(formEl);
 
+        formData.delete('aracGaleri');
+        secilenGaleriDosyalari.forEach(file => {
+            formData.append('aracGaleri', file);
+        });
+
+        const id = document.getElementById('aracId').value;
         let url = '/api/admin/vehicles';
         let method = 'POST';
 

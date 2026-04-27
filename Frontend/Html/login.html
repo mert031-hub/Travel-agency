@@ -9,30 +9,68 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/jpeg" href="/Frontend/photo/favicon.jpeg">
     <link rel="apple-touch-icon" href="/Frontend/photo/favicon.jpeg">
-    <meta name="description"
-        content="Buğra Polat Turizm ile Kıbrıs'ta 7/24 lüks, güvenilir ve konforlu VIP transfer hizmeti. Şoförlü lüks araç kiralama ve özel Kıbrıs turları.">
-    <meta name="keywords"
-        content="Kıbrıs VIP transfer, Ercan havalimanı transfer, Girne VIP taksi, Kıbrıs lüks araç kiralama, Buğra Polat Turizm">
-    <meta name="author" content="Buğra Polat Turizm">
 
-    <meta property="og:title" content="Buğra Polat Turizm | Kıbrıs VIP Transfer">
-    <meta property="og:description"
-        content="Kıbrıs'ta ayrıcalıklı yolculuk. Ercan Havalimanı'ndan otelinize 7/24 lüks araçlarla VIP transfer hizmeti.">
-    <meta property="og:image" content="https://SİZİN-SİTE-ADRESİNİZ.com/Frontend/photo/favicon.jpeg">
-    <meta property="og:url" content="https://SİZİN-SİTE-ADRESİNİZ.com">
-    <meta property="og:type" content="website">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Buğra Polat Turizm | Kıbrıs VIP Transfer">
-    <meta name="twitter:description"
-        content="Kıbrıs'ta ayrıcalıklı yolculuk. Ercan Havalimanı'ndan otelinize 7/24 lüks araçlarla VIP transfer hizmeti.">
-    <meta name="twitter:image" content="https://SİZİN-SİTE-ADRESİNİZ.com/Frontend/photo/favicon.jpeg">
     <style>
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* --- 1. DÜZELTİLMİŞ PRELOADER STİLLERİ --- */
+        #bp-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f3d7a;
+            /* Giriş sayfasıyla uyumlu lacivert arka plan */
+            z-index: 999999;
+            display: flex;
+            /* !important KALDIRILDI */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .preloader-hide {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        .bp-spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .bp-brand {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .bp-sub {
+            color: #d4af37;
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- 2. GİRİŞ PANELİ STİLLERİ --- */
         body {
             background: linear-gradient(135deg, #0f3d7a 0%, #1e5ba3 100%);
             display: flex;
@@ -50,6 +88,8 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         .login-container h2 {
@@ -111,6 +151,11 @@
 </head>
 
 <body>
+    <div id="bp-preloader">
+        <div class="bp-spinner"></div>
+        <div class="bp-brand">BUĞRA POLAT</div>
+        <div class="bp-sub">YÖNETİM PANELİ</div>
+    </div>
 
     <div class="login-container">
         <h2>Yönetici Girişi</h2>
@@ -133,7 +178,6 @@
             const btn = document.getElementById('loginBtn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kontrol Ediliyor...';
             btn.disabled = true;
-
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
@@ -143,7 +187,6 @@
                         sifre: document.getElementById('password').value
                     })
                 });
-
                 const data = await res.json();
 
                 if (data.basari) {
@@ -163,37 +206,23 @@
     </script>
     <script src="/Frontend/Js/main.js"></script>
 
+    <script>
+        (function () {
+            var preloader = document.getElementById('bp-preloader');
+            if (!preloader) return;
+
+            function removePreloader() {
+                preloader.classList.add('preloader-hide');
+                // DOM'dan tamamen gizleyerek tıklamaların forma geçmesini garanti altına alıyoruz
+                setTimeout(function () { preloader.style.setProperty('display', 'none', 'important'); }, 500);
+            }
+
+            window.addEventListener('load', function () {
+                setTimeout(removePreloader, 300);
+            });
+            setTimeout(removePreloader, 2000);
+        })();
+    </script>
 </body>
-<div id="bp-preloader">
-    <div class="bp-glass-panel">
-        <div class="bp-spinner"></div>
-        <div class="bp-brand">BUĞRA POLAT</div>
-        <div class="bp-sub">VIP TRANSFER & TURİZM</div>
-    </div>
-</div>
-
-<script>
-    // ASLA TAKILI KALMAYAN GÜVENLİK KODU
-    (function () {
-        var preloader = document.getElementById('bp-preloader');
-        if (!preloader) return;
-
-        document.body.style.overflow = 'hidden'; // Kaydırmayı kilitle
-
-        function removePreloader() {
-            preloader.classList.add('preloader-hide');
-            document.body.style.overflow = ''; // Kilidi aç
-            setTimeout(function () { preloader.style.display = 'none'; }, 800);
-        }
-
-        // 1. İhtimal: Sayfa yüklenince 0.5 saniye bekle ve aç
-        window.addEventListener('load', function () {
-            setTimeout(removePreloader, 500);
-        });
-
-        // 2. İhtimal (GÜVENLİK): Sayfa takılsa bile 2.5 saniye sonra ZORLA aç!
-        setTimeout(removePreloader, 2500);
-    })();
-</script>
 
 </html>

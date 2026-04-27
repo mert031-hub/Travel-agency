@@ -8,9 +8,70 @@
     <link rel="apple-touch-icon" href="/Frontend/photo/favicon.jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/Frontend/Css/admin.css">
+
+    <style>
+        #bp-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4f7fa;
+            z-index: 9999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .preloader-hide {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        .bp-spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(15, 61, 122, 0.1);
+            border-top: 3px solid #0f3d7a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .bp-brand {
+            color: #0f3d7a;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .bp-sub {
+            color: #f39c12;
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-weight: 600;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div id="bp-preloader">
+        <div class="bp-spinner"></div>
+        <div class="bp-brand">BUĞRA POLAT</div>
+        <div class="bp-sub">YÖNETİM PANELİ</div>
+    </div>
+
     <div class="admin-container">
         <div class="stats-grid">
             <div class="stat-card">
@@ -21,14 +82,14 @@
                 </div>
             </div>
             <div class="stat-card">
-                <i class="fas fa-bell" style="color: var(--warning);"></i>
+                <i class="fas fa-bell" style="color: #f39c12;"></i>
                 <div class="stat-info">
                     <h3 id="statNew">0</h3>
                     <p>Bekleyen</p>
                 </div>
             </div>
             <div class="stat-card">
-                <i class="fas fa-trash-alt" style="color: var(--danger);"></i>
+                <i class="fas fa-trash-alt" style="color: #e74c3c;"></i>
                 <div class="stat-info">
                     <h3 id="statTrash">0</h3>
                     <p>Çöp Kutusu</p>
@@ -57,7 +118,7 @@
             </div>
 
             <div id="reservationsSection">
-                <table>
+                <table class="responsive-table">
                     <thead>
                         <tr>
                             <th style="width: 110px;">Tarih</th>
@@ -75,10 +136,8 @@
             <div id="vehiclesSection" style="display: none;">
                 <button class="btn-add-vehicle" onclick="aracModalAc()"><i class="fas fa-plus"></i> Yeni Araç
                     Ekle</button>
-                <div class="vehicle-grid" id="vehicleGrid">
-                </div>
+                <div class="vehicle-grid" id="vehicleGrid"></div>
             </div>
-
         </div>
     </div>
 
@@ -92,33 +151,61 @@
             <form id="vehicleForm" onsubmit="aracKaydet(event)">
                 <input type="hidden" id="aracId" name="aracId">
 
-                <div class="form-group">
-                    <label>Araç Adı (Örn: Mercedes Vito VIP)</label>
-                    <input type="text" id="aracAd" name="aracAd" required placeholder="Aracın marka ve modelini girin">
+                <div class="form-row-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <div class="form-group">
+                        <label>Araç Adı (Ana Başlık)</label>
+                        <input type="text" id="aracAd" name="aracAd" required
+                            placeholder="Örn: MERCEDES VITO VIP (6+1)">
+                    </div>
+                    <div class="form-group">
+                        <label>Marka (Üst Alt Başlık)</label>
+                        <input type="text" id="aracMarka" name="aracMarka" placeholder="Örn: MERCEDES MARKA">
+                    </div>
+                    <div class="form-group">
+                        <label>Görüntüleme Sırası</label>
+                        <input type="number" id="aracSira" name="aracSira" placeholder="Örn: 1">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Araç Özellikleri (Yeni özellik yazıp Ekle'ye basın)</label>
+                    <label>Araç Açıklaması (Detay Yazısı)</label>
+                    <textarea id="aracAciklama" name="aracAciklama" rows="3"
+                        placeholder="Örn: Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu seçenek..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Araç Özellikleri</label>
                     <div class="dynamic-feature-input">
-                        <input type="text" id="yeniOzellikInput"
-                            placeholder="Örn: 15+1 Kişi, TV Ünitesi, Deri Koltuk..."
+                        <input type="text" id="yeniOzellikInput" placeholder="Örn: TV Ünitesi..."
                             onkeypress="if(event.key === 'Enter') { event.preventDefault(); ozellikEkle(); }">
-                        <button type="button" class="btn-add-feature" onclick="ozellikEkle()">
-                            <i class="fas fa-plus"></i> Ekle
-                        </button>
+                        <button type="button" class="btn-add-feature" onclick="ozellikEkle()">Ekle</button>
                     </div>
-
-                    <div class="feature-tags-container" id="featureTagsContainer">
-                    </div>
-
+                    <div class="feature-tags-container" id="featureTagsContainer"></div>
                     <input type="hidden" id="aracOzelliklerGizli" name="aracOzellikler">
                 </div>
 
+                <div class="form-group"
+                    style="background: rgba(15, 61, 122, 0.03); padding: 15px; border-radius: 10px; border: 1px dashed #ccc;">
+                    <label style="color: #0f3d7a;"><i class="fas fa-comments"></i> Müşteri Yorumları Ekle</label>
+                    <div class="dynamic-feature-input" style="flex-wrap: wrap;">
+                        <input type="text" id="yeniYorumIsim" placeholder="Müşteri Adı (Örn: Ahmet Y.)"
+                            style="flex: 1; min-width: 150px; margin-bottom: 10px;">
+                        <input type="text" id="yeniYorumMetin" placeholder="Yorum yazısı..."
+                            style="flex: 2; min-width: 200px; margin-bottom: 10px;"
+                            onkeypress="if(event.key === 'Enter') { event.preventDefault(); yorumEkle(); }">
+                        <button type="button" class="btn-add-feature" style="background: #f39c12; margin-bottom: 10px;"
+                            onclick="yorumEkle()"><i class="fas fa-plus"></i> Ekle</button>
+                    </div>
+                    <div class="feature-tags-container" id="yorumlarContainer"
+                        style="flex-direction: column; gap: 10px; margin-top: 10px;"></div>
+                    <input type="hidden" id="aracYorumlarGizli" name="aracYorumlar">
+                </div>
+
                 <div class="form-group">
-                    <label>Araç Fotoğrafı (VIP Görünüm İçin 1920x1080 Önerilir)</label>
+                    <label>Ana Araç Fotoğrafı (Kapak Görseli)</label>
                     <div class="upload-area" id="dropZone" onclick="document.getElementById('aracFotoInput').click()">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Fotoğrafı buraya sürükleyin veya seçmek için tıklayın</p>
+                        <i class="fas fa-car"></i>
+                        <p>Kapak fotoğrafını sürükle veya seç</p>
                         <input type="file" id="aracFotoInput" name="aracFoto" accept="image/*" hidden
                             onchange="fotoOnizlemeYap(this)">
                     </div>
@@ -126,6 +213,19 @@
                         <img src="" id="previewImg">
                         <button type="button" class="btn-remove-img" onclick="fotoKaldir()">Kaldır</button>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Araç Galeri Fotoğrafları (İç Mekan ve Detaylar)</label>
+                    <div class="upload-area" id="dropZoneGallery"
+                        style="border-color: #f39c12; background: rgba(243, 156, 18, 0.05);"
+                        onclick="document.getElementById('aracGaleriInput').click()">
+                        <i class="fas fa-images" style="color: #f39c12;"></i>
+                        <p>Galeri fotoğraflarını seçmek için tıklayın (Aynı anda birden fazla resim seçebilirsiniz)</p>
+                        <input type="file" id="aracGaleriInput" name="aracGaleri" accept="image/*" multiple hidden
+                            onchange="galeriOnizlemeYap(this)">
+                    </div>
+                    <div class="gallery-preview-container" id="galleryPreviewBox"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -139,27 +239,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/Frontend/Js/admin.js"></script>
-    <div id="bp-preloader">
-        <div class="bp-glass-panel">
-            <div class="bp-spinner"></div>
-            <div class="bp-brand">BUĞRA POLAT</div>
-            <div class="bp-sub">VIP TRANSFER & TURİZM</div>
-        </div>
-    </div>
 
     <script>
-        // ASLA TAKILI KALMAYAN GÜVENLİK KODU
         (function () {
             var preloader = document.getElementById('bp-preloader');
             if (!preloader) return;
-            document.body.style.overflow = 'hidden';
             function removePreloader() {
                 preloader.classList.add('preloader-hide');
-                document.body.style.overflow = '';
-                setTimeout(function () { preloader.style.display = 'none'; }, 800);
+                setTimeout(function () { preloader.style.setProperty('display', 'none', 'important'); }, 500);
             }
-            window.addEventListener('load', function () { setTimeout(removePreloader, 500); });
-            setTimeout(removePreloader, 2500);
+            window.addEventListener('load', function () { setTimeout(removePreloader, 300); });
+            setTimeout(removePreloader, 2000); // Admin JS hata verse bile 2 saniye sonra kesin açılır!
         })();
     </script>
 </body>

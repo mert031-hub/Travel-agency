@@ -2,6 +2,93 @@
    BUĞRA POLAT TURİZM - ANA SAYFA (INDEX) CSS
    (TAŞMA VE İÇ İÇE GEÇME SORUNU GİDERİLDİ)
 ========================================= */
+/* =========================================
+   BUZLU CAM (GLASSMORPHISM) VIP PRELOADER
+========================================= */
+#bp-preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  /* Arkada Kıbrıs Manzarası */
+  background: url("/Frontend/photo/yenifoto5.jpg") center/cover no-repeat;
+  z-index: 9999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    opacity 0.8s ease,
+    visibility 0.8s ease;
+}
+
+/* Manzarayı lacivert tonla karartıp asil bir hava katar */
+#bp-preloader::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 61, 122, 0.7); /* Kurumsal Lacivert Overlay */
+}
+
+/* Lüks Buzlu Cam Paneli */
+.bp-glass-panel {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 40px 60px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+/* Altın Renkli Zarif Spinner */
+.bp-spinner {
+  width: 45px;
+  height: 45px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid #d4af37; /* Lüks Altın Sarısı */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+/* Marka İsmi */
+.bp-brand {
+  color: #ffffff;
+  font-family: "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: 6px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Alt Başlık */
+.bp-sub {
+  color: #d4af37; /* Altın Sarısı */
+  font-family: "Segoe UI", sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* JS ile tetiklenen gizleme kodu */
+.preloader-hide {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700&display=swap");
@@ -1049,91 +1136,19 @@ a {
     width: 100%;
   }
 }
-
-/* =========================================
-   BUZLU CAM (GLASSMORPHISM) VIP PRELOADER
-========================================= */
-#bp-preloader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  /* Arkada Kıbrıs Manzarası */
-  background: url("/Frontend/photo/yenifoto5.jpg") center/cover no-repeat;
-  z-index: 9999999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition:
-    opacity 0.8s ease,
-    visibility 0.8s ease;
-}
-
-/* Manzarayı lacivert tonla karartıp asil bir hava katar */
-#bp-preloader::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15, 61, 122, 0.7); /* Kurumsal Lacivert Overlay */
-}
-
-/* Lüks Buzlu Cam Paneli */
-.bp-glass-panel {
-  position: relative;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  padding: 40px 60px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  text-align: center;
-  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-  z-index: 2;
-}
-
-/* Altın Renkli Zarif Spinner */
-.bp-spinner {
-  width: 45px;
-  height: 45px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid #d4af37; /* Lüks Altın Sarısı */
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-}
-
-/* Marka İsmi */
-.bp-brand {
-  color: #ffffff;
-  font-family: "Times New Roman", serif;
-  font-size: 26px;
-  font-weight: bold;
-  letter-spacing: 6px;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-/* Alt Başlık */
-.bp-sub {
-  color: #d4af37; /* Altın Sarısı */
-  font-family: "Segoe UI", sans-serif;
-  font-size: 11px;
-  letter-spacing: 4px;
-  font-weight: 600;
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
+/* =======================================================
+   MOBİL İÇİN BUTON DÜZELTMESİ (AŞIRI DAR/İNCE GÖRÜNÜMÜ ESNESİR)
+======================================================= */
+@media (max-width: 768px) {
+  .hero-booking-form button,
+  .btn-primary,
+  .btn-offer {
+    padding: 16px 20px !important; /* Butonu dikeyde ve yatayda dolgunlaştırır */
+    font-size: 16px !important; /* Mobilde yazının rahat okunmasını sağlar */
+    font-weight: 800 !important;
+    border-radius: 10px !important; /* Köşeleri modern ve yumuşak yapar */
+    height: auto !important; /* Eğer başka yerde sabit yükseklik verildiyse onu ezer */
+    line-height: normal !important; /* Metnin tam ortalanmasını sağlar */
+    width: 100% !important; /* Ekrana tam yayılmasını sağlar */
   }
-}
-
-/* JS ile tetiklenen gizleme kodu */
-.preloader-hide {
-  opacity: 0 !important;
-  visibility: hidden !important;
 }

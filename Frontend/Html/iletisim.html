@@ -5,6 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>İletişim - BUĞRA POLAT TURİZM</title>
+    <style>
+        #bp-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Sayfanın arka plan rengiyle aynı yapın */
+            z-index: 999999;
+            display: flex !important;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/Frontend/Css/iletisim.css">
     <link rel="icon" type="image/jpeg" href="/Frontend/photo/favicon.jpeg">
@@ -27,9 +39,18 @@
     <meta name="twitter:description"
         content="Kıbrıs'ta ayrıcalıklı yolculuk. Ercan Havalimanı'ndan otelinize 7/24 lüks araçlarla VIP transfer hizmeti.">
     <meta name="twitter:image" content="https://SİZİN-SİTE-ADRESİNİZ.com/Frontend/photo/favicon.jpeg">
+
 </head>
 
 <body>
+
+    <div id="bp-preloader">
+        <div class="bp-glass-panel">
+            <div class="bp-spinner"></div>
+            <div class="bp-brand">BUĞRA POLAT</div>
+            <div class="bp-sub">BİZE ULAŞIN</div>
+        </div>
+    </div>
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
@@ -226,13 +247,6 @@
     <script src="/Frontend/Js/lang.js"></script>
     <script src="/Frontend/Js/main.js"></script>
 </body>
-<div id="bp-preloader">
-    <div class="bp-glass-panel">
-        <div class="bp-spinner"></div>
-        <div class="bp-brand">BUĞRA POLAT</div>
-        <div class="bp-sub">BİZE ULAŞIN</div>
-    </div>
-</div>
 
 <script>
     (function () {

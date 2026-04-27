@@ -1,3 +1,16 @@
+/* ==============================================================
+   1. PRELOADER ZORLAYICI (GECİKMEYİ SIFIRLAMAK İÇİN)
+   Tarayıcı henüz hiçbir şeyi çizmeden preloader'ı görünür kılar.
+============================================================== */
+(function () {
+    const preloader = document.getElementById('bp-preloader');
+    if (preloader) {
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
+        preloader.style.visibility = 'visible';
+    }
+})();
+
 /* =========================================
    BUĞRA POLAT TURİZM - MAIN JAVASCRIPT
 ========================================= */
@@ -88,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
     if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
+
     if (mainNav) {
         const navLinks = mainNav.querySelectorAll('a');
         navLinks.forEach(link => {
@@ -178,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const btn = formElement.querySelector('button');
         let originalText = "";
-
         if (btn) {
             originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
@@ -193,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(data)
             });
             const result = await response.json();
-
             if (result.basari) {
                 Swal.fire({
                     icon: 'success',
@@ -271,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // D) ARAÇLARIMIZ SAYFASI ÖZEL VIP ARAÇ FORMLARI (YENİ EKLENDİ)
+    // D) ARAÇLARIMIZ SAYFASI ÖZEL VIP ARAÇ FORMLARI
     const vehicleForms = document.querySelectorAll('.vh-form');
     vehicleForms.forEach(vForm => {
         vForm.removeAttribute('action');
@@ -296,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ======================================================
-   SAYFALAR ARASI YUMUŞAK GEÇİŞ (HIZLANDIRILDI)
+   SAYFALAR ARASI YUMUŞAK GEÇİŞ
 ========================================================= */
 document.addEventListener('DOMContentLoaded', function () {
     const links = document.querySelectorAll('a[href]');
@@ -320,7 +332,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
 
                 document.body.classList.add('page-exit');
-
                 setTimeout(() => {
                     window.location.href = targetUrl;
                 }, 300);

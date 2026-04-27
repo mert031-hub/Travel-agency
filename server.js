@@ -13,11 +13,13 @@ const session = require('express-session');
 
 const Reservation = require('./models/Reservation');
 
-// --- ARAÇLAR (VEHICLES) İÇİN MONGODB ŞEMASI ---
+// --- ARAÇLAR (VEHICLES) İÇİN MONGODB ŞEMASI (GÜNCELLENDİ) ---
 const vehicleSchema = new mongoose.Schema({
     aracAd: { type: String, required: true },
+    aracSira: { type: Number, default: 999 }, // Ekranda gösterme sırası
     aracOzellikler: { type: String, default: '' },
-    fotoUrl: { type: String, default: '' },
+    fotoUrl: { type: String, default: '' }, // Ana Kapak Fotoğrafı
+    galeriUrls: [{ type: String }], // YENİ: Çoklu Galeri Fotoğrafları
     kayitTarihi: { type: Date, default: Date.now }
 });
 const Vehicle = mongoose.models.Vehicle || mongoose.model('Vehicle', vehicleSchema);
@@ -91,7 +93,14 @@ const storage = multer.diskStorage({
         cb(null, 'arac-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
+
 const upload = multer({ storage: storage });
+
+// YENİ: Hem Ana Fotoğrafı Hem de Çoklu Galeri Fotoğraflarını Yakalayacak Yapı
+const cpUpload = upload.fields([
+    { name: 'aracFoto', maxCount: 1 },
+    { name: 'aracGaleri', maxCount: 10 } // Maksimum 10 galeri resmi
+]);
 
 // Resend (E-posta) Başlatma
 let resend;
@@ -209,29 +218,51 @@ app.put('/api/admin/trash/:id/restore', adminKontrol, async (req, res) => {
     } catch (error) { res.status(500).send(); }
 });
 
-// --- YENİ: ARAÇ YÖNETİMİ API'LERİ ---
+// --- YENİ: ARAÇ YÖNETİMİ API'LERİ (GALERİ DESTEKLİ) ---
 
-// Tüm Araçları Getir
-app.get('/api/admin/vehicles', adminKontrol, async (req, res) => {
+// Tüm Araçları Getir (Herkese Açık - Anasayfa çekecek)
+app.get('/api/vehicles', async (req, res) => {
     try {
-        const araclar = await Vehicle.find().sort({ kayitTarihi: -1 });
+        const araclar = await Vehicle.find().sort({ aracSira: 1, kayitTarihi: -1 });
         res.json(araclar);
     } catch (error) {
         res.status(500).json({ mesaj: "Araçlar getirilemedi." });
     }
 });
 
-// Yeni Araç Ekle (Fotoğraf Dahil) -> Formdaki input name='aracFoto' olmalıdır.
-app.post('/api/admin/vehicles', adminKontrol, upload.single('aracFoto'), async (req, res) => {
+// Admin Panel Tüm Araçları Getir
+app.get('/api/admin/vehicles', adminKontrol, async (req, res) => {
     try {
-        const { aracAd, aracOzellikler } = req.body;
-        // Eğer fotoğraf yüklendiyse URL'sini oluştur, yüklenmediyse boş bırak
-        const fotoUrl = req.file ? '/Frontend/Images/Cars/' + req.file.filename : '';
+        const araclar = await Vehicle.find().sort({ aracSira: 1, kayitTarihi: -1 });
+        res.json(araclar);
+    } catch (error) {
+        res.status(500).json({ mesaj: "Araçlar getirilemedi." });
+    }
+});
+
+// Yeni Araç Ekle (Çoklu Fotoğraf Dahil)
+app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
+    try {
+        const { aracAd, aracOzellikler, aracSira } = req.body;
+
+        let fotoUrl = '';
+        if (req.files && req.files['aracFoto']) {
+            fotoUrl = '/Frontend/Images/Cars/' + req.files['aracFoto'][0].filename;
+        }
+
+        let galeriUrls = [];
+        if (req.files && req.files['aracGaleri']) {
+            req.files['aracGaleri'].forEach(file => {
+                galeriUrls.push('/Frontend/Images/Cars/' + file.filename);
+            });
+        }
 
         const yeniArac = new Vehicle({
             aracAd: aracAd,
+            aracSira: aracSira || 999, // Sıra girilmezse en sona atsın
             aracOzellikler: aracOzellikler,
-            fotoUrl: fotoUrl
+            fotoUrl: fotoUrl,
+            galeriUrls: galeriUrls
         });
 
         await yeniArac.save();
@@ -242,26 +273,41 @@ app.post('/api/admin/vehicles', adminKontrol, upload.single('aracFoto'), async (
     }
 });
 
-// Araç Güncelle (Fotoğraf Opsiyonel)
-app.put('/api/admin/vehicles/:id', adminKontrol, upload.single('aracFoto'), async (req, res) => {
+// Araç Güncelle
+app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
     try {
         const arac = await Vehicle.findById(req.params.id);
         if (!arac) return res.status(404).json({ basari: false, mesaj: "Araç bulunamadı." });
 
         arac.aracAd = req.body.aracAd || arac.aracAd;
+        arac.aracSira = req.body.aracSira || arac.aracSira;
         arac.aracOzellikler = req.body.aracOzellikler || arac.aracOzellikler;
 
-        // Admin YENİ bir fotoğraf seçtiyse
-        if (req.file) {
-            // Sunucudaki ESKİ fotoğrafı fiziksel olarak SİL (Çöp dosyaları engellemek için)
+        // Admin YENİ bir KAPAK fotoğrafı seçtiyse
+        if (req.files && req.files['aracFoto']) {
             if (arac.fotoUrl) {
                 const eskiFotoPath = path.join(__dirname, arac.fotoUrl);
-                if (fs.existsSync(eskiFotoPath)) {
-                    fs.unlinkSync(eskiFotoPath);
-                }
+                if (fs.existsSync(eskiFotoPath)) fs.unlinkSync(eskiFotoPath);
             }
-            // Yeni fotoğrafı veritabanına yaz
-            arac.fotoUrl = '/Frontend/Images/Cars/' + req.file.filename;
+            arac.fotoUrl = '/Frontend/Images/Cars/' + req.files['aracFoto'][0].filename;
+        }
+
+        // Admin YENİ bir GALERİ seçtiyse
+        if (req.files && req.files['aracGaleri']) {
+            // Eskileri fiziksel olarak klasörden sil
+            if (arac.galeriUrls && arac.galeriUrls.length > 0) {
+                arac.galeriUrls.forEach(url => {
+                    const eskiGaleriPath = path.join(__dirname, url);
+                    if (fs.existsSync(eskiGaleriPath)) fs.unlinkSync(eskiGaleriPath);
+                });
+            }
+
+            // Yenileri veritabanına kaydet
+            let yeniGaleriUrls = [];
+            req.files['aracGaleri'].forEach(file => {
+                yeniGaleriUrls.push('/Frontend/Images/Cars/' + file.filename);
+            });
+            arac.galeriUrls = yeniGaleriUrls;
         }
 
         await arac.save();
@@ -278,12 +324,18 @@ app.delete('/api/admin/vehicles/:id', adminKontrol, async (req, res) => {
         const arac = await Vehicle.findById(req.params.id);
         if (!arac) return res.status(404).json({ basari: false, mesaj: "Araç bulunamadı." });
 
-        // Aracın fotoğrafı varsa klasörden fiziksel olarak sil
+        // Kapak Fotoğrafını Sil
         if (arac.fotoUrl) {
             const fotoPath = path.join(__dirname, arac.fotoUrl);
-            if (fs.existsSync(fotoPath)) {
-                fs.unlinkSync(fotoPath);
-            }
+            if (fs.existsSync(fotoPath)) fs.unlinkSync(fotoPath);
+        }
+
+        // Galeri Fotoğraflarını Sil
+        if (arac.galeriUrls && arac.galeriUrls.length > 0) {
+            arac.galeriUrls.forEach(url => {
+                const galeriPath = path.join(__dirname, url);
+                if (fs.existsSync(galeriPath)) fs.unlinkSync(galeriPath);
+            });
         }
 
         await Vehicle.findByIdAndDelete(req.params.id);
