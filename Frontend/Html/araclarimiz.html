@@ -12,7 +12,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Sayfanın arka plan rengiyle aynı yapın */
+            background: #fff;
             z-index: 999999;
             display: flex !important;
         }
@@ -31,22 +31,21 @@
     <meta property="og:title" content="Buğra Polat Turizm | Kıbrıs VIP Transfer">
     <meta property="og:description"
         content="Kıbrıs'ta ayrıcalıklı yolculuk. Ercan Havalimanı'ndan otelinize 7/24 lüks araçlarla VIP transfer hizmeti.">
-    <meta property="og:image" content="https://SİZİN-SİTE-ADRESİNİZ.com/Frontend/photo/favicon.jpeg">
-    <meta property="og:url" content="https://SİZİN-SİTE-ADRESİNİZ.com">
+    <meta property="og:image" content="https://bugrapolatturizim.com/Frontend/photo/favicon.jpeg">
+    <meta property="og:url" content="https://bugrapolatturizim.com">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Buğra Polat Turizm | Kıbrıs VIP Transfer">
     <meta name="twitter:description"
         content="Kıbrıs'ta ayrıcalıklı yolculuk. Ercan Havalimanı'ndan otelinize 7/24 lüks araçlarla VIP transfer hizmeti.">
-    <meta name="twitter:image" content="https://SİZİN-SİTE-ADRESİNİZ.com/Frontend/photo/favicon.jpeg">
-
+    <meta name="twitter:image" content="https://bugrapolatturizim.com/Frontend/photo/favicon.jpeg">
 </head>
 
 <body>
 
     <div id="bp-preloader">
-        <div class=" bp-glass-panel">
+        <div class="bp-glass-panel">
             <div class="bp-spinner"></div>
             <div class="bp-brand">BUĞRA POLAT</div>
             <div class="bp-sub">LÜKS ARAÇ FİLOMUZ</div>
@@ -57,9 +56,9 @@
     <div class="topbar">
         <div class="topbar-container">
             <div class="topbar-left">
-                <span><i class="fas fa-envelope"></i> info@vipkibristravel.com</span>
-                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905338577240"
-                        class="topbar-phone-link">+905338577240</a></span>
+                <span><i class="fas fa-envelope"></i> info@bugrapolatturizim.com</span>
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+905338577240" class="topbar-phone-link">+90 533 857
+                        72 40</a></span>
             </div>
             <div class="topbar-right">
                 <span data-lang="topbar_service"><i class="fas fa-clock"></i> 7/24 Hizmetinizdeyiz</span>
@@ -117,7 +116,6 @@
             <div class="hero-text">
                 <span class="offer-tag"><span data-lang="veh_page_title">LÜKS ARAÇ FİLOMUZ</span> <span></span></span>
                 <h1 data-lang="veh_page_h1">VIP Araçlarımız</h1>
-
                 <div class="breadcrumb-container">
                     <a href="index.html" data-lang="nav_home">Ana Sayfa</a> / <span
                         data-lang="nav_vehicles">Araçlarımız</span>
@@ -134,141 +132,13 @@
                 <h2 data-lang="veh_page_h2">Geniş ve Modern Araç Filomuz</h2>
             </div>
 
-            <div class="vehicles-list-wrapper">
-
-                <div class="vehicle-main-card">
-                    <div class="vehicle-top-info">
-                        <div class="v-img-side">
-                            <img src="/Frontend/photo/Orj vitoRED.jpg" alt="Mercedes Vito">
-                        </div>
-                        <div class="v-content-side">
-                            <span class="tag" data-lang="veh1_tag">MERCEDES MARKA</span>
-                            <h3 data-lang="veh1_title">MERCEDES VITO VIP (6+1)</h3>
-                            <p data-lang="veh1_desc">Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu
-                                seçenek. Geniş bagaj
-                                hacmi ve deri koltuk tasarımıyla prestiji hissedin.</p>
-                            <div class="quick-specs">
-                                <span><i class="fas fa-users"></i> <span data-lang="veh1_spec_pax">6+1
-                                        Kişi</span></span>
-                                <span><i class="fas fa-suitcase"></i> <span data-lang="veh1_spec_lug">5
-                                        Bagaj</span></span>
-                                <span><i class="fas fa-snowflake"></i> <span
-                                        data-lang="veh1_spec_ac">Klima</span></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="vehicle-tabs">
-                        <div class="tab-header">
-                            <button class="tab-btn active" onclick="openTab(event, 'rez-1')"><i
-                                    class="fas fa-calendar-check"></i> <span data-lang="tab_rez">REZERVASYON
-                                    YAP</span></button>
-                            <button class="tab-btn" onclick="openTab(event, 'gal-1')"><i class="fas fa-images"></i>
-                                <span data-lang="tab_gal">ARAÇ RESİMLERİ</span></button>
-                            <button class="tab-btn" onclick="openTab(event, 'com-1')"><i class="fas fa-comments"></i>
-                                <span data-lang="tab_com">MÜŞTERİ YORUMLARI</span></button>
-                        </div>
-                        <div class="tab-content-wrapper">
-                            <div id="rez-1" class="tab-content active">
-                                <form class="inline-rez-form">
-                                    <input type="text" placeholder="Ad Soyad" data-lang-placeholder="pl_name" required>
-                                    <input type="tel" placeholder="Telefon" data-lang-placeholder="pl_phone" required>
-                                    <input type="date" required>
-                                    <button type="submit" class="btn-primary" data-lang="btn_offer">TEKLİF AL</button>
-                                </form>
-                            </div>
-                            <div id="gal-1" class="tab-content">
-                                <div class="vehicle-gallery-grid">
-                                    <img src="https://images.unsplash.com/photo-1625805562095-d227521c3272?auto=format&fit=crop&w=400&q=80"
-                                        alt="Vito 1">
-                                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=400&q=80"
-                                        alt="Vito 2">
-                                    <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=400&q=80"
-                                        alt="Vito 3">
-                                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80"
-                                        alt="Vito 4">
-                                </div>
-                            </div>
-                            <div id="com-1" class="tab-content">
-                                <div class="mini-comment">
-                                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                            class="fas fa-star"></i></div>
-                                    <p data-lang="com1_text">"Araç çok temizdi, şoför bey bizi kapıda karşıladı.
-                                        Teşekkürler." - Ahmet Y.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="vehicles-list-wrapper" id="araclarimizSayfasiVitrin">
+                <div style="text-align: center; width: 100%; padding: 50px;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color: #0f3d7a;"></i>
+                    <p style="margin-top: 15px; color:#555; font-weight: bold;">Lüks Filomuz Hazırlanıyor...</p>
                 </div>
-
-                <div class="vehicle-main-card mt-50">
-                    <div class="vehicle-top-info">
-                        <div class="v-img-side">
-                            <img src="/Frontend/Images/Cars/views/OndenVitoRed.jpg" alt="Mercedes Sprinter">
-                        </div>
-                        <div class="v-content-side">
-                            <span class="tag" data-lang="veh2_tag">MERCEDES MARKA</span>
-                            <h3 data-lang="veh2_title">MERCEDES SPRINTER VIP (15+1)</h3>
-                            <p data-lang="veh2_desc">Geniş gruplar, düğün organizasyonları ve casino turları için ideal,
-                                yüksek tavanlı ve TV
-                                üniteli VIP minibüsümüz.</p>
-                            <div class="quick-specs">
-                                <span><i class="fas fa-users"></i> <span data-lang="veh2_spec_pax">15+1
-                                        Kişi</span></span>
-                                <span><i class="fas fa-suitcase"></i> <span data-lang="veh2_spec_lug">15
-                                        Bagaj</span></span>
-                                <span><i class="fas fa-tv"></i> <span data-lang="veh2_spec_tv">Eğlence
-                                        Paketi</span></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="vehicle-tabs">
-                        <div class="tab-header">
-                            <button class="tab-btn active" onclick="openTab(event, 'rez-2')"><i
-                                    class="fas fa-calendar-check"></i> <span data-lang="tab_rez">REZERVASYON
-                                    YAP</span></button>
-                            <button class="tab-btn" onclick="openTab(event, 'gal-2')"><i class="fas fa-images"></i>
-                                <span data-lang="tab_gal">ARAÇ RESİMLERİ</span></button>
-                            <button class="tab-btn" onclick="openTab(event, 'com-2')"><i class="fas fa-comments"></i>
-                                <span data-lang="tab_com">MÜŞTERİ YORUMLARI</span></button>
-                        </div>
-                        <div class="tab-content-wrapper">
-                            <div id="rez-2" class="tab-content active">
-                                <form class="inline-rez-form">
-                                    <input type="text" placeholder="Ad Soyad" data-lang-placeholder="pl_name" required>
-                                    <input type="tel" placeholder="Telefon" data-lang-placeholder="pl_phone" required>
-                                    <input type="date" required>
-                                    <button type="submit" class="btn-primary" data-lang="btn_offer">TEKLİF AL</button>
-                                </form>
-                            </div>
-                            <div id="gal-2" class="tab-content">
-                                <div class="vehicle-gallery-grid">
-                                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=400&q=80"
-                                        alt="Sprinter 1">
-                                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=400&q=80"
-                                        alt="Sprinter 2">
-                                    <img src="https://images.unsplash.com/photo-1625805562095-d227521c3272?auto=format&fit=crop&w=400&q=80"
-                                        alt="Sprinter 3">
-                                    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=400&q=80"
-                                        alt="Sprinter 4">
-                                </div>
-                            </div>
-                            <div id="com-2" class="tab-content">
-                                <div class="mini-comment">
-                                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                            class="fas fa-star"></i></div>
-                                    <p data-lang="com2_text">"Grup olarak çok memnun kaldık, araç içi ikramlar
-                                        harikaydı." - Mehmet K.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
         </div>
     </section>
 
@@ -289,7 +159,7 @@
             <div class="footer-col">
                 <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
-                    <li><i class="fas fa-envelope"></i> info@vipkibristravel.com</li>
+                    <li><i class="fas fa-envelope"></i> info@bugrapolatturizim.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 533 857 72 40</li>
                 </ul>
             </div>
@@ -308,110 +178,236 @@
     <script src="/Frontend/Js/main.js"></script>
 
     <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            var container = evt.currentTarget.closest('.vehicle-tabs');
+        // --- YENİ: AKILLI İKON SİSTEMİ ---
+        // --- YENİ VE KUSURSUZ: AKILLI İKON SİSTEMİ ---
+        function getSmartIcon(ozellik) {
+            // toLocaleLowerCase('tr-TR') ile Türkçe karakterleri kusursuz çeviririz
+            let text = ozellik.toLocaleLowerCase('tr-TR').trim();
 
-            tabcontent = container.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
-            }
+            if (text.includes('tv') || text.includes('televizyon') || text.includes('ekran')) return 'fas fa-tv';
+            if (text.includes('klima') || text.includes('havalandırma') || text.includes('soğutma')) return 'fas fa-snowflake';
+            if (text.includes('bagaj') || text.includes('valiz')) return 'fas fa-suitcase';
+            if (text.includes('kişi') || text.includes('yolcu') || text.includes('koltuk')) return 'fas fa-users';
+            if (text.includes('wifi') || text.includes('internet')) return 'fas fa-wifi';
+            if (text.includes('şarj') || text.includes('priz') || text.includes('usb')) return 'fas fa-plug';
+            if (text.includes('su') || text.includes('ikram') || text.includes('içecek') || text.includes('içki')) return 'fas fa-glass-martini-alt';
+            if (text.includes('müzik') || text.includes('ses') || text.includes('bluetooth')) return 'fas fa-music';
+            if (text.includes('buzdolabı') || text.includes('minibar') || text.includes('dolap')) return 'fas fa-temperature-low';
+            if (text.includes('deri')) return 'fas fa-couch';
+            if (text.includes('vip') || text.includes('özel') || text.includes('lüks')) return 'fas fa-crown';
+            if (text.includes('masa') || text.includes('çalışma')) return 'fas fa-table';
 
-            tablinks = container.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+            return 'fas fa-check-circle'; // Kelimeyi tanıyamazsa şık yuvarlak tik koyar
         }
 
-        // --- YENİ EKLENEN KISIM: FORM BAĞLANTILARI ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const rezForms = document.querySelectorAll('.inline-rez-form');
+        document.addEventListener('DOMContentLoaded', async function () {
+            const wrapper = document.getElementById('araclarimizSayfasiVitrin');
+            if (!wrapper) return;
 
-            rezForms.forEach((form, index) => {
-                form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
+            try {
+                // Backend'den araç verilerini çekiyoruz
+                const response = await fetch('/api/vehicles');
+                const araclar = await response.json();
 
-                    const inputs = form.querySelectorAll('input');
-                    const adSoyad = inputs[0].value;
-                    const telefon = inputs[1].value;
-                    const tarih = inputs[2].value;
+                wrapper.innerHTML = ''; // Yükleniyor ikonunu temizle
 
-                    // 0. index Vito, 1. index Sprinter formunu temsil ediyor
-                    const aracTipi = index === 0 ? 'MERCEDES VITO VIP (6+1)' : 'MERCEDES SPRINTER VIP (15+1)';
+                if (araclar.length === 0) {
+                    wrapper.innerHTML = '<p style="text-align:center; padding: 40px; color:#666;">Şu an sistemde gösterilecek araç bulunmuyor.</p>';
+                    return;
+                }
 
-                    const btn = form.querySelector('button');
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
-                    btn.disabled = true;
+                // Her bir araç için HTML kart yapısını oluşturuyoruz
+                araclar.forEach((arac, index) => {
+                    const id = arac._id || `temp-${index}`;
+                    const foto = arac.fotoUrl || arac.foto || '/Frontend/Images/default-car.jpg';
 
-                    try {
-                        const response = await fetch('/api/teklif-al', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                adSoyad: adSoyad,
-                                telefon: telefon,
-                                tarih: tarih,
-                                alinisNoktasi: 'Belirtilmedi', // Sadece araç ve tarih seçiliyor
-                                birakilisNoktasi: 'Belirtilmedi',
-                                formTipi: 'Araç Sayfası Rezervasyonu',
-                                mesaj: `Seçilen Araç: ${aracTipi}\nSeçilen Tarih: ${tarih}`
-                            })
+                    // YENİ: Veritabanı isim uyuşmazlıklarına karşı (arac.marka veya arac.aracMarka) garantili güvenlik ağı
+                    const marka = arac.marka || arac.aracMarka || 'VIP TRANSFER';
+                    const aciklama = arac.aciklama || arac.aracAciklama || 'Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu seçenek.';
+                    const ad = arac.ad || arac.aracAd || 'Lüks VIP Araç';
+
+                    // 1. Özellikleri Oluşturma (Akıllı İkonlarla Birlikte)
+                    let ozelliklerHTML = '';
+                    const ozellikVerisi = arac.ozellikler || arac.aracOzellikler;
+                    if (ozellikVerisi) {
+                        const ozellikler = Array.isArray(ozellikVerisi) ? ozellikVerisi : ozellikVerisi.split(',');
+                        ozellikler.forEach(oz => {
+                            if (oz.trim()) {
+                                const iconClass = getSmartIcon(oz.trim());
+                                ozelliklerHTML += `<span style="display:inline-flex; align-items:center; margin-right:20px; margin-bottom:10px;"><i class="${iconClass}" style="color:#f39c12; margin-right:8px; font-size:16px;"></i> <span style="font-weight:700; font-size:14px; color:#444;">${oz.trim()}</span></span>`;
+                            }
                         });
-
-                        const result = await response.json();
-
-                        if (result.basari) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Başarılı!',
-                                text: 'Rezervasyon talebiniz başarıyla alındı. Sizinle en kısa sürede iletişime geçeceğiz.',
-                                confirmButtonColor: '#0f3d7a'
-                            });
-                            form.reset();
-                        } else {
-                            Swal.fire({ icon: 'error', title: 'Hata!', text: result.mesaj || 'İşlem başarısız.' });
-                        }
-                    } catch (error) {
-                        console.error('API Gönderim Hatası:', error);
-                        Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor, lütfen tekrar deneyin.' });
-                    } finally {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
+                    } else {
+                        ozelliklerHTML = '<span style="color:#999; font-size:12px;">Özellik eklenmemiş</span>';
                     }
+
+                    // 2. Çoklu Galeri Oluşturma
+                    let galeriHTML = '';
+                    const galeriVerisi = arac.galeriUrls || arac.galeri;
+                    if (galeriVerisi && galeriVerisi.length > 0) {
+                        galeriVerisi.forEach(url => {
+                            galeriHTML += `<img src="${url}" alt="${ad} Galeri">`;
+                        });
+                    } else {
+                        galeriHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #888; padding: 20px;">Bu araca ait galeri fotoğrafı bulunmamaktadır.</p>`;
+                    }
+
+                    // 3. Müşteri Yorumlarını Oluşturma (Garantili Veri Çekimi)
+                    let yorumlarHTML = '';
+                    let yorumlarDizisi = [];
+                    const yorumVerisi = arac.yorumlar || arac.aracYorumlar;
+
+                    if (Array.isArray(yorumVerisi)) {
+                        yorumlarDizisi = yorumVerisi;
+                    } else if (yorumVerisi && typeof yorumVerisi === 'string' && yorumVerisi !== '[]') {
+                        try { yorumlarDizisi = JSON.parse(yorumVerisi); } catch (e) { console.log("Yorum ayrıştırma hatası"); }
+                    }
+
+                    if (yorumlarDizisi.length > 0) {
+                        yorumlarDizisi.forEach(y => {
+                            const musteriIsmi = y.isim || y.ad || y.musteri || 'Misafir';
+                            const yorumMetni = y.metin || y.yorum || y.mesaj || '';
+
+                            yorumlarHTML += `
+                                <div class="mini-comment" style="margin-bottom:15px; padding:15px; background:#f9f9f9; border-radius:8px; border-left:4px solid #f39c12;">
+                                    <div class="stars" style="color:#f39c12; margin-bottom:8px; font-size:12px;">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <p style="font-style:italic; color:#444; font-size:14px; margin:0;">"${yorumMetni}" - <strong>${musteriIsmi}</strong></p>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        yorumlarHTML = `<p style="text-align: center; color: #888; padding: 20px;">Bu araç için henüz müşteri yorumu eklenmemiştir.</p>`;
+                    }
+
+                    // KART ŞABLONU (Tasarımınızın Birebir Aynısı)
+                    const cardHTML = `
+                        <div class="vehicle-main-card" style="margin-bottom: 50px;">
+                            <div class="vehicle-top-info">
+                                <div class="v-img-side">
+                                    <img src="${foto}" alt="${ad}">
+                                </div>
+                                <div class="v-content-side">
+                                    <span class="tag" style="text-transform: uppercase;">${marka}</span>
+                                    <h3 style="text-transform: uppercase;">${ad}</h3>
+                                    <p>${aciklama}</p>
+                                    <div class="quick-specs" style="display:flex; flex-wrap:wrap; margin-top:15px;">
+                                        ${ozelliklerHTML}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="vehicle-tabs">
+                                <div class="tab-header">
+                                    <button class="tab-btn active" onclick="openDynamicTab(event, 'rez-${id}', this)"><i class="fas fa-calendar-check"></i> <span>REZERVASYON YAP</span></button>
+                                    <button class="tab-btn" onclick="openDynamicTab(event, 'gal-${id}', this)"><i class="fas fa-images"></i> <span>ARAÇ RESİMLERİ</span></button>
+                                    <button class="tab-btn" onclick="openDynamicTab(event, 'com-${id}', this)"><i class="fas fa-comments"></i> <span>MÜŞTERİ YORUMLARI</span></button>
+                                </div>
+                                
+                                <div class="tab-content-wrapper">
+                                    <div id="rez-${id}" class="tab-content active">
+                                        <form class="inline-rez-form" onsubmit="gonderAracRezervasyon(event, '${ad}')">
+                                            <input type="text" placeholder="Ad Soyad" required>
+                                            <input type="tel" placeholder="Telefon" required>
+                                            <input type="date" required>
+                                            <button type="submit" class="btn-primary">TEKLİF AL</button>
+                                        </form>
+                                    </div>
+                                    
+                                    <div id="gal-${id}" class="tab-content">
+                                        <div class="vehicle-gallery-grid">
+                                            ${galeriHTML}
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="com-${id}" class="tab-content">
+                                        ${yorumlarHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    wrapper.innerHTML += cardHTML;
                 });
-            });
+
+            } catch (error) {
+                console.error("Araçları çekerken hata oluştu:", error);
+                wrapper.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi. Lütfen daha sonra tekrar deneyin.</p>';
+            }
         });
+
+        // Dinamik Sekme (Tab) Değiştirme Fonksiyonu
+        window.openDynamicTab = function (evt, tabId, btnElement) {
+            const container = btnElement.closest('.vehicle-tabs');
+            const contents = container.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+            const btns = container.getElementsByClassName("tab-btn");
+            for (let i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+            }
+            document.getElementById(tabId).classList.add("active");
+            btnElement.classList.add("active");
+        };
+
+        // Dinamik Rezervasyon Gönderim Fonksiyonu
+        window.gonderAracRezervasyon = async function (e, aracIsmi) {
+            e.preventDefault();
+            const form = e.target;
+            const inputs = form.querySelectorAll('input');
+            const btn = form.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/teklif-al', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        adSoyad: inputs[0].value,
+                        telefon: inputs[1].value,
+                        tarih: inputs[2].value,
+                        alinisNoktasi: 'Belirtilmedi',
+                        birakilisNoktasi: 'Belirtilmedi',
+                        formTipi: 'Araç Sayfası Rezervasyonu',
+                        mesaj: `Seçilen Araç: ${aracIsmi}\nSeçilen Tarih: ${inputs[2].value}`
+                    })
+                });
+                const result = await response.json();
+
+                if (result.basari) {
+                    Swal.fire({ icon: 'success', title: 'Başarılı!', text: 'Rezervasyon talebiniz başarıyla alındı.', confirmButtonColor: '#0f3d7a' });
+                    form.reset();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Hata!', text: result.mesaj || 'İşlem başarısız.' });
+                }
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor.' });
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        // Preloader Güvenlik Kodu
+        (function () {
+            var preloader = document.getElementById('bp-preloader');
+            if (!preloader) return;
+            document.body.style.overflow = 'hidden';
+            function removePreloader() {
+                preloader.classList.add('preloader-hide');
+                document.body.style.overflow = '';
+                setTimeout(function () { preloader.style.display = 'none'; }, 800);
+            }
+            window.addEventListener('load', function () { setTimeout(removePreloader, 500); });
+            setTimeout(removePreloader, 2500);
+        })();
     </script>
 
 </body>
-
-
-<script>
-    // ASLA TAKILI KALMAYAN GÜVENLİK KODU
-    (function () {
-        var preloader = document.getElementById('bp-preloader');
-        if (!preloader) return;
-
-        document.body.style.overflow = 'hidden'; // Kaydırmayı kilitle
-
-        function removePreloader() {
-            preloader.classList.add('preloader-hide');
-            document.body.style.overflow = ''; // Kilidi aç
-            setTimeout(function () { preloader.style.display = 'none'; }, 800);
-        }
-
-        // 1. İhtimal: Sayfa yüklenince 0.5 saniye bekle ve aç
-        window.addEventListener('load', function () {
-            setTimeout(removePreloader, 500);
-        });
-
-        // 2. İhtimal (GÜVENLİK): Sayfa takılsa bile 2.5 saniye sonra ZORLA aç!
-        setTimeout(removePreloader, 2500);
-    })();
-</script>
 
 </html>

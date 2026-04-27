@@ -16,10 +16,13 @@ const Reservation = require('./models/Reservation');
 // --- ARAÇLAR (VEHICLES) İÇİN MONGODB ŞEMASI (GÜNCELLENDİ) ---
 const vehicleSchema = new mongoose.Schema({
     aracAd: { type: String, required: true },
+    aracMarka: { type: String, default: '' },      // YENİ EKLENDİ
+    aracAciklama: { type: String, default: '' },   // YENİ EKLENDİ
+    aracYorumlar: { type: String, default: '[]' }, // YENİ EKLENDİ (Yorumlar JSON formatında string olarak tutulacak)
     aracSira: { type: Number, default: 999 }, // Ekranda gösterme sırası
     aracOzellikler: { type: String, default: '' },
     fotoUrl: { type: String, default: '' }, // Ana Kapak Fotoğrafı
-    galeriUrls: [{ type: String }], // YENİ: Çoklu Galeri Fotoğrafları
+    galeriUrls: [{ type: String }], // Çoklu Galeri Fotoğrafları
     kayitTarihi: { type: Date, default: Date.now }
 });
 const Vehicle = mongoose.models.Vehicle || mongoose.model('Vehicle', vehicleSchema);
@@ -75,7 +78,7 @@ const adminKontrol = (req, res, next) => {
     }
 };
 
-// --- YENİ: MULTER (FOTOĞRAF YÜKLEME) AYARLARI ---
+// --- MULTER (FOTOĞRAF YÜKLEME) AYARLARI ---
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Resimlerin kaydedileceği fiziksel klasör
@@ -93,10 +96,9 @@ const storage = multer.diskStorage({
         cb(null, 'arac-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
-
 const upload = multer({ storage: storage });
 
-// YENİ: Hem Ana Fotoğrafı Hem de Çoklu Galeri Fotoğraflarını Yakalayacak Yapı
+// Hem Ana Fotoğrafı Hem de Çoklu Galeri Fotoğraflarını Yakalayacak Yapı
 const cpUpload = upload.fields([
     { name: 'aracFoto', maxCount: 1 },
     { name: 'aracGaleri', maxCount: 10 } // Maksimum 10 galeri resmi
@@ -218,7 +220,7 @@ app.put('/api/admin/trash/:id/restore', adminKontrol, async (req, res) => {
     } catch (error) { res.status(500).send(); }
 });
 
-// --- YENİ: ARAÇ YÖNETİMİ API'LERİ (GALERİ DESTEKLİ) ---
+// --- ARAÇ YÖNETİMİ API'LERİ (GALERİ DESTEKLİ) ---
 
 // Tüm Araçları Getir (Herkese Açık - Anasayfa çekecek)
 app.get('/api/vehicles', async (req, res) => {
@@ -240,10 +242,10 @@ app.get('/api/admin/vehicles', adminKontrol, async (req, res) => {
     }
 });
 
-// Yeni Araç Ekle (Çoklu Fotoğraf Dahil)
+// Yeni Araç Ekle (YENİ ALANLAR EKLENDİ)
 app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
     try {
-        const { aracAd, aracOzellikler, aracSira } = req.body;
+        const { aracAd, aracMarka, aracAciklama, aracOzellikler, aracYorumlar, aracSira } = req.body;
 
         let fotoUrl = '';
         if (req.files && req.files['aracFoto']) {
@@ -259,8 +261,11 @@ app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
 
         const yeniArac = new Vehicle({
             aracAd: aracAd,
-            aracSira: aracSira || 999, // Sıra girilmezse en sona atsın
-            aracOzellikler: aracOzellikler,
+            aracMarka: aracMarka || '',
+            aracAciklama: aracAciklama || '',
+            aracYorumlar: aracYorumlar || '[]',
+            aracSira: aracSira || 999,
+            aracOzellikler: aracOzellikler || '',
             fotoUrl: fotoUrl,
             galeriUrls: galeriUrls
         });
@@ -273,7 +278,7 @@ app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
     }
 });
 
-// Araç Güncelle
+// Araç Güncelle (YENİ ALANLAR EKLENDİ)
 app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
     try {
         const arac = await Vehicle.findById(req.params.id);
@@ -281,7 +286,13 @@ app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
 
         arac.aracAd = req.body.aracAd || arac.aracAd;
         arac.aracSira = req.body.aracSira || arac.aracSira;
-        arac.aracOzellikler = req.body.aracOzellikler || arac.aracOzellikler;
+        arac.aracOzellikler = req.body.aracOzellikler !== undefined ? req.body.aracOzellikler : arac.aracOzellikler;
+        arac.aracMarka = req.body.aracMarka !== undefined ? req.body.aracMarka : arac.aracMarka;
+        arac.aracAciklama = req.body.aracAciklama !== undefined ? req.body.aracAciklama : arac.aracAciklama;
+
+        if (req.body.aracYorumlar !== undefined) {
+            arac.aracYorumlar = req.body.aracYorumlar;
+        }
 
         // Admin YENİ bir KAPAK fotoğrafı seçtiyse
         if (req.files && req.files['aracFoto']) {
@@ -352,7 +363,7 @@ app.post('/api/teklif-al', async (req, res) => {
         const yeni = new Reservation(req.body);
         await yeni.save();
 
-        // Admin'e E-posta Bildirimi Gönder (İsteğe Bağlı)
+        // Admin'e E-posta Bildirimi Gönder
         if (resend && process.env.RESEND_API_KEY) {
             try {
                 await resend.emails.send({

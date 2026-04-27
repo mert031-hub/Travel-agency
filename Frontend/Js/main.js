@@ -65,6 +65,7 @@ function changeLanguage(lang) {
  */
 function updateWhatsAppLinks(lang) {
     const wpLinks = document.querySelectorAll('[data-wp-msg]');
+
     wpLinks.forEach(link => {
         const msgKey = link.getAttribute('data-wp-msg');
 
@@ -104,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (mainNav) {
         const navLinks = mainNav.querySelectorAll('a');
+
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mainNav.classList.remove('active');
@@ -142,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- TELEFON ALANLARINA HARF GİRİŞİNİ ANLIK ENGELLEME ---
     const phoneInputs = document.querySelectorAll('input[type="tel"], #heroPhone');
+
     phoneInputs.forEach(input => {
         input.addEventListener('input', function (e) {
             this.value = this.value.replace(/(?!^\+)[^\d]/g, '');
@@ -178,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // --- 3. E-POSTA KONTROLÜ ---
         if (data.email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
             if (!emailRegex.test(data.email.trim())) {
                 Swal.fire({ icon: 'warning', title: 'Geçersiz E-Posta', text: 'Lütfen e-posta formatını kontrol ediniz.' });
                 return;
@@ -192,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const btn = formElement.querySelector('button');
         let originalText = "";
+
         if (btn) {
             originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
@@ -206,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(data)
             });
             const result = await response.json();
+
             if (result.basari) {
                 Swal.fire({
                     icon: 'success',
@@ -338,4 +344,61 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+});
+
+/* ==============================================================
+   YENİ EKLENEN: ANA SAYFA DİNAMİK ARAÇ VİTRİNİ (VERİTABANINDAN ÇEKER)
+============================================================== */
+document.addEventListener('DOMContentLoaded', async function () {
+    const vitrin = document.getElementById('anaSayfaAracVitrisi');
+
+    // Eğer bulunduğumuz sayfada "anaSayfaAracVitrisi" ID'li alan yoksa çalışmayı durdur (hata vermemesi için)
+    if (!vitrin) return;
+
+    try {
+        // Backend'den tüm araçları sırasıyla çek
+        const response = await fetch('/api/vehicles');
+        const araclar = await response.json();
+
+        vitrin.innerHTML = ''; // Yükleniyor yazısını sil
+
+        if (araclar.length === 0) {
+            vitrin.innerHTML = '<p style="text-align:center; width:100%; color:#666;">Şu an sistemde araç bulunmuyor.</p>';
+            return;
+        }
+
+        // Araçları döngüye sok ve ana sayfa kart tasarımına göre ekrana bas
+        araclar.forEach(arac => {
+            const foto = arac.fotoUrl || '/Frontend/Images/default-car.jpg';
+            const marka = arac.aracMarka || 'VIP TRANSFER';
+
+            // Kart HTML Tasarımı (Ana sayfadaki sütunlu yapıya uygun)
+            const kartHTML = `
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="vehicle-card-home" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05); transition:0.3s; height: 100%; display: flex; flex-direction: column;">
+                        <div style="height:200px; overflow:hidden; flex-shrink: 0;">
+                            <img src="${foto}" alt="${arac.aracAd}" style="width:100%; height:100%; object-fit:cover;">
+                        </div>
+                        <div style="padding:20px; display: flex; flex-direction: column; flex-grow: 1;">
+                            <span style="font-size:11px; color:#f39c12; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">${marka}</span>
+                            <h3 style="margin:5px 0 10px; font-size:18px; color:#0f3d7a; font-weight:800;">${arac.aracAd}</h3>
+                            <p style="font-size:13px; color:#666; height:40px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; margin-bottom: 15px;">
+                                ${arac.aracAciklama || 'Ayrıcalıklı ve konforlu seyahatin tadını çıkarın.'}
+                            </p>
+                            <div style="margin-top: auto;">
+                                <a href="araclarimiz.html" style="display:inline-block; padding:10px 20px; background:#0f3d7a; color:#fff; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; width: 100%; text-align: center; transition: 0.3s;">
+                                    İncele & Rezervasyon
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            vitrin.innerHTML += kartHTML;
+        });
+
+    } catch (error) {
+        console.error("Araçları çekerken hata oluştu:", error);
+        vitrin.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi. Lütfen daha sonra tekrar deneyin.</p>';
+    }
 });
