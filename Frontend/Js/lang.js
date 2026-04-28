@@ -232,8 +232,18 @@ const translations = {
         wp_msg_srv1: "Merhaba, Otel Transfer hizmetiniz hakkında bilgi alabilir miyim?",
         wp_msg_srv2: "Merhaba, Şoförlü Araç Tahsisi hakkında bilgi alabilir miyim?",
         wp_msg_srv3: "Merhaba, VIP Karşılama hizmetiniz hakkında bilgi alabilir miyim?",
+
+        // TURLAR İÇİN WHATSAPP MESAJLARI (TÜMÜ)
         wp_msg_tour_girne: "Merhaba, Girne & Bellapais turu hakkında bilgi ve fiyat alabilir miyim?",
         wp_msg_tour_magosa: "Merhaba, Magosa & Maraş turu hakkında bilgi ve fiyat alabilir miyim?",
+        wp_msg_tour_lefkosa: "Merhaba, Lefkoşa Kültür turu hakkında bilgi ve fiyat alabilir miyim?",
+        wp_msg_tour_karpaz: "Merhaba, Karpaz & Altınkum turu hakkında bilgi ve fiyat alabilir miyim?",
+        wp_msg_tour_guzelyurt: "Merhaba, Güzelyurt & Lefke turu hakkında bilgi ve fiyat alabilir miyim?",
+
+        // HİZMETLER SAYFASI WHATSAPP MESAJLARI
+        wp_msg_srv_ercan: "Merhaba, Ercan Havalimanı VIP Transfer hizmetiniz için fiyat almak istiyorum.",
+        wp_msg_srv_tahsis: "Merhaba, Şoförlü Araç Tahsisi hizmetiniz hakkında detaylı bilgi almak istiyorum.",
+        wp_msg_srv_karsilama: "Merhaba, VIP Karşılama ve Asistanlık hizmetiniz için rezervasyon yaptırmak istiyorum."
     },
     en: {
         topbar_service: "24/7 At Your Service",
@@ -406,7 +416,7 @@ const translations = {
         t3_title: "Nicosia Culture",
         t3_desc: "Trace the Ottoman and Lusignan footprints in the world's only divided capital.",
         t3_l1: "Great Inn (Büyük Han)",
-        t3_l2: "Selimiye Mosque",
+        t3_l2: "Selimi Mosque",
         t3_l3: "Arasta Bazaar",
 
         t4_badge: "Nature",
@@ -458,8 +468,18 @@ const translations = {
         wp_msg_srv1: "Hello, could I get information about your Hotel Transfer service?",
         wp_msg_srv2: "Hello, could I get information about Chauffeured Vehicle Allocation?",
         wp_msg_srv3: "Hello, could I get information about your VIP Meet & Greet service?",
+
+        // TURLAR İÇİN WHATSAPP MESAJLARI
         wp_msg_tour_girne: "Hello, I would like to get information and pricing for the Kyrenia & Bellapais tour.",
         wp_msg_tour_magosa: "Hello, I would like to get information and pricing for the Famagusta & Varosha tour.",
+        wp_msg_tour_lefkosa: "Hello, I would like to get information and pricing for the Nicosia Culture tour.",
+        wp_msg_tour_karpaz: "Hello, I would like to get information and pricing for the Karpaz & Golden Beach tour.",
+        wp_msg_tour_guzelyurt: "Hello, I would like to get information and pricing for the Morphou & Lefka tour.",
+
+        // HİZMETLER SAYFASI WHATSAPP MESAJLARI
+        wp_msg_srv_ercan: "Hello, I would like to get a price for your Ercan Airport VIP Transfer service.",
+        wp_msg_srv_tahsis: "Hello, I would like to get detailed information about your Chauffeur Driven Car Allocation service.",
+        wp_msg_srv_karsilama: "Hello, I would like to make a reservation for your VIP Meet & Greet and Assistance service."
     },
     ru: {
         topbar_service: "К Вашим Услугам 24/7",
@@ -684,7 +704,17 @@ const translations = {
         wp_msg_srv1: "Здравствуйте, могу ли я получить информацию об услуге трансфера в отель?",
         wp_msg_srv2: "Здравствуйте, могу ли я получить информацию об аренде автомобиля с водителем?",
         wp_msg_srv3: "Здравствуйте, могу ли я получить информацию о вашей услуге VIP-встречи?",
+
+        // TURLAR İÇİN WHATSAPP MESAJLARI
         wp_msg_tour_girne: "Здравствуйте, я хотел бы получить информацию и цены на тур Кирения и Беллапаис.",
         wp_msg_tour_magosa: "Здравствуйте, я хотел бы получить информацию и цены на тур Фамагуста и Вароша.",
+        wp_msg_tour_lefkosa: "Здравствуйте, я хотел бы получить информацию и цены на тур Культура Никосии.",
+        wp_msg_tour_karpaz: "Здравствуйте, я хотел бы получить информацию и цены на тур Карпаз и Золотой Пляж.",
+        wp_msg_tour_guzelyurt: "Здравствуйте, я хотел бы получить информацию и цены на тур Морфу и Лефка.",
+
+        // HİZMETLER SAYFASI WHATSAPP MESAJLARI
+        wp_msg_srv_ercan: "Здравствуйте, я хотел бы узнать цену на услугу VIP-трансфера из аэропорта Эрджан.",
+        wp_msg_srv_tahsis: "Здравствуйте, я хотел бы получить подробную информацию о вашей услуге аренды автомобиля с водителем.",
+        wp_msg_srv_karsilama: "Здравствуйте, я хотел бы забронировать услугу VIP-встречи и сопровождения."
     }
 };

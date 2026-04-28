@@ -4,10 +4,17 @@
 
 let currentTab = 'active';
 let tumVeriler = [];
+
+// Araç Değişkenleri
 let tumAraclar = [];
 let aktifOzellikler = [];
-let aktifYorumlar = []; // YENİ: Müşteri yorumlarını hafızada tutacak dizi
+let aktifYorumlar = [];
 let secilenGaleriDosyalari = [];
+
+// Tur Değişkenleri
+let tumTurlar = [];
+let aktifYerler = [];
+let secilenTurGaleriDosyalari = [];
 
 window.onload = verileriYukle;
 
@@ -25,12 +32,14 @@ async function guvenliFetch(url, options = {}) {
 function aktifSekmeyiYenile() {
     if (currentTab === 'vehicles') {
         araclariYukle();
+    } else if (currentTab === 'tours') {
+        turlariYukle();
     } else {
         verileriYukle();
     }
 }
 
-// --- 1. REZERVASYON (ESKİ) SİSTEMİ KODLARI ---
+// --- 1. REZERVASYON SİSTEMİ KODLARI ---
 async function verileriYukle() {
     const tbody = document.getElementById('tableBody');
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
@@ -92,8 +101,7 @@ function tabloyuCiz(liste) {
                 <td data-label="Tip"><span class="tag ${item.formTipi?.includes('Hero') ? 'tag-hero' : 'tag-contact'}">${item.formTipi || 'Genel'}</span></td>
                 <td data-label="İşlemler">
                     <div class="action-flex">
-                        ${currentTab === 'active' ?
-                `
+                        ${currentTab === 'active' ? `
                             <button onclick="durumDegistir('${item._id}')" class="btn btn-blue" title="Görülme Durumu"><i class="fas ${item.isRead ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
                             <a href="${wpLink}" target="_blank" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                             <button onclick="kayitSil('${item._id}')" class="btn btn-red" title="Çöpe At"><i class="fas fa-trash"></i></button>
@@ -115,6 +123,12 @@ function tabloyuFiltrele() {
         return;
     }
 
+    if (currentTab === 'tours') {
+        const filtrelenmisTurlar = tumTurlar.filter(i => (i.turAd || '').toLocaleLowerCase('tr-TR').includes(q));
+        turlariCiz(filtrelenmisTurlar);
+        return;
+    }
+
     const filtrelenmis = tumVeriler.filter(i => {
         return (i.adSoyad || '').toLocaleLowerCase('tr-TR').includes(q) ||
             (i.telefon || '').includes(q) ||
@@ -126,7 +140,6 @@ function tabloyuFiltrele() {
 async function mesajGoster(encodedMsg, id, encodedNote) {
     const msg = decodeURIComponent(escape(atob(encodedMsg)));
     const note = decodeURIComponent(escape(atob(encodedNote)));
-
     const { value: text, isConfirmed } = await Swal.fire({
         title: '<span style="color:#0f3d7a; font-weight:800;">Talep Detayları</span>',
         customClass: { popup: 'modern-modal' },
@@ -169,31 +182,50 @@ window.cikisYap = async function () {
     window.location.href = '/login';
 };
 
+
 // --- 2. SEKME (TAB) YÖNETİMİ ---
-function tabDegistir(t) {
+window.tabDegistir = function (t) {
     currentTab = t;
     document.getElementById('btnActive').classList.toggle('active', t === 'active');
     document.getElementById('btnTrash').classList.toggle('active', t === 'trash');
     document.getElementById('btnVehicles').classList.toggle('active', t === 'vehicles');
+    document.getElementById('btnTours').classList.toggle('active', t === 'tours'); // Yeni Tur Sekmesi
 
     const searchInput = document.getElementById('searchInput');
 
+    // Araçlar
     if (t === 'vehicles') {
         document.getElementById('reservationsSection').style.display = 'none';
+        document.getElementById('toursSection').style.display = 'none';
         document.getElementById('vehiclesSection').style.display = 'block';
         searchInput.placeholder = "Araç adı ara...";
         searchInput.value = '';
         araclariYukle();
-    } else {
-        document.getElementById('reservationsSection').style.display = 'block';
+    }
+    // Turlar
+    else if (t === 'tours') {
+        document.getElementById('reservationsSection').style.display = 'none';
         document.getElementById('vehiclesSection').style.display = 'none';
+        document.getElementById('toursSection').style.display = 'block';
+        searchInput.placeholder = "Tur adı ara...";
+        searchInput.value = '';
+        turlariYukle();
+    }
+    // Rezervasyonlar
+    else {
+        document.getElementById('vehiclesSection').style.display = 'none';
+        document.getElementById('toursSection').style.display = 'none';
+        document.getElementById('reservationsSection').style.display = 'block';
         searchInput.placeholder = "İsim, telefon veya güzergah ara...";
         searchInput.value = '';
         verileriYukle();
     }
 }
 
-// --- 3. ARAÇ YÖNETİMİ SİSTEMİ KODLARI ---
+
+/* ==============================================================
+   3. ARAÇ YÖNETİMİ SİSTEMİ KODLARI
+============================================================== */
 async function araclariYukle() {
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
     if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
@@ -202,11 +234,7 @@ async function araclariYukle() {
         const res = await guvenliFetch('/api/admin/vehicles');
         if (res.ok) {
             tumAraclar = await res.json();
-            tumAraclar.sort((a, b) => {
-                const siraA = a.aracSira || 999;
-                const siraB = b.aracSira || 999;
-                return siraA - siraB;
-            });
+            tumAraclar.sort((a, b) => (a.aracSira || 999) - (b.aracSira || 999));
             araclariCiz(tumAraclar);
         } else {
             document.getElementById('vehicleGrid').innerHTML = '<p style="color:#666; width:100%; text-align:center;">Araçlar yüklenemedi.</p>';
@@ -235,9 +263,7 @@ function araclariCiz(liste) {
         if (arac.aracOzellikler) {
             const ozDizisi = arac.aracOzellikler.split(',');
             ozDizisi.forEach(oz => {
-                if (oz.trim()) {
-                    ozellikHtml += `<span class="tag tag-hero" style="margin:2px;">${oz.trim()}</span>`;
-                }
+                if (oz.trim()) ozellikHtml += `<span class="tag tag-hero" style="margin:2px;">${oz.trim()}</span>`;
             });
         } else {
             ozellikHtml = '<span style="color:#999; font-size:12px;">Özellik eklenmemiş</span>';
@@ -274,57 +300,44 @@ const imagePreviewBox = document.getElementById('imagePreviewBox');
 const previewImg = document.getElementById('previewImg');
 const btnSaveVehicle = document.getElementById('btnSaveVehicle');
 
-function aracModalAc() {
+window.aracModalAc = function () {
     vehicleForm.reset();
     document.getElementById('aracId').value = '';
-    if (document.getElementById('aracSira')) document.getElementById('aracSira').value = '';
-
-    // YENİ ALANLARI SIFIRLA
-    if (document.getElementById('aracMarka')) document.getElementById('aracMarka').value = '';
-    if (document.getElementById('aracAciklama')) document.getElementById('aracAciklama').value = '';
-
+    document.getElementById('aracSira').value = '';
+    document.getElementById('aracMarka').value = '';
+    document.getElementById('aracAciklama').value = '';
     document.getElementById('modalTitle').innerText = 'Yeni Araç Ekle';
-    btnSaveVehicle.innerHTML = '<i class="fas fa-save"></i> Aracı Kaydet';
+    btnSaveVehicle.innerHTML = '<i class="fas fa-save"></i> Kaydet';
 
     aktifOzellikler = [];
     ozellikleriEkranaCiz();
-
-    // MÜŞTERİ YORUMLARINI SIFIRLA
     aktifYorumlar = [];
     yorumlariEkranaCiz();
-
-    // GALERİYİ SIFIRLA
     secilenGaleriDosyalari = [];
     document.getElementById('galleryPreviewBox').innerHTML = '';
-
     fotoKaldir();
     vehicleModal.classList.add('active');
 }
 
-function aracDuzenleModalAc(encodedData) {
+window.aracDuzenleModalAc = function (encodedData) {
     const arac = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
 
     document.getElementById('aracId').value = arac._id;
     document.getElementById('aracAd').value = arac.aracAd;
-    if (document.getElementById('aracSira')) document.getElementById('aracSira').value = arac.aracSira || '';
-
-    // YENİ ALANLARI DOLDUR
-    if (document.getElementById('aracMarka')) document.getElementById('aracMarka').value = arac.aracMarka || '';
-    if (document.getElementById('aracAciklama')) document.getElementById('aracAciklama').value = arac.aracAciklama || '';
-
+    document.getElementById('aracSira').value = arac.aracSira || '';
+    document.getElementById('aracMarka').value = arac.aracMarka || '';
+    document.getElementById('aracAciklama').value = arac.aracAciklama || '';
     document.getElementById('modalTitle').innerText = 'Aracı Düzenle';
     btnSaveVehicle.innerHTML = '<i class="fas fa-sync"></i> Güncelle';
 
     aktifOzellikler = arac.aracOzellikler ? arac.aracOzellikler.split(',').map(o => o.trim()).filter(o => o) : [];
     ozellikleriEkranaCiz();
 
-    // MÜŞTERİ YORUMLARINI DOLDUR
     try {
         aktifYorumlar = arac.aracYorumlar ? JSON.parse(arac.aracYorumlar) : [];
     } catch (e) { aktifYorumlar = []; }
     yorumlariEkranaCiz();
 
-    // DÜZENLEME MODUNDA SEÇİLİ GALERİ RESİMLERİNİ SIFIRLA
     secilenGaleriDosyalari = [];
     document.getElementById('galleryPreviewBox').innerHTML = '';
 
@@ -339,52 +352,44 @@ function aracDuzenleModalAc(encodedData) {
     vehicleModal.classList.add('active');
 }
 
-function aracModalKapat() {
+window.aracModalKapat = function () {
     vehicleModal.classList.remove('active');
 }
 
-// --- DİNAMİK ÖZELLİK (TAG) SİSTEMİ FONKSİYONLARI ---
-function ozellikEkle() {
+// Araç Özellikleri
+window.ozellikEkle = function () {
     const input = document.getElementById('yeniOzellikInput');
     const val = input.value.trim();
-
     if (val && !aktifOzellikler.includes(val)) {
         aktifOzellikler.push(val);
         ozellikleriEkranaCiz();
         input.value = '';
     }
 }
-
-function ozellikSil(index) {
+window.ozellikSil = function (index) {
     aktifOzellikler.splice(index, 1);
     ozellikleriEkranaCiz();
 }
-
 function ozellikleriEkranaCiz() {
     const container = document.getElementById('featureTagsContainer');
     if (!container) return;
-
     container.innerHTML = '';
     aktifOzellikler.forEach((ozellik, i) => {
         container.innerHTML += `
             <div class="feature-tag">
                 <i class="fas fa-check-circle" style="color: #d4af37;"></i> ${ozellik} 
-                <i class="fas fa-times-circle" style="margin-left: 5px; cursor:pointer; color: #e74c3c;" onclick="ozellikSil(${i})" title="Sil"></i>
-            </div>
-        `;
+                <i class="fas fa-times-circle" style="margin-left: 5px; cursor:pointer; color: #e74c3c;" onclick="ozellikSil(${i})"></i>
+            </div>`;
     });
-
-    const gizliInput = document.getElementById('aracOzelliklerGizli');
-    if (gizliInput) gizliInput.value = aktifOzellikler.join(', ');
+    document.getElementById('aracOzelliklerGizli').value = aktifOzellikler.join(', ');
 }
 
-// --- YENİ: MÜŞTERİ YORUMLARI SİSTEMİ ---
+// Araç Yorumları
 window.yorumEkle = function () {
     const isimInput = document.getElementById('yeniYorumIsim');
     const metinInput = document.getElementById('yeniYorumMetin');
     const isim = isimInput.value.trim();
     const metin = metinInput.value.trim();
-
     if (isim && metin) {
         aktifYorumlar.push({ isim, metin });
         yorumlariEkranaCiz();
@@ -392,59 +397,36 @@ window.yorumEkle = function () {
         metinInput.value = '';
     }
 };
-
 window.yorumSil = function (index) {
     aktifYorumlar.splice(index, 1);
     yorumlariEkranaCiz();
 };
-
 window.yorumlariEkranaCiz = function () {
     const container = document.getElementById('yorumlarContainer');
     if (!container) return;
-
     container.innerHTML = '';
     aktifYorumlar.forEach((yorum, i) => {
         container.innerHTML += `
             <div class="feature-tag" style="display:flex; justify-content:space-between; width:100%; background:#fff; border-left:3px solid #f39c12; padding:10px;">
                 <div style="flex:1;"><strong>${yorum.isim}:</strong> ${yorum.metin}</div>
-                <i class="fas fa-trash" style="color:#e74c3c; cursor:pointer; margin-left:15px; align-self:center;" onclick="yorumSil(${i})" title="Sil"></i>
-            </div>
-        `;
+                <i class="fas fa-trash" style="color:#e74c3c; cursor:pointer; margin-left:15px; align-self:center;" onclick="yorumSil(${i})"></i>
+            </div>`;
     });
-
-    const gizliInput = document.getElementById('aracYorumlarGizli');
-    if (gizliInput) gizliInput.value = JSON.stringify(aktifYorumlar);
+    document.getElementById('aracYorumlarGizli').value = JSON.stringify(aktifYorumlar);
 };
 
-// --- ANA KAPAK FOTOĞRAFI SÜRÜKLE-BIRAK DESTEĞİ ---
+// Araç Kapak Foto
 if (dropZone) {
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropZone.style.borderColor = "#0f3d7a";
-            dropZone.style.background = "#f0f4f8";
-        });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropZone.style.borderColor = "#cbd5e1";
-            dropZone.style.background = "#f8fafc";
-        });
-    });
-
+    ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, (ev) => { ev.preventDefault(); dropZone.style.background = "#f0f4f8"; }));
+    ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, (ev) => { ev.preventDefault(); dropZone.style.background = "#f8fafc"; }));
     dropZone.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        if (files.length > 0) {
-            fileInput.files = files;
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
             fotoOnizlemeYap(fileInput);
         }
     });
 }
-
-function fotoOnizlemeYap(input) {
+window.fotoOnizlemeYap = function (input) {
     const file = input.files[0];
     if (file) {
         const reader = new FileReader();
@@ -456,84 +438,59 @@ function fotoOnizlemeYap(input) {
         reader.readAsDataURL(file);
     }
 }
-
-function fotoKaldir() {
+window.fotoKaldir = function () {
     document.getElementById('aracFotoInput').value = '';
     previewImg.src = '';
     imagePreviewBox.style.display = 'none';
     dropZone.style.display = 'block';
 }
 
-/* ==============================================================
-   ÇOKLU GALERİ RESMİ İŞLEMLERİ
-============================================================== */
+// Araç Galeri
 window.galeriOnizlemeYap = function (input) {
     if (input.files) {
-        Array.from(input.files).forEach(file => {
-            secilenGaleriDosyalari.push(file);
-        });
+        Array.from(input.files).forEach(file => secilenGaleriDosyalari.push(file));
         galeriEkranaCiz();
     }
     input.value = '';
 }
-
 window.galeriEkranaCiz = function () {
     const box = document.getElementById('galleryPreviewBox');
     box.innerHTML = '';
-
     secilenGaleriDosyalari.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function (e) {
             box.innerHTML += `
                 <div class="gallery-item">
-                    <img src="${e.target.result}" alt="Galeri">
-                    <button type="button" class="btn-remove-gal" onclick="galeriResimSil(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `;
+                    <img src="${e.target.result}">
+                    <button type="button" class="btn-remove-gal" onclick="galeriResimSil(${index})"><i class="fas fa-times"></i></button>
+                </div>`;
         }
         reader.readAsDataURL(file);
     });
 }
-
 window.galeriResimSil = function (index) {
     secilenGaleriDosyalari.splice(index, 1);
     galeriEkranaCiz();
 }
 
-// --- Backend'e Gönderim ---
-async function aracKaydet(e) {
+// Araç Kaydet
+window.aracKaydet = async function (e) {
     e.preventDefault();
     const btn = document.getElementById('btnSaveVehicle');
     const originalText = btn.innerHTML;
-
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...';
     btn.disabled = true;
-
     try {
         const formEl = document.getElementById('vehicleForm');
         const formData = new FormData(formEl);
-
         formData.delete('aracGaleri');
-        secilenGaleriDosyalari.forEach(file => {
-            formData.append('aracGaleri', file);
-        });
+        secilenGaleriDosyalari.forEach(file => formData.append('aracGaleri', file));
 
         const id = document.getElementById('aracId').value;
-        let url = '/api/admin/vehicles';
-        let method = 'POST';
+        const url = id ? `/api/admin/vehicles/${id}` : '/api/admin/vehicles';
+        const method = id ? 'PUT' : 'POST';
 
-        if (id) {
-            url = `/api/admin/vehicles/${id}`;
-            method = 'PUT';
-        }
-
-        const res = await fetch(url, {
-            method: method,
-            body: formData
-        });
-
+        const res = await fetch(url, { method: method, body: formData });
         const result = await res.json();
 
         if (res.ok) {
@@ -544,18 +501,271 @@ async function aracKaydet(e) {
             Swal.fire({ icon: 'error', title: 'Hata', text: result.mesaj || 'Kayıt başarısız.' });
         }
     } catch (err) {
-        console.error(err);
         Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor.' });
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
     }
 }
-
-async function aracTamamenSil(id) {
-    const confirm = await Swal.fire({ title: 'Aracı Sil?', text: "Bu işlem geri alınamaz ve aracın fotoğrafı da sunucudan silinir.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c' });
+window.aracTamamenSil = async function (id) {
+    const confirm = await Swal.fire({ title: 'Aracı Sil?', text: "Bu işlem geri alınamaz.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c' });
     if (confirm.isConfirmed) {
         await guvenliFetch(`/api/admin/vehicles/${id}`, { method: 'DELETE' });
         araclariYukle();
+    }
+}
+
+
+/* ==============================================================
+   4. YENİ: TURLAR YÖNETİMİ SİSTEMİ
+============================================================== */
+
+async function turlariYukle() {
+    const refreshBtnIcon = document.querySelector('.btn-refresh i');
+    if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
+
+    try {
+        const res = await guvenliFetch('/api/admin/tours');
+        if (res.ok) {
+            tumTurlar = await res.json();
+            tumTurlar.sort((a, b) => (a.turSira || 999) - (b.turSira || 999));
+            turlariCiz(tumTurlar);
+        } else {
+            document.getElementById('tourGrid').innerHTML = '<p style="color:#666; width:100%; text-align:center;">Turlar yüklenemedi.</p>';
+        }
+    } catch (e) {
+        console.error("Tur yükleme hatası:", e);
+    } finally {
+        if (refreshBtnIcon) refreshBtnIcon.classList.remove('fa-spin');
+    }
+}
+
+function turlariCiz(liste) {
+    const grid = document.getElementById('tourGrid');
+    grid.innerHTML = '';
+
+    if (liste.length === 0) {
+        grid.innerHTML = '<p style="color:#999; text-align:center; width:100%; padding:40px;">Henüz sistemde tur bulunmuyor.</p>';
+        return;
+    }
+
+    liste.forEach(tur => {
+        const foto = tur.fotoUrl || '/Frontend/Images/default-car.jpg';
+        const turVerisi = btoa(unescape(encodeURIComponent(JSON.stringify(tur))));
+
+        const siraRozeti = tur.turSira ? `<div style="position:absolute; top:10px; right:10px; background:#27ae60; color:#fff; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px;">Sıra: ${tur.turSira}</div>` : '';
+        const turRozetLabel = tur.turRozet ? `<div style="position:absolute; top:10px; left:10px; background:#f39c12; color:#fff; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px;">${tur.turRozet}</div>` : '';
+
+        grid.innerHTML += `
+            <div class="vehicle-card" style="position:relative; border-top: 3px solid #27ae60;">
+                ${siraRozeti}
+                ${turRozetLabel}
+                <div class="vehicle-img-box">
+                    <img src="${foto}" alt="${tur.turAd}">
+                </div>
+                <div class="vehicle-details">
+                    <h4>${tur.turAd}</h4>
+                    <p style="font-size:12px; color:#888; margin-top:-5px; margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> ${tur.turBolge || 'Belirtilmedi'}</p>
+                    
+                    <div class="vehicle-actions" style="margin-top:15px;">
+                        <button class="btn-edit-veh" style="background:#f0f4f8; color:#0f3d7a;" onclick="turDuzenleModalAc('${turVerisi}')"><i class="fas fa-edit"></i> Düzenle</button>
+                        <button class="btn-delete-veh" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:8px 12px; cursor:pointer;" onclick="turTamamenSil('${tur._id}')"><i class="fas fa-trash"></i> Sil</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// Tur Modal İşlemleri
+const tourModal = document.getElementById('tourModal');
+const tourForm = document.getElementById('tourForm');
+const dropZoneTour = document.getElementById('dropZoneTour');
+const turFotoInput = document.getElementById('turFotoInput');
+const tourImagePreviewBox = document.getElementById('tourImagePreviewBox');
+const tourPreviewImg = document.getElementById('tourPreviewImg');
+const btnSaveTour = document.getElementById('btnSaveTour');
+
+window.turModalAc = function () {
+    tourForm.reset();
+    document.getElementById('turId').value = '';
+    document.getElementById('turSira').value = '';
+    document.getElementById('turAd').value = '';
+    document.getElementById('turBolge').value = '';
+    document.getElementById('turAciklama').value = '';
+    document.getElementById('turRozet').value = '';
+
+    document.getElementById('tourModalTitle').innerText = 'Yeni Tur Ekle';
+    btnSaveTour.innerHTML = '<i class="fas fa-save"></i> Kaydet';
+
+    aktifYerler = [];
+    yerleriEkranaCiz();
+
+    secilenTurGaleriDosyalari = [];
+    document.getElementById('tourGalleryPreviewBox').innerHTML = '';
+    turFotoKaldir();
+
+    tourModal.classList.add('active');
+}
+
+window.turDuzenleModalAc = function (encodedData) {
+    const tur = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
+
+    document.getElementById('turId').value = tur._id;
+    document.getElementById('turAd').value = tur.turAd;
+    document.getElementById('turSira').value = tur.turSira || '';
+    document.getElementById('turBolge').value = tur.turBolge || '';
+    document.getElementById('turAciklama').value = tur.turAciklama || '';
+    document.getElementById('turRozet').value = tur.turRozet || '';
+
+    document.getElementById('tourModalTitle').innerText = 'Turu Düzenle';
+    btnSaveTour.innerHTML = '<i class="fas fa-sync"></i> Güncelle';
+
+    aktifYerler = tur.turYerler ? tur.turYerler.split(',').map(o => o.trim()).filter(o => o) : [];
+    yerleriEkranaCiz();
+
+    secilenTurGaleriDosyalari = [];
+    document.getElementById('tourGalleryPreviewBox').innerHTML = '';
+
+    if (tur.fotoUrl) {
+        tourPreviewImg.src = tur.fotoUrl;
+        tourImagePreviewBox.style.display = 'block';
+        dropZoneTour.style.display = 'none';
+    } else {
+        turFotoKaldir();
+    }
+
+    tourModal.classList.add('active');
+}
+
+window.turModalKapat = function () {
+    tourModal.classList.remove('active');
+}
+
+// Tur Yerler Ekleme (Özellikler gibi)
+window.yerEkle = function () {
+    const input = document.getElementById('yeniYerInput');
+    const val = input.value.trim();
+    if (val && !aktifYerler.includes(val)) {
+        aktifYerler.push(val);
+        yerleriEkranaCiz();
+        input.value = '';
+    }
+}
+window.yerSil = function (index) {
+    aktifYerler.splice(index, 1);
+    yerleriEkranaCiz();
+}
+function yerleriEkranaCiz() {
+    const container = document.getElementById('yerTagsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    aktifYerler.forEach((yer, i) => {
+        container.innerHTML += `
+            <div class="feature-tag" style="background:#e8f5e9; border: 1px solid #27ae60; color:#27ae60;">
+                <i class="fas fa-check" style="color: #27ae60;"></i> ${yer} 
+                <i class="fas fa-times-circle" style="margin-left: 5px; cursor:pointer; color: #e74c3c;" onclick="yerSil(${i})"></i>
+            </div>`;
+    });
+    document.getElementById('turYerlerGizli').value = aktifYerler.join(', ');
+}
+
+// Tur Kapak Foto
+if (dropZoneTour) {
+    ['dragenter', 'dragover'].forEach(e => dropZoneTour.addEventListener(e, (ev) => { ev.preventDefault(); dropZoneTour.style.background = "#e8f5e9"; }));
+    ['dragleave', 'drop'].forEach(e => dropZoneTour.addEventListener(e, (ev) => { ev.preventDefault(); dropZoneTour.style.background = "#f8fafc"; }));
+    dropZoneTour.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files.length > 0) {
+            turFotoInput.files = e.dataTransfer.files;
+            turFotoOnizlemeYap(turFotoInput);
+        }
+    });
+}
+window.turFotoOnizlemeYap = function (input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            tourPreviewImg.src = e.target.result;
+            tourImagePreviewBox.style.display = 'block';
+            dropZoneTour.style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+window.turFotoKaldir = function () {
+    document.getElementById('turFotoInput').value = '';
+    tourPreviewImg.src = '';
+    tourImagePreviewBox.style.display = 'none';
+    dropZoneTour.style.display = 'block';
+}
+
+// Tur Galeri Foto
+window.turGaleriOnizlemeYap = function (input) {
+    if (input.files) {
+        Array.from(input.files).forEach(file => secilenTurGaleriDosyalari.push(file));
+        turGaleriEkranaCiz();
+    }
+    input.value = '';
+}
+window.turGaleriEkranaCiz = function () {
+    const box = document.getElementById('tourGalleryPreviewBox');
+    box.innerHTML = '';
+    secilenTurGaleriDosyalari.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            box.innerHTML += `
+                <div class="gallery-item">
+                    <img src="${e.target.result}">
+                    <button type="button" class="btn-remove-gal" onclick="turGaleriResimSil(${index})"><i class="fas fa-times"></i></button>
+                </div>`;
+        }
+        reader.readAsDataURL(file);
+    });
+}
+window.turGaleriResimSil = function (index) {
+    secilenTurGaleriDosyalari.splice(index, 1);
+    turGaleriEkranaCiz();
+}
+
+// Tur Kaydet / Gönder
+window.turKaydet = async function (e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnSaveTour');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yükleniyor...';
+    btn.disabled = true;
+    try {
+        const formEl = document.getElementById('tourForm');
+        const formData = new FormData(formEl);
+        formData.delete('turGaleri');
+        secilenTurGaleriDosyalari.forEach(file => formData.append('turGaleri', file));
+
+        const id = document.getElementById('turId').value;
+        const url = id ? `/api/admin/tours/${id}` : '/api/admin/tours';
+        const method = id ? 'PUT' : 'POST';
+
+        const res = await fetch(url, { method: method, body: formData });
+        const result = await res.json();
+
+        if (res.ok) {
+            Swal.fire({ icon: 'success', title: 'Başarılı', text: 'Tur bilgileri kaydedildi.', confirmButtonColor: '#27ae60' });
+            turModalKapat();
+            turlariYukle();
+        } else {
+            Swal.fire({ icon: 'error', title: 'Hata', text: result.mesaj || 'Kayıt başarısız.' });
+        }
+    } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor.' });
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+window.turTamamenSil = async function (id) {
+    const confirm = await Swal.fire({ title: 'Turu Sil?', text: "Bu işlem geri alınamaz.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e74c3c' });
+    if (confirm.isConfirmed) {
+        await guvenliFetch(`/api/admin/tours/${id}`, { method: 'DELETE' });
+        turlariYukle();
     }
 }

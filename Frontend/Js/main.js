@@ -1,6 +1,5 @@
 /* ==============================================================
    1. PRELOADER ZORLAYICI (GECİKMEYİ SIFIRLAMAK İÇİN)
-   Tarayıcı henüz hiçbir şeyi çizmeden preloader'ı görünür kılar.
 ============================================================== */
 (function () {
     const preloader = document.getElementById('bp-preloader');
@@ -40,20 +39,26 @@ function changeLanguage(lang) {
     placeholders.forEach(el => {
         const key = el.getAttribute('data-lang-placeholder');
         if (translations[lang][key]) {
-            el.placeholder = translations[lang][key];
+            el.setAttribute('placeholder', translations[lang][key]);
         }
     });
 
-    updateWhatsAppLinks(lang);
+    // Bayrak ve metin güncelleme
+    const currentFlag = document.getElementById('currentFlag');
+    const currentLangText = document.getElementById('currentLangText');
 
-    const flagImg = document.getElementById('currentFlag');
-    const langText = document.getElementById('currentLangText');
-
-    if (flagImg && langText) {
-        if (lang === 'tr') { flagImg.src = 'https://flagcdn.com/w20/tr.png'; langText.innerText = 'TR'; }
-        if (lang === 'en') { flagImg.src = 'https://flagcdn.com/w20/gb.png'; langText.innerText = 'EN'; }
-        if (lang === 'ru') { flagImg.src = 'https://flagcdn.com/w20/ru.png'; langText.innerText = 'RU'; }
+    if (lang === 'tr') {
+        currentFlag.src = "https://flagcdn.com/w20/tr.png";
+        currentLangText.innerText = "TR";
+    } else if (lang === 'en') {
+        currentFlag.src = "https://flagcdn.com/w20/gb.png";
+        currentLangText.innerText = "EN";
+    } else if (lang === 'ru') {
+        currentFlag.src = "https://flagcdn.com/w20/ru.png";
+        currentLangText.innerText = "RU";
     }
+
+    updateWhatsAppLinks(lang);
 
     if (typeof AOS !== 'undefined') {
         setTimeout(() => { AOS.refresh(); }, 150);
@@ -65,7 +70,6 @@ function changeLanguage(lang) {
  */
 function updateWhatsAppLinks(lang) {
     const wpLinks = document.querySelectorAll('[data-wp-msg]');
-
     wpLinks.forEach(link => {
         const msgKey = link.getAttribute('data-wp-msg');
 
@@ -105,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (mainNav) {
         const navLinks = mainNav.querySelectorAll('a');
-
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mainNav.classList.remove('active');
@@ -115,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Slider Ayarları (Swiper)
+    // Slider Ayarları (Swiper) 
     if (typeof Swiper !== 'undefined') {
         if (document.querySelector('.heroSwiper')) {
             new Swiper(".heroSwiper", {
@@ -142,9 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true, offset: 50, disable: false });
     }
 
-    // --- TELEFON ALANLARINA HARF GİRİŞİNİ ANLIK ENGELLEME ---
+    // Telefon giriş engelleme
     const phoneInputs = document.querySelectorAll('input[type="tel"], #heroPhone');
-
     phoneInputs.forEach(input => {
         input.addEventListener('input', function (e) {
             this.value = this.value.replace(/(?!^\+)[^\d]/g, '');
@@ -152,113 +154,64 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /* ==============================================================
-        5. API ENTEGRASYONU & VALIDATION (KONTROLLER)
+        5. API ENTEGRASYONU & VALIDATION
     ============================================================== */
-
     async function veriGonder(data, formElement) {
-        // --- 1. TELEFON TEMİZLİĞİ VE KONTROLÜ ---
         if (data.telefon !== undefined) {
             const cleanPhone = data.telefon.trim().replace(/\s/g, '');
             const phoneRegex = /^\+?[0-9]{10,15}$/;
-
             if (!phoneRegex.test(cleanPhone)) {
-                Swal.fire({ icon: 'warning', title: 'Geçersiz Telefon', text: 'Lütfen geçerli bir telefon numarası giriniz (Örn: 05xx...).' });
+                Swal.fire({ icon: 'warning', title: 'Geçersiz Telefon', text: 'Lütfen geçerli bir numara giriniz.' });
                 return;
             }
             data.telefon = cleanPhone;
         }
 
-        // --- 2. AD SOYAD KONTROLÜ ---
         if (!data.adSoyad || data.adSoyad.trim().length < 3) {
-            Swal.fire({ icon: 'warning', title: 'İsim Gerekli', text: 'Lütfen adınızı ve soyadınızı giriniz.' });
-            return;
-        }
-        if (/[0-9]/.test(data.adSoyad)) {
-            Swal.fire({ icon: 'warning', title: 'Hata', text: 'İsim alanı rakam içeremez.' });
-            return;
-        }
-
-        // --- 3. E-POSTA KONTROLÜ ---
-        if (data.email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!emailRegex.test(data.email.trim())) {
-                Swal.fire({ icon: 'warning', title: 'Geçersiz E-Posta', text: 'Lütfen e-posta formatını kontrol ediniz.' });
-                return;
-            }
-        }
-
-        // --- 4. BOŞ ALAN KONTROLÜ (Hero Form için ekstra kontrol) ---
-        if (data.formTipi.includes('Hero') && (!data.alinisNoktasi || !data.birakilisNoktasi || !data.tarih)) {
-            Swal.fire({ icon: 'info', title: 'Eksik Bilgi', text: 'Lütfen nereden, nereye ve tarih alanlarını doldurunuz.' });
+            Swal.fire({ icon: 'warning', title: 'İsim Gerekli', text: 'Lütfen adınızı giriniz.' });
             return;
         }
 
         const btn = formElement.querySelector('button');
-        let originalText = "";
-
-        if (btn) {
-            originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
-            btn.disabled = true;
-        }
+        let originalText = btn ? btn.innerHTML : "";
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...'; btn.disabled = true; }
 
         try {
-            // BACKEND'E (ADMİN PANELİNE) İSTEK ATILAN YER
             const response = await fetch('/api/teklif-al', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
             const result = await response.json();
-
             if (result.basari) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Başarılı!',
-                    text: result.mesaj || 'Talebiniz alınmıştır, en kısa sürede dönüş yapılacaktır.',
-                    confirmButtonColor: '#0f3d7a'
-                });
+                Swal.fire({ icon: 'success', title: 'Başarılı!', text: 'Talebiniz alınmıştır.', confirmButtonColor: '#0f3d7a' });
                 formElement.reset();
             } else {
-                Swal.fire({ icon: 'error', title: 'Hata!', text: result.mesaj || 'İşlem başarısız.' });
+                Swal.fire({ icon: 'error', title: 'Hata!', text: 'İşlem başarısız.' });
             }
         } catch (error) {
-            console.error('API Gönderim Hatası:', error);
-            Swal.fire({ icon: 'error', title: 'Bağlantı Hatası', text: 'Sunucuya ulaşılamıyor, lütfen WhatsApp üzerinden ulaşın.' });
+            Swal.fire({ icon: 'error', title: 'Hata', text: 'Sunucuya ulaşılamıyor.' });
         } finally {
-            if (btn) {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
         }
     }
 
-    // A) HERO FORM (Ana Sayfa Üst Kısım)
+    // Form Eventleri 
     window.gonderHeroForm = async function () {
         const form = document.getElementById('heroForm');
         if (!form) return;
-        const adSoyad = document.getElementById('heroName').value;
-        const telefon = document.getElementById('heroPhone').value;
-        const alinisNoktasi = document.getElementById('heroFrom').value;
-        const birakilisNoktasi = document.getElementById('heroTo').value;
-        const tarih = document.getElementById('heroDate').value;
-
         await veriGonder({
-            adSoyad: adSoyad,
-            telefon: telefon,
-            alinisNoktasi: alinisNoktasi,
-            birakilisNoktasi: birakilisNoktasi,
-            tarih: tarih,
-            mesaj: `Seçilen Tarih: ${tarih}`,
-            formTipi: 'Hızlı Fiyat Sor (Ana Sayfa Hero Form)'
+            adSoyad: document.getElementById('heroName').value,
+            telefon: document.getElementById('heroPhone').value,
+            alinisNoktasi: document.getElementById('heroFrom').value,
+            birakilisNoktasi: document.getElementById('heroTo').value,
+            tarih: document.getElementById('heroDate').value,
+            formTipi: 'Hızlı Fiyat Sor'
         }, form);
     };
 
-    // B) DETAYLI TEKLİF AL FORMU (Ana Sayfa Alt Kutu)
     const offerForm = document.querySelector('.offer-form-box form');
     if (offerForm) {
-        offerForm.removeAttribute('action');
         offerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             await veriGonder({
@@ -267,138 +220,104 @@ document.addEventListener('DOMContentLoaded', function () {
                 telefon: offerForm.querySelector('input[type="tel"]').value,
                 yolcuSayisi: offerForm.querySelector('input[type="number"]').value,
                 mesaj: offerForm.querySelector('textarea').value,
-                formTipi: 'Detaylı Teklif Al Formu'
+                formTipi: 'Detaylı Teklif Formu'
             }, offerForm);
         });
     }
-
-    // C) İLETİŞİM SAYFASI FORMU
-    const contactForm = document.querySelector('.contact-form-clean');
-    if (contactForm) {
-        contactForm.removeAttribute('action');
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const selectBox = contactForm.querySelector('select');
-            await veriGonder({
-                adSoyad: contactForm.querySelector('input[type="text"]').value,
-                telefon: contactForm.querySelector('input[type="tel"]').value,
-                email: contactForm.querySelector('input[type="email"]').value,
-                mesaj: (selectBox ? `[Konu: ${selectBox.value}] \n` : '') + contactForm.querySelector('textarea').value,
-                formTipi: 'İletişim Sayfası Mesajı'
-            }, contactForm);
-        });
-    }
-
-    // D) ARAÇLARIMIZ SAYFASI ÖZEL VIP ARAÇ FORMLARI
-    const vehicleForms = document.querySelectorAll('.vh-form');
-    vehicleForms.forEach(vForm => {
-        vForm.removeAttribute('action');
-        vForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const inputs = vForm.querySelectorAll('input');
-
-            // İlgili aracın ismini almak için DOM'da yukarı çıkıp başlığı buluyoruz
-            const card = vForm.closest('.vip-horiz-card');
-            const carName = card ? card.querySelector('.vh-title').innerText : 'VIP Araç';
-
-            await veriGonder({
-                adSoyad: inputs[0].value,
-                telefon: inputs[1].value,
-                tarih: inputs[2].value,
-                mesaj: `Araçlar sayfasından özel araç talebi.\nTalep Edilen Araç: ${carName}\nSeçilen Tarih: ${inputs[2].value}`,
-                formTipi: 'VIP Araç Rezervasyon Talebi'
-            }, vForm);
-        });
-    });
-
-});
-
-/* ======================================================
-   SAYFALAR ARASI YUMUŞAK GEÇİŞ
-========================================================= */
-document.addEventListener('DOMContentLoaded', function () {
-    const links = document.querySelectorAll('a[href]');
-
-    links.forEach(link => {
-        link.addEventListener('click', function (e) {
-            const targetUrl = this.getAttribute('href');
-
-            if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1 || this.getAttribute('target') === '_blank') {
-                return;
-            }
-
-            if (
-                targetUrl &&
-                !targetUrl.startsWith('#') &&
-                !targetUrl.startsWith('tel:') &&
-                !targetUrl.startsWith('mailto:') &&
-                !targetUrl.startsWith('javascript') &&
-                !targetUrl.startsWith('https://wa.me')
-            ) {
-                e.preventDefault();
-
-                document.body.classList.add('page-exit');
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 300);
-            }
-        });
-    });
 });
 
 /* ==============================================================
-   YENİ EKLENEN: ANA SAYFA DİNAMİK ARAÇ VİTRİNİ (VERİTABANINDAN ÇEKER)
+   YENİ DİNAMİK VERİ YÜKLEYİCİLER (AÇIKLAMALAR TAMAMEN GÖRÜNÜR)
 ============================================================== */
-document.addEventListener('DOMContentLoaded', async function () {
-    const vitrin = document.getElementById('anaSayfaAracVitrisi');
 
-    // Eğer bulunduğumuz sayfada "anaSayfaAracVitrisi" ID'li alan yoksa çalışmayı durdur (hata vermemesi için)
+// 1. TURLARI YÜKLE
+async function turlariYukle() {
+    const vitrin = document.getElementById('anaSayfaTurVitrini');
     if (!vitrin) return;
 
     try {
-        // Backend'den tüm araçları sırasıyla çek
-        const response = await fetch('/api/vehicles');
-        const araclar = await response.json();
+        const res = await fetch('/api/tours');
+        const turlar = await res.json();
+        vitrin.innerHTML = '';
 
-        vitrin.innerHTML = ''; // Yükleniyor yazısını sil
-
-        if (araclar.length === 0) {
-            vitrin.innerHTML = '<p style="text-align:center; width:100%; color:#666;">Şu an sistemde araç bulunmuyor.</p>';
+        if (turlar.length === 0) {
+            vitrin.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">Şu an tur bulunmuyor.</p>';
             return;
         }
 
-        // Araçları döngüye sok ve ana sayfa kart tasarımına göre ekrana bas
+        turlar.forEach(tur => {
+            const foto = tur.fotoUrl || '/Frontend/photo/default-tour.jpg';
+            vitrin.innerHTML += `
+                <div class="tour-card" data-aos="fade-up">
+                    <div class="card-img">
+                        <img src="${foto}" alt="${tur.turAd}">
+                        <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span>${tur.turRozet || 'VIP'}</span></span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3>${tur.turAd}</h3>
+                        <p style="margin-bottom: 15px;">${tur.turAciklama || ''}</p> 
+                        <a href="https://wa.me/905338577240?text=Merhaba, ${encodeURIComponent(tur.turAd)} hakkında bilgi almak istiyorum." target="_blank" class="circle-icon green"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>`;
+        });
+        if (typeof AOS !== 'undefined') AOS.init();
+    } catch (e) {
+        vitrin.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red;">Turlar yüklenemedi.</p>';
+    }
+}
+
+// 2. ARAÇLARI YÜKLE
+async function araclariYukle() {
+    const vitrin = document.getElementById('anaSayfaAracVitrisi');
+    if (!vitrin) return;
+
+    try {
+        const res = await fetch('/api/vehicles');
+        const araclar = await res.json();
+        vitrin.innerHTML = '';
+
+        if (araclar.length === 0) {
+            vitrin.innerHTML = '<p style="text-align:center; width:100%;">Araç bulunmuyor.</p>';
+            return;
+        }
+
         araclar.forEach(arac => {
             const foto = arac.fotoUrl || '/Frontend/Images/default-car.jpg';
-            const marka = arac.aracMarka || 'VIP TRANSFER';
-
-            // Kart HTML Tasarımı (Ana sayfadaki sütunlu yapıya uygun)
-            const kartHTML = `
+            vitrin.innerHTML += `
                 <div class="col-md-4 col-sm-6 mb-4">
-                    <div class="vehicle-card-home" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05); transition:0.3s; height: 100%; display: flex; flex-direction: column;">
-                        <div style="height:200px; overflow:hidden; flex-shrink: 0;">
-                            <img src="${foto}" alt="${arac.aracAd}" style="width:100%; height:100%; object-fit:cover;">
-                        </div>
-                        <div style="padding:20px; display: flex; flex-direction: column; flex-grow: 1;">
-                            <span style="font-size:11px; color:#f39c12; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">${marka}</span>
-                            <h3 style="margin:5px 0 10px; font-size:18px; color:#0f3d7a; font-weight:800;">${arac.aracAd}</h3>
-                            <p style="font-size:13px; color:#666; height:40px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; margin-bottom: 15px;">
-                                ${arac.aracAciklama || 'Ayrıcalıklı ve konforlu seyahatin tadını çıkarın.'}
-                            </p>
-                            <div style="margin-top: auto;">
-                                <a href="araclarimiz.html" style="display:inline-block; padding:10px 20px; background:#0f3d7a; color:#fff; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; width: 100%; text-align: center; transition: 0.3s;">
-                                    İncele & Rezervasyon
-                                </a>
-                            </div>
+                    <div class="vehicle-card-home" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+                        <div style="height:200px; overflow:hidden;"><img src="${foto}" style="width:100%; height:100%; object-fit:cover;"></div>
+                        <div style="padding:20px; flex-grow: 1; display: flex; flex-direction: column;">
+                            <span style="font-size:11px; color:#f39c12; font-weight:bold;">${arac.aracMarka || 'VIP'}</span>
+                            <h3 style="margin:5px 0; font-size:18px; color:#0f3d7a;">${arac.aracAd}</h3>
+                            <p style="font-size:13px; color:#666; margin-bottom:15px;">${arac.aracAciklama || ''}</p>
+                            <div style="margin-top:auto;"><a href="araclarimiz.html" style="display:block; text-align:center; padding:10px; background:#0f3d7a; color:#fff; border-radius:8px; text-decoration:none;">İncele</a></div>
                         </div>
                     </div>
-                </div>
-            `;
-            vitrin.innerHTML += kartHTML;
+                </div>`;
         });
-
-    } catch (error) {
-        console.error("Araçları çekerken hata oluştu:", error);
-        vitrin.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi. Lütfen daha sonra tekrar deneyin.</p>';
+    } catch (e) {
+        vitrin.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi.</p>';
     }
+}
+
+// Sayfa yüklendiğinde çalıştır
+document.addEventListener('DOMContentLoaded', () => {
+    turlariYukle();
+    araclariYukle();
+});
+
+/* Sayfalar Arası Yumuşak Geçiş */
+document.addEventListener('DOMContentLoaded', function () {
+    const links = document.querySelectorAll('a[href]');
+    links.forEach(link => {
+        link.addEventListener('click', function (e) {
+            const targetUrl = this.getAttribute('href');
+            if (targetUrl && !targetUrl.startsWith('#') && !targetUrl.startsWith('tel:') && !targetUrl.startsWith('https://wa.me')) {
+                e.preventDefault();
+                document.body.classList.add('page-exit');
+                setTimeout(() => { window.location.href = targetUrl; }, 300);
+            }
+        });
+    });
 });

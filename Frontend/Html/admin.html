@@ -115,6 +115,9 @@
                     Kutusu</button>
                 <button class="tab-btn" id="btnVehicles" onclick="tabDegistir('vehicles')"><i class="fas fa-car"></i>
                     Araç Filosu</button>
+                <button class="tab-btn" id="btnTours" onclick="tabDegistir('tours')"><i
+                        class="fas fa-map-marked-alt"></i>
+                    Turlar</button>
             </div>
 
             <div id="reservationsSection">
@@ -137,6 +140,12 @@
                 <button class="btn-add-vehicle" onclick="aracModalAc()"><i class="fas fa-plus"></i> Yeni Araç
                     Ekle</button>
                 <div class="vehicle-grid" id="vehicleGrid"></div>
+            </div>
+
+            <div id="toursSection" style="display: none;">
+                <button class="btn-add-vehicle" style="background: #27ae60;" onclick="turModalAc()"><i
+                        class="fas fa-plus"></i> Yeni Tur Ekle</button>
+                <div class="vehicle-grid" id="tourGrid"></div>
             </div>
         </div>
     </div>
@@ -232,6 +241,91 @@
                     <button type="button" class="tab-btn" onclick="aracModalKapat()">İptal</button>
                     <button type="submit" class="btn-save-modal" id="btnSaveVehicle"><i class="fas fa-save"></i>
                         Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="custom-modal-overlay" id="tourModal">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <h3 id="tourModalTitle">Yeni Tur Ekle</h3>
+                <button class="btn-close-modal" onclick="turModalKapat()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <form id="tourForm" onsubmit="turKaydet(event)">
+                <input type="hidden" id="turId" name="turId">
+
+                <div class="form-row-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <div class="form-group">
+                        <label>Tur Adı (Ana Başlık)</label>
+                        <input type="text" id="turAd" name="turAd" required placeholder="Örn: Girne & Bellapais">
+                    </div>
+                    <div class="form-group">
+                        <label>Bölge Adı</label>
+                        <input type="text" id="turBolge" name="turBolge" placeholder="Örn: Girne Bölgesi">
+                    </div>
+                    <div class="form-group">
+                        <label>Tur Etiketi / Rozeti</label>
+                        <input type="text" id="turRozet" name="turRozet" placeholder="Örn: VIP Tur, Popüler">
+                    </div>
+                    <div class="form-group">
+                        <label>Görüntüleme Sırası</label>
+                        <input type="number" id="turSira" name="turSira" placeholder="Örn: 1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tur Açıklaması (Detay Yazısı)</label>
+                    <textarea id="turAciklama" name="turAciklama" rows="3"
+                        placeholder="Örn: Limanın büyüleyici atmosferi ve eşsiz mimari..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="color: #27ae60;"><i class="fas fa-map-marked-alt"></i> Gezilecek Yerler (Tikli
+                        Liste)</label>
+                    <div class="dynamic-feature-input">
+                        <input type="text" id="yeniYerInput" placeholder="Örn: Girne Kalesi..."
+                            onkeypress="if(event.key === 'Enter') { event.preventDefault(); yerEkle(); }">
+                        <button type="button" class="btn-add-feature" style="background: #27ae60;"
+                            onclick="yerEkle()">Ekle</button>
+                    </div>
+                    <div class="feature-tags-container" id="yerTagsContainer"></div>
+                    <input type="hidden" id="turYerlerGizli" name="turYerler">
+                </div>
+
+                <div class="form-group">
+                    <label>Ana Tur Fotoğrafı (Kapak Görseli)</label>
+                    <div class="upload-area" id="dropZoneTour"
+                        onclick="document.getElementById('turFotoInput').click()">
+                        <i class="fas fa-camera-retro"></i>
+                        <p>Kapak fotoğrafını sürükle veya seç</p>
+                        <input type="file" id="turFotoInput" name="turFoto" accept="image/*" hidden
+                            onchange="turFotoOnizlemeYap(this)">
+                    </div>
+                    <div class="img-preview-box" id="tourImagePreviewBox">
+                        <img src="" id="tourPreviewImg">
+                        <button type="button" class="btn-remove-img" onclick="turFotoKaldir()">Kaldır</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tur Galeri Fotoğrafları</label>
+                    <div class="upload-area" id="dropZoneTourGallery"
+                        style="border-color: #27ae60; background: rgba(39, 174, 96, 0.05);"
+                        onclick="document.getElementById('turGaleriInput').click()">
+                        <i class="fas fa-images" style="color: #27ae60;"></i>
+                        <p>Galeri fotoğraflarını seçmek için tıklayın</p>
+                        <input type="file" id="turGaleriInput" name="turGaleri" accept="image/*" multiple hidden
+                            onchange="turGaleriOnizlemeYap(this)">
+                    </div>
+                    <div class="gallery-preview-container" id="tourGalleryPreviewBox"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="tab-btn" onclick="turModalKapat()">İptal</button>
+                    <button type="submit" class="btn-save-modal" style="background: #27ae60;" id="btnSaveTour"><i
+                            class="fas fa-save"></i> Kaydet</button>
                 </div>
             </form>
         </div>
