@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs'); // Dosya silme/kontrol işlemleri için
+const crypto = require('crypto');
 const helmet = require('helmet'); // Güvenlik kalkanı
 const morgan = require('morgan'); // HTTP istek loglayıcı
 const rateLimit = require('express-rate-limit'); // İstek sınırlayıcı
@@ -46,6 +47,101 @@ const Tour = mongoose.models.Tour || mongoose.model('Tour', tourSchema);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === 'production';
+const generatedSessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim()).filter(Boolean)
+    : null;
+const allowedImageMimeTypes = new Set([
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+    'image/avif'
+]);
+const emailAlici = process.env.NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || '';
+
+if (!process.env.SESSION_SECRET) {
+    console.warn('SESSION_SECRET tanimli degil. Gecici bir oturum anahtari uretildi.');
+}
+
+function temizMetin(deger, maxUzunluk = 5000) {
+    if (deger === undefined || deger === null) return '';
+    return String(deger).replace(/\0/g, '').trim().slice(0, maxUzunluk);
+}
+
+function temizListeMetni(deger, maxUzunluk = 500) {
+    if (!deger) return '';
+    return String(deger)
+        .split(',')
+        .map(item => temizMetin(item, 80))
+        .filter(Boolean)
+        .join(', ');
+}
+
+function temizEmail(deger) {
+    const email = temizMetin(deger, 254).toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) ? email : '';
+}
+
+function temizTelefon(deger) {
+    const telefon = temizMetin(deger, 20).replace(/\s+/g, '');
+    const telefonRegex = /^\+?[0-9]{10,15}$/;
+    return telefonRegex.test(telefon) ? telefon : '';
+}
+
+function sayiOku(deger, varsayilanDeger = 999) {
+    if (deger === undefined || deger === null || deger === '') return varsayilanDeger;
+    const sayi = Number.parseInt(deger, 10);
+    return Number.isFinite(sayi) ? sayi : varsayilanDeger;
+}
+
+function htmlKacis(deger) {
+    return String(deger)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function rezervasyonVerisiniHazirla(body = {}) {
+    return {
+        adSoyad: temizMetin(body.adSoyad, 120),
+        telefon: temizTelefon(body.telefon),
+        email: temizEmail(body.email),
+        alinisNoktasi: temizMetin(body.alinisNoktasi, 150),
+        birakilisNoktasi: temizMetin(body.birakilisNoktasi, 150),
+        tarih: temizMetin(body.tarih, 50),
+        yolcuSayisi: temizMetin(body.yolcuSayisi, 20),
+        mesaj: temizMetin(body.mesaj, 2000),
+        formTipi: temizMetin(body.formTipi, 80) || 'Genel Teklif'
+    };
+}
+
+function rezervasyonDogrula(veri) {
+    if (!veri.adSoyad || veri.adSoyad.length < 3) {
+        return 'Lutfen gecerli bir ad soyad girin.';
+    }
+
+    if (!veri.telefon) {
+        return 'Lutfen gecerli bir telefon numarasi girin.';
+    }
+
+    if (veri.email && !temizEmail(veri.email)) {
+        return 'Lutfen gecerli bir e-posta adresi girin.';
+    }
+
+    return '';
+}
+
+function dosyaYolunuCoz(dosyaUrl) {
+    if (!dosyaUrl || typeof dosyaUrl !== 'string' || !dosyaUrl.startsWith('/Frontend/Images/')) {
+        return '';
+    }
+    return path.join(__dirname, dosyaUrl);
+}
 
 // --- 2. GÜVENLİK, İZLEME VE OTURUM ---
 
@@ -62,16 +158,38 @@ const limiter = rateLimit({
     message: { mesaj: "Çok fazla deneme yaptınız, lütfen biraz bekleyin." }
 });
 app.use('/api/teklif-al', limiter);
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { basari: false, mesaj: 'Cok fazla giris denemesi yaptiniz. Lutfen biraz bekleyin.' }
+});
+app.use('/api/login', loginLimiter);
 
-app.use(cors());
+app.use(cors({
+    origin(origin, cb) {
+        if (!origin || !allowedOrigins || allowedOrigins.includes(origin)) {
+            return cb(null, true);
+        }
+        return cb(new Error('CORS engellendi.'));
+    },
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'kibris-vip-gizli-anahtari-123',
+    secret: generatedSessionSecret,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true }
+    name: 'bp-admin-session',
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: isProduction
+    }
 }));
 
 const adminKontrol = (req, res, next) => {
@@ -107,7 +225,19 @@ const storage = multer.diskStorage({
         cb(null, prefix + uniqueSuffix + path.extname(file.originalname));
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+        files: 11
+    },
+    fileFilter(req, file, cb) {
+        if (!allowedImageMimeTypes.has(file.mimetype)) {
+            return cb(new Error('Sadece gorsel dosyalari yuklenebilir.'));
+        }
+        cb(null, true);
+    }
+});
 
 // Araçlar İçin Upload
 const cpUpload = upload.fields([
@@ -141,12 +271,13 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-    const { kullaniciAdi, sifre } = req.body;
+    const kullaniciAdi = temizMetin(req.body?.kullaniciAdi, 120);
+    const sifre = temizMetin(req.body?.sifre, 120);
     if (kullaniciAdi === process.env.ADMIN_USERNAME && sifre === process.env.ADMIN_PASS) {
         req.session.adminGirisYapti = true;
         res.json({ basari: true });
     } else {
-        res.json({ basari: false, mesaj: 'Hatalı kullanıcı adı veya şifre!' });
+        res.status(401).json({ basari: false, mesaj: 'Hatali kullanici adi veya sifre!' });
     }
 });
 
@@ -210,7 +341,8 @@ app.put('/api/admin/reservations/:id/toggle-read', adminKontrol, async (req, res
 
 app.put('/api/admin/reservations/:id/note', adminKontrol, async (req, res) => {
     try {
-        await Reservation.findByIdAndUpdate(req.params.id, { adminNotu: req.body.not });
+        const adminNotu = temizMetin(req.body?.not, 1000);
+        await Reservation.findByIdAndUpdate(req.params.id, { adminNotu });
         res.json({ basari: true });
     } catch (e) { res.status(500).send(); }
 });
@@ -246,7 +378,16 @@ app.get('/api/admin/vehicles', adminKontrol, async (req, res) => {
 
 app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
     try {
-        const { aracAd, aracMarka, aracAciklama, aracOzellikler, aracYorumlar, aracSira } = req.body;
+        const aracAd = temizMetin(req.body?.aracAd, 150);
+        const aracMarka = temizMetin(req.body?.aracMarka, 150);
+        const aracAciklama = temizMetin(req.body?.aracAciklama, 3000);
+        const aracOzellikler = temizListeMetni(req.body?.aracOzellikler, 500);
+        const aracYorumlar = temizMetin(req.body?.aracYorumlar, 5000) || '[]';
+        const aracSira = sayiOku(req.body?.aracSira, 999);
+
+        if (!aracAd) {
+            return res.status(400).json({ basari: false, mesaj: "Araç adı zorunludur." });
+        }
 
         let fotoUrl = '';
         if (req.files && req.files['aracFoto']) { fotoUrl = '/Frontend/Images/Cars/' + req.files['aracFoto'][0].filename; }
@@ -257,12 +398,12 @@ app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
         }
 
         const yeniArac = new Vehicle({
-            aracAd: aracAd,
-            aracMarka: aracMarka || '',
-            aracAciklama: aracAciklama || '',
-            aracYorumlar: aracYorumlar || '[]',
-            aracSira: aracSira || 999,
-            aracOzellikler: aracOzellikler || '',
+            aracAd,
+            aracMarka,
+            aracAciklama,
+            aracYorumlar,
+            aracSira,
+            aracOzellikler,
             fotoUrl: fotoUrl,
             galeriUrls: galeriUrls
         });
@@ -277,16 +418,16 @@ app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
         const arac = await Vehicle.findById(req.params.id);
         if (!arac) return res.status(404).json({ basari: false, mesaj: "Araç bulunamadı." });
 
-        arac.aracAd = req.body.aracAd || arac.aracAd;
-        arac.aracSira = req.body.aracSira || arac.aracSira;
-        arac.aracOzellikler = req.body.aracOzellikler !== undefined ? req.body.aracOzellikler : arac.aracOzellikler;
-        arac.aracMarka = req.body.aracMarka !== undefined ? req.body.aracMarka : arac.aracMarka;
-        arac.aracAciklama = req.body.aracAciklama !== undefined ? req.body.aracAciklama : arac.aracAciklama;
-        if (req.body.aracYorumlar !== undefined) { arac.aracYorumlar = req.body.aracYorumlar; }
+        arac.aracAd = req.body.aracAd !== undefined ? temizMetin(req.body.aracAd, 150) || arac.aracAd : arac.aracAd;
+        arac.aracSira = req.body.aracSira !== undefined ? sayiOku(req.body.aracSira, arac.aracSira) : arac.aracSira;
+        arac.aracOzellikler = req.body.aracOzellikler !== undefined ? temizListeMetni(req.body.aracOzellikler, 500) : arac.aracOzellikler;
+        arac.aracMarka = req.body.aracMarka !== undefined ? temizMetin(req.body.aracMarka, 150) : arac.aracMarka;
+        arac.aracAciklama = req.body.aracAciklama !== undefined ? temizMetin(req.body.aracAciklama, 3000) : arac.aracAciklama;
+        if (req.body.aracYorumlar !== undefined) { arac.aracYorumlar = temizMetin(req.body.aracYorumlar, 5000) || '[]'; }
 
         if (req.files && req.files['aracFoto']) {
             if (arac.fotoUrl) {
-                const eskiFotoPath = path.join(__dirname, arac.fotoUrl);
+                const eskiFotoPath = dosyaYolunuCoz(arac.fotoUrl);
                 if (fs.existsSync(eskiFotoPath)) fs.unlinkSync(eskiFotoPath);
             }
             arac.fotoUrl = '/Frontend/Images/Cars/' + req.files['aracFoto'][0].filename;
@@ -295,7 +436,7 @@ app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
         if (req.files && req.files['aracGaleri']) {
             if (arac.galeriUrls && arac.galeriUrls.length > 0) {
                 arac.galeriUrls.forEach(url => {
-                    const eskiGaleriPath = path.join(__dirname, url);
+                    const eskiGaleriPath = dosyaYolunuCoz(url);
                     if (fs.existsSync(eskiGaleriPath)) fs.unlinkSync(eskiGaleriPath);
                 });
             }
@@ -315,13 +456,13 @@ app.delete('/api/admin/vehicles/:id', adminKontrol, async (req, res) => {
         if (!arac) return res.status(404).json({ basari: false, mesaj: "Araç bulunamadı." });
 
         if (arac.fotoUrl) {
-            const fotoPath = path.join(__dirname, arac.fotoUrl);
+            const fotoPath = dosyaYolunuCoz(arac.fotoUrl);
             if (fs.existsSync(fotoPath)) fs.unlinkSync(fotoPath);
         }
 
         if (arac.galeriUrls && arac.galeriUrls.length > 0) {
             arac.galeriUrls.forEach(url => {
-                const galeriPath = path.join(__dirname, url);
+                const galeriPath = dosyaYolunuCoz(url);
                 if (fs.existsSync(galeriPath)) fs.unlinkSync(galeriPath);
             });
         }
@@ -348,7 +489,16 @@ app.get('/api/admin/tours', adminKontrol, async (req, res) => {
 
 app.post('/api/admin/tours', adminKontrol, tourUpload, async (req, res) => {
     try {
-        const { turAd, turBolge, turAciklama, turYerler, turRozet, turSira } = req.body;
+        const turAd = temizMetin(req.body?.turAd, 150);
+        const turBolge = temizMetin(req.body?.turBolge, 150);
+        const turAciklama = temizMetin(req.body?.turAciklama, 3000);
+        const turYerler = temizListeMetni(req.body?.turYerler, 500);
+        const turRozet = temizMetin(req.body?.turRozet, 80);
+        const turSira = sayiOku(req.body?.turSira, 999);
+
+        if (!turAd) {
+            return res.status(400).json({ basari: false, mesaj: "Tur adı zorunludur." });
+        }
 
         let fotoUrl = '';
         if (req.files && req.files['turFoto']) { fotoUrl = '/Frontend/Images/Tours/' + req.files['turFoto'][0].filename; }
@@ -359,12 +509,12 @@ app.post('/api/admin/tours', adminKontrol, tourUpload, async (req, res) => {
         }
 
         const yeniTur = new Tour({
-            turAd: turAd,
-            turBolge: turBolge || '',
-            turAciklama: turAciklama || '',
-            turYerler: turYerler || '',
-            turRozet: turRozet || '',
-            turSira: turSira || 999,
+            turAd,
+            turBolge,
+            turAciklama,
+            turYerler,
+            turRozet,
+            turSira,
             fotoUrl: fotoUrl,
             galeriUrls: galeriUrls
         });
@@ -379,16 +529,16 @@ app.put('/api/admin/tours/:id', adminKontrol, tourUpload, async (req, res) => {
         const tur = await Tour.findById(req.params.id);
         if (!tur) return res.status(404).json({ basari: false, mesaj: "Tur bulunamadı." });
 
-        tur.turAd = req.body.turAd || tur.turAd;
-        tur.turSira = req.body.turSira || tur.turSira;
-        tur.turBolge = req.body.turBolge !== undefined ? req.body.turBolge : tur.turBolge;
-        tur.turAciklama = req.body.turAciklama !== undefined ? req.body.turAciklama : tur.turAciklama;
-        tur.turYerler = req.body.turYerler !== undefined ? req.body.turYerler : tur.turYerler;
-        tur.turRozet = req.body.turRozet !== undefined ? req.body.turRozet : tur.turRozet;
+        tur.turAd = req.body.turAd !== undefined ? temizMetin(req.body.turAd, 150) || tur.turAd : tur.turAd;
+        tur.turSira = req.body.turSira !== undefined ? sayiOku(req.body.turSira, tur.turSira) : tur.turSira;
+        tur.turBolge = req.body.turBolge !== undefined ? temizMetin(req.body.turBolge, 150) : tur.turBolge;
+        tur.turAciklama = req.body.turAciklama !== undefined ? temizMetin(req.body.turAciklama, 3000) : tur.turAciklama;
+        tur.turYerler = req.body.turYerler !== undefined ? temizListeMetni(req.body.turYerler, 500) : tur.turYerler;
+        tur.turRozet = req.body.turRozet !== undefined ? temizMetin(req.body.turRozet, 80) : tur.turRozet;
 
         if (req.files && req.files['turFoto']) {
             if (tur.fotoUrl) {
-                const eskiFotoPath = path.join(__dirname, tur.fotoUrl);
+                const eskiFotoPath = dosyaYolunuCoz(tur.fotoUrl);
                 if (fs.existsSync(eskiFotoPath)) fs.unlinkSync(eskiFotoPath);
             }
             tur.fotoUrl = '/Frontend/Images/Tours/' + req.files['turFoto'][0].filename;
@@ -397,7 +547,7 @@ app.put('/api/admin/tours/:id', adminKontrol, tourUpload, async (req, res) => {
         if (req.files && req.files['turGaleri']) {
             if (tur.galeriUrls && tur.galeriUrls.length > 0) {
                 tur.galeriUrls.forEach(url => {
-                    const eskiGaleriPath = path.join(__dirname, url);
+                    const eskiGaleriPath = dosyaYolunuCoz(url);
                     if (fs.existsSync(eskiGaleriPath)) fs.unlinkSync(eskiGaleriPath);
                 });
             }
@@ -417,13 +567,13 @@ app.delete('/api/admin/tours/:id', adminKontrol, async (req, res) => {
         if (!tur) return res.status(404).json({ basari: false, mesaj: "Tur bulunamadı." });
 
         if (tur.fotoUrl) {
-            const fotoPath = path.join(__dirname, tur.fotoUrl);
+            const fotoPath = dosyaYolunuCoz(tur.fotoUrl);
             if (fs.existsSync(fotoPath)) fs.unlinkSync(fotoPath);
         }
 
         if (tur.galeriUrls && tur.galeriUrls.length > 0) {
             tur.galeriUrls.forEach(url => {
-                const galeriPath = path.join(__dirname, url);
+                const galeriPath = dosyaYolunuCoz(url);
                 if (fs.existsSync(galeriPath)) fs.unlinkSync(galeriPath);
             });
         }
@@ -436,23 +586,30 @@ app.delete('/api/admin/tours/:id', adminKontrol, async (req, res) => {
 // --- MÜŞTERİ FORMU (TEKLİF AL) ---
 app.post('/api/teklif-al', async (req, res) => {
     try {
-        const yeni = new Reservation(req.body);
+        const rezervasyonVerisi = rezervasyonVerisiniHazirla(req.body);
+        const dogrulamaHatasi = rezervasyonDogrula(rezervasyonVerisi);
+
+        if (dogrulamaHatasi) {
+            return res.status(400).json({ basari: false, mesaj: dogrulamaHatasi });
+        }
+
+        const yeni = new Reservation(rezervasyonVerisi);
         await yeni.save();
 
-        if (resend && process.env.RESEND_API_KEY) {
+        if (resend && process.env.RESEND_API_KEY && emailAlici) {
             try {
                 await resend.emails.send({
                     from: 'BUGRA POLAT <onboarding@resend.dev>',
-                    to: 'senin.kendimailadresin@gmail.com',
-                    subject: `🔔 Yeni VIP Talep: ${req.body.adSoyad}`,
+                    to: emailAlici,
+                    subject: `Yeni VIP Talep: ${htmlKacis(rezervasyonVerisi.adSoyad)}`,
                     html: `
                         <h3>Yeni Rezervasyon Talebi!</h3>
-                        <p><strong>Müşteri:</strong> ${req.body.adSoyad}</p>
-                        <p><strong>Tel:</strong> ${req.body.telefon}</p>
-                        <p><strong>Nereden:</strong> ${req.body.alinisNoktasi || '-'}</p>
-                        <p><strong>Nereye:</strong> ${req.body.birakilisNoktasi || '-'}</p>
-                        <p><strong>Tarih:</strong> ${req.body.tarih || '-'}</p>
-                        <p><strong>Mesaj:</strong> ${req.body.mesaj || '-'}</p>
+                        <p><strong>Musteri:</strong> ${htmlKacis(rezervasyonVerisi.adSoyad)}</p>
+                        <p><strong>Tel:</strong> ${htmlKacis(rezervasyonVerisi.telefon)}</p>
+                        <p><strong>Nereden:</strong> ${htmlKacis(rezervasyonVerisi.alinisNoktasi || '-')}</p>
+                        <p><strong>Nereye:</strong> ${htmlKacis(rezervasyonVerisi.birakilisNoktasi || '-')}</p>
+                        <p><strong>Tarih:</strong> ${htmlKacis(rezervasyonVerisi.tarih || '-')}</p>
+                        <p><strong>Mesaj:</strong> ${htmlKacis(rezervasyonVerisi.mesaj || '-')}</p>
                     `
                 });
             } catch (e) {
@@ -468,6 +625,12 @@ app.post('/api/teklif-al', async (req, res) => {
 // --- 10. HATA YÖNETİMİ ---
 app.use((err, req, res, next) => {
     console.error("🔥 Beklenmedik Sunucu Hatası:", err.stack);
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({ basari: false, mesaj: "Dosya yukleme siniri asildi veya gecersiz dosya secildi." });
+    }
+    if (err.message === 'Sadece gorsel dosyalari yuklenebilir.' || err.message === 'CORS engellendi.') {
+        return res.status(400).json({ basari: false, mesaj: err.message });
+    }
     res.status(500).json({ basari: false, mesaj: "Bir hata oluştu." });
 });
 

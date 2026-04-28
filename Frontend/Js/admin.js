@@ -18,9 +18,42 @@ let secilenTurGaleriDosyalari = [];
 
 window.onload = verileriYukle;
 
+function escapeHtml(deger) {
+    return String(deger ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function encodeBase64Unicode(deger) {
+    return btoa(unescape(encodeURIComponent(String(deger ?? ''))));
+}
+
+function decodeBase64Unicode(deger) {
+    return decodeURIComponent(escape(atob(deger)));
+}
+
+function sanitizeAssetUrl(url, fallback = '') {
+    if (typeof url !== 'string') return fallback;
+    const temizUrl = url.trim();
+    if (!temizUrl) return fallback;
+    if (temizUrl.startsWith('/Frontend/')) return temizUrl;
+    if (/^https?:\/\//i.test(temizUrl)) return temizUrl;
+    return fallback;
+}
+
+function sanitizePhoneForWhatsapp(telefon) {
+    return String(telefon ?? '').replace(/[^\d]/g, '');
+}
+
 // Yetki Kontrolü Yapan Ortak İstek Fonksiyonu
 async function guvenliFetch(url, options = {}) {
-    const res = await fetch(url, options);
+    const res = await fetch(url, {
+        credentials: 'same-origin',
+        ...options
+    });
     if (res.status === 401) {
         window.location.href = '/login';
         throw new Error('Oturum süresi doldu.');
@@ -78,32 +111,38 @@ function tabloyuCiz(liste) {
     liste.forEach(item => {
         const tarih = item.kayitTarihi ? new Date(item.kayitTarihi).toLocaleDateString('tr-TR') : '-';
         const rowClass = (item.isRead && currentTab === 'active') ? 'is-read' : '';
-        const wpLink = `https://wa.me/${item.telefon}?text=Merhaba%20${encodeURIComponent(item.adSoyad || '')}`;
+        const wpLink = `https://wa.me/${sanitizePhoneForWhatsapp(item.telefon)}?text=Merhaba%20${encodeURIComponent(item.adSoyad || '')}`;
 
-        const msgEscaped = btoa(unescape(encodeURIComponent(item.mesaj || '-')));
-        const noteEscaped = btoa(unescape(encodeURIComponent(item.adminNotu || '')));
+        const msgEscaped = encodeBase64Unicode(item.mesaj || '-');
+        const noteEscaped = encodeBase64Unicode(item.adminNotu || '');
 
         const rawMsg = item.mesaj || '-';
-        const msgPreview = rawMsg.length > 35 ? rawMsg.substring(0, 35) + "..." : rawMsg;
+        const msgPreview = escapeHtml(rawMsg.length > 35 ? rawMsg.substring(0, 35) + "..." : rawMsg);
+        const adSoyad = escapeHtml(item.adSoyad || 'İsimsiz');
+        const telefon = escapeHtml(item.telefon || '-');
+        const alinisNoktasi = escapeHtml(item.alinisNoktasi || '-');
+        const birakilisNoktasi = escapeHtml(item.birakilisNoktasi || '-');
+        const formTipi = escapeHtml(item.formTipi || 'Genel');
+        const adminNotu = item.adminNotu ? `${escapeHtml(item.adminNotu.substring(0, 25))}...` : '';
 
         tbody.innerHTML += `
             <tr class="${rowClass}">
                 <td data-label="Tarih">${tarih}</td>
-                <td data-label="Müşteri"><strong>${item.adSoyad || 'İsimsiz'}</strong><br><small style="color:#666">${item.telefon || '-'}</small></td>
+                <td data-label="Müşteri"><strong>${adSoyad}</strong><br><small style="color:#666">${telefon}</small></td>
                 <td class="route-cell" data-label="Güzergah">
-                    <div><i class="fas fa-map-marker-alt text-danger"></i> ${item.alinisNoktasi || '-'}</div>
-                    <div><i class="fas fa-flag-checkered text-dark"></i> ${item.birakilisNoktasi || '-'}</div>
+                    <div><i class="fas fa-map-marker-alt text-danger"></i> ${alinisNoktasi}</div>
+                    <div><i class="fas fa-flag-checkered text-dark"></i> ${birakilisNoktasi}</div>
                 </td>
                 <td onclick="mesajGoster('${msgEscaped}', '${item._id}', '${noteEscaped}')" class="msg-cell" data-label="Mesaj">
                     <div class="msg-preview" title="Detay için tıkla">${msgPreview}</div>
-                    <span class="note-tag">${item.adminNotu ? `<i class="fas fa-sticky-note"></i> ${item.adminNotu.substring(0, 25)}...` : '<i class="fas fa-plus-circle"></i> Not ekle'}</span>
+                    <span class="note-tag">${item.adminNotu ? `<i class="fas fa-sticky-note"></i> ${adminNotu}` : '<i class="fas fa-plus-circle"></i> Not ekle'}</span>
                 </td>
-                <td data-label="Tip"><span class="tag ${item.formTipi?.includes('Hero') ? 'tag-hero' : 'tag-contact'}">${item.formTipi || 'Genel'}</span></td>
+                <td data-label="Tip"><span class="tag ${item.formTipi?.includes('Hero') ? 'tag-hero' : 'tag-contact'}">${formTipi}</span></td>
                 <td data-label="İşlemler">
                     <div class="action-flex">
                         ${currentTab === 'active' ? `
                             <button onclick="durumDegistir('${item._id}')" class="btn btn-blue" title="Görülme Durumu"><i class="fas ${item.isRead ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
-                            <a href="${wpLink}" target="_blank" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                            <a href="${wpLink}" target="_blank" rel="noopener noreferrer" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                             <button onclick="kayitSil('${item._id}')" class="btn btn-red" title="Çöpe At"><i class="fas fa-trash"></i></button>
                         ` : `
                             <button onclick="geriYukle('${item._id}')" class="btn btn-orange" title="Geri Yükle"><i class="fas fa-undo"></i></button>
@@ -138,16 +177,16 @@ function tabloyuFiltrele() {
 }
 
 async function mesajGoster(encodedMsg, id, encodedNote) {
-    const msg = decodeURIComponent(escape(atob(encodedMsg)));
-    const note = decodeURIComponent(escape(atob(encodedNote)));
+    const msg = decodeBase64Unicode(encodedMsg);
+    const note = decodeBase64Unicode(encodedNote);
     const { value: text, isConfirmed } = await Swal.fire({
         title: '<span style="color:#0f3d7a; font-weight:800;">Talep Detayları</span>',
         customClass: { popup: 'modern-modal' },
         html: `
             <div class="modern-msg-title">Müşteriden Gelen Mesaj</div>
-            <div class="modern-msg-content">${msg}</div>
+            <div class="modern-msg-content">${escapeHtml(msg)}</div>
             <div class="modern-msg-title">Admin Özel Notu</div>
-            <textarea id="swal-note" class="modern-note-area" rows="4" placeholder="Müşteriyle ilgili notlarınızı buraya yazın...">${note !== 'undefined' ? note : ''}</textarea>
+            <textarea id="swal-note" class="modern-note-area" rows="4" placeholder="Müşteriyle ilgili notlarınızı buraya yazın...">${escapeHtml(note !== 'undefined' ? note : '')}</textarea>
         `,
         showCancelButton: true,
         confirmButtonText: '<i class="fas fa-save"></i> Notu Güncelle',
@@ -256,14 +295,16 @@ function araclariCiz(liste) {
     }
 
     liste.forEach(arac => {
-        const foto = arac.fotoUrl || '/Frontend/Images/default-car.jpg';
-        const aracVerisi = btoa(unescape(encodeURIComponent(JSON.stringify(arac))));
+        const foto = sanitizeAssetUrl(arac.fotoUrl, '/Frontend/Images/default-car.jpg');
+        const aracVerisi = encodeBase64Unicode(JSON.stringify(arac));
+        const aracAd = escapeHtml(arac.aracAd || '');
+        const aracMarka = escapeHtml(arac.aracMarka || '');
 
         let ozellikHtml = '';
         if (arac.aracOzellikler) {
             const ozDizisi = arac.aracOzellikler.split(',');
             ozDizisi.forEach(oz => {
-                if (oz.trim()) ozellikHtml += `<span class="tag tag-hero" style="margin:2px;">${oz.trim()}</span>`;
+                if (oz.trim()) ozellikHtml += `<span class="tag tag-hero" style="margin:2px;">${escapeHtml(oz.trim())}</span>`;
             });
         } else {
             ozellikHtml = '<span style="color:#999; font-size:12px;">Özellik eklenmemiş</span>';
@@ -275,11 +316,11 @@ function araclariCiz(liste) {
             <div class="vehicle-card" style="position:relative;">
                 ${siraRozeti}
                 <div class="vehicle-img-box">
-                    <img src="${foto}" alt="${arac.aracAd}">
+                    <img src="${foto}" alt="${aracAd}">
                 </div>
                 <div class="vehicle-details">
-                    <h4>${arac.aracAd}</h4>
-                    <p style="font-size:12px; color:#888; margin-top:-5px; margin-bottom:10px;">${arac.aracMarka || ''}</p>
+                    <h4>${aracAd}</h4>
+                    <p style="font-size:12px; color:#888; margin-top:-5px; margin-bottom:10px;">${aracMarka}</p>
                     <div style="margin-bottom:15px; display:flex; flex-wrap:wrap; gap:4px;">${ozellikHtml}</div>
                     <div class="vehicle-actions">
                         <button class="btn-edit-veh" onclick="aracDuzenleModalAc('${aracVerisi}')"><i class="fas fa-edit"></i> Düzenle</button>
@@ -320,7 +361,7 @@ window.aracModalAc = function () {
 }
 
 window.aracDuzenleModalAc = function (encodedData) {
-    const arac = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
+    const arac = JSON.parse(decodeBase64Unicode(encodedData));
 
     document.getElementById('aracId').value = arac._id;
     document.getElementById('aracAd').value = arac.aracAd;
@@ -377,7 +418,7 @@ function ozellikleriEkranaCiz() {
     aktifOzellikler.forEach((ozellik, i) => {
         container.innerHTML += `
             <div class="feature-tag">
-                <i class="fas fa-check-circle" style="color: #d4af37;"></i> ${ozellik} 
+                <i class="fas fa-check-circle" style="color: #d4af37;"></i> ${escapeHtml(ozellik)} 
                 <i class="fas fa-times-circle" style="margin-left: 5px; cursor:pointer; color: #e74c3c;" onclick="ozellikSil(${i})"></i>
             </div>`;
     });
@@ -408,7 +449,7 @@ window.yorumlariEkranaCiz = function () {
     aktifYorumlar.forEach((yorum, i) => {
         container.innerHTML += `
             <div class="feature-tag" style="display:flex; justify-content:space-between; width:100%; background:#fff; border-left:3px solid #f39c12; padding:10px;">
-                <div style="flex:1;"><strong>${yorum.isim}:</strong> ${yorum.metin}</div>
+                <div style="flex:1;"><strong>${escapeHtml(yorum.isim)}:</strong> ${escapeHtml(yorum.metin)}</div>
                 <i class="fas fa-trash" style="color:#e74c3c; cursor:pointer; margin-left:15px; align-self:center;" onclick="yorumSil(${i})"></i>
             </div>`;
     });
@@ -490,7 +531,7 @@ window.aracKaydet = async function (e) {
         const url = id ? `/api/admin/vehicles/${id}` : '/api/admin/vehicles';
         const method = id ? 'PUT' : 'POST';
 
-        const res = await fetch(url, { method: method, body: formData });
+        const res = await guvenliFetch(url, { method: method, body: formData });
         const result = await res.json();
 
         if (res.ok) {
@@ -550,22 +591,25 @@ function turlariCiz(liste) {
     }
 
     liste.forEach(tur => {
-        const foto = tur.fotoUrl || '/Frontend/Images/default-car.jpg';
-        const turVerisi = btoa(unescape(encodeURIComponent(JSON.stringify(tur))));
+        const foto = sanitizeAssetUrl(tur.fotoUrl, '/Frontend/Images/default-car.jpg');
+        const turVerisi = encodeBase64Unicode(JSON.stringify(tur));
+        const turAd = escapeHtml(tur.turAd || '');
+        const turBolge = escapeHtml(tur.turBolge || 'Belirtilmedi');
+        const turRozet = escapeHtml(tur.turRozet || '');
 
         const siraRozeti = tur.turSira ? `<div style="position:absolute; top:10px; right:10px; background:#27ae60; color:#fff; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px;">Sıra: ${tur.turSira}</div>` : '';
-        const turRozetLabel = tur.turRozet ? `<div style="position:absolute; top:10px; left:10px; background:#f39c12; color:#fff; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px;">${tur.turRozet}</div>` : '';
+        const turRozetLabel = tur.turRozet ? `<div style="position:absolute; top:10px; left:10px; background:#f39c12; color:#fff; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px;">${turRozet}</div>` : '';
 
         grid.innerHTML += `
             <div class="vehicle-card" style="position:relative; border-top: 3px solid #27ae60;">
                 ${siraRozeti}
                 ${turRozetLabel}
                 <div class="vehicle-img-box">
-                    <img src="${foto}" alt="${tur.turAd}">
+                    <img src="${foto}" alt="${turAd}">
                 </div>
                 <div class="vehicle-details">
-                    <h4>${tur.turAd}</h4>
-                    <p style="font-size:12px; color:#888; margin-top:-5px; margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> ${tur.turBolge || 'Belirtilmedi'}</p>
+                    <h4>${turAd}</h4>
+                    <p style="font-size:12px; color:#888; margin-top:-5px; margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> ${turBolge}</p>
                     
                     <div class="vehicle-actions" style="margin-top:15px;">
                         <button class="btn-edit-veh" style="background:#f0f4f8; color:#0f3d7a;" onclick="turDuzenleModalAc('${turVerisi}')"><i class="fas fa-edit"></i> Düzenle</button>
@@ -609,7 +653,7 @@ window.turModalAc = function () {
 }
 
 window.turDuzenleModalAc = function (encodedData) {
-    const tur = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
+    const tur = JSON.parse(decodeBase64Unicode(encodedData));
 
     document.getElementById('turId').value = tur._id;
     document.getElementById('turAd').value = tur.turAd;
@@ -663,7 +707,7 @@ function yerleriEkranaCiz() {
     aktifYerler.forEach((yer, i) => {
         container.innerHTML += `
             <div class="feature-tag" style="background:#e8f5e9; border: 1px solid #27ae60; color:#27ae60;">
-                <i class="fas fa-check" style="color: #27ae60;"></i> ${yer} 
+                <i class="fas fa-check" style="color: #27ae60;"></i> ${escapeHtml(yer)} 
                 <i class="fas fa-times-circle" style="margin-left: 5px; cursor:pointer; color: #e74c3c;" onclick="yerSil(${i})"></i>
             </div>`;
     });
@@ -745,7 +789,7 @@ window.turKaydet = async function (e) {
         const url = id ? `/api/admin/tours/${id}` : '/api/admin/tours';
         const method = id ? 'PUT' : 'POST';
 
-        const res = await fetch(url, { method: method, body: formData });
+        const res = await guvenliFetch(url, { method: method, body: formData });
         const result = await res.json();
 
         if (res.ok) {

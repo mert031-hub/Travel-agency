@@ -19,6 +19,45 @@ const WHATSAPP_NUMBER = "905338577240";
 // Titreme (flickering) sorununu tamamen kaldıran kilit değişken
 let isInitialLoad = true;
 
+function escapeHtml(deger) {
+    return String(deger ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function sanitizeAssetUrl(url, fallback = '') {
+    if (typeof url !== 'string') return fallback;
+    const temizUrl = url.trim();
+    if (!temizUrl) return fallback;
+    if (temizUrl.startsWith('/Frontend/') || temizUrl.startsWith('/Css/') || temizUrl.startsWith('/Js/')) {
+        return temizUrl;
+    }
+    if (/^https?:\/\//i.test(temizUrl)) {
+        return temizUrl;
+    }
+    return fallback;
+}
+
+function normalizePhone(telefon) {
+    return String(telefon ?? '').trim().replace(/\s+/g, '');
+}
+
+function applyBlankLinkSecurity(scope = document) {
+    scope.querySelectorAll('a[target="_blank"]').forEach(link => {
+        link.rel = 'noopener noreferrer';
+    });
+}
+
+window.bpUtils = {
+    escapeHtml,
+    sanitizeAssetUrl,
+    normalizePhone,
+    applyBlankLinkSecurity
+};
+
 /**
  * Dil değiştirme fonksiyonu
  */
@@ -95,6 +134,7 @@ function updateWhatsAppLinks(lang) {
 
 /* --- ORTAK UYGULAMA İŞLEMLERİ --- */
 document.addEventListener('DOMContentLoaded', function () {
+    applyBlankLinkSecurity();
 
     const savedLang = localStorage.getItem('selectedLang') || 'tr';
     changeLanguage(savedLang);
@@ -168,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ============================================================== */
     async function veriGonder(data, formElement) {
         if (data.telefon !== undefined) {
-            const cleanPhone = data.telefon.trim().replace(/\s/g, '');
+            const cleanPhone = normalizePhone(data.telefon);
             const phoneRegex = /^\+?[0-9]{10,15}$/;
             if (!phoneRegex.test(cleanPhone)) {
                 Swal.fire({ icon: 'warning', title: 'Geçersiz Telefon', text: 'Lütfen geçerli bir numara giriniz.' });
@@ -267,27 +307,32 @@ window.turlariYukle = async function () {
 
         turlar.forEach(tur => {
             const sira = tur.turSira || 999;
-            const foto = tur.fotoUrl || '/Frontend/photo/default-tour.jpg';
+            const foto = sanitizeAssetUrl(tur.fotoUrl, '/Frontend/photo/default-tour.jpg');
 
             // Veriler TR ise kesinlikle DB'den gelir.
             const ad = currentLang === 'tr' ? tur.turAd : (sozluk[`t${sira}_title`] || tur.turAd);
             const aciklama = currentLang === 'tr' ? tur.turAciklama : (sozluk[`t${sira}_desc`] || tur.turAciklama);
             const rozet = currentLang === 'tr' ? (tur.turRozet || 'VIP') : (sozluk[`t${sira}_badge`] || tur.turRozet || 'VIP');
+            const adGuvenli = escapeHtml(ad || 'VIP Tur');
+            const aciklamaGuvenli = escapeHtml(aciklama || '');
+            const rozetGuvenli = escapeHtml(rozet || 'VIP');
+            const bilgiMesaji = encodeURIComponent(`Merhaba, ${tur.turAd || ad || 'tur'} hakkında bilgi almak istiyorum.`);
 
             // YENİ: "flex: 1 1 300px; max-width: 400px; width: 100%;" eklendi (Tek kartın bozulmasını engeller)
             vitrin.innerHTML += `
                 <div class="tour-card" data-aos="fade-up" style="flex: 1 1 300px; max-width: 400px; width: 100%; display: flex; flex-direction: column;">
                     <div class="card-img" style="min-height: 220px; flex-shrink: 0;">
-                        <img src="${foto}" alt="${ad}" style="width: 100%; height: 100%; object-fit: cover;">
-                        <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span>${rozet}</span></span></div>
+                        <img src="${foto}" alt="${adGuvenli}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span>${rozetGuvenli}</span></span></div>
                     </div>
                     <div class="card-body" style="flex-grow: 1; display: flex; flex-direction: column;">
-                        <h3 style="word-break: break-word;">${ad}</h3>
-                        <p style="margin-bottom: 15px; flex-grow: 1; word-break: break-word;">${aciklama}</p> 
-                        <a href="https://wa.me/905338577240?text=Merhaba, ${encodeURIComponent(tur.turAd)} hakkında bilgi almak istiyorum." target="_blank" class="circle-icon green" style="align-self: flex-start;"><i class="fab fa-whatsapp"></i></a>
+                        <h3 style="word-break: break-word;">${adGuvenli}</h3>
+                        <p style="margin-bottom: 15px; flex-grow: 1; word-break: break-word;">${aciklamaGuvenli}</p> 
+                        <a href="https://wa.me/905338577240?text=${bilgiMesaji}" target="_blank" rel="noopener noreferrer" class="circle-icon green" style="align-self: flex-start;"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>`;
         });
+        applyBlankLinkSecurity(vitrin);
         if (typeof AOS !== 'undefined') AOS.init();
     } catch (e) {
         vitrin.innerHTML = '<p style="text-align:center; width: 100%; color:red;">Turlar yüklenemedi.</p>';
@@ -336,28 +381,33 @@ window.araclariYukle = async function () {
 
         araclar.forEach(arac => {
             const sira = arac.aracSira || 999;
-            const foto = arac.fotoUrl || '/Frontend/Images/default-car.jpg';
+            const foto = sanitizeAssetUrl(arac.fotoUrl, '/Frontend/Images/default-car.jpg');
 
             // TR ise veritabanından çek. 
             const ad = currentLang === 'tr' ? arac.aracAd : (sozluk[`veh${sira}_title`] || arac.aracAd);
             const marka = currentLang === 'tr' ? (arac.aracMarka || 'VIP') : (sozluk[`veh${sira}_tag`] || arac.aracMarka || 'VIP');
             const aciklama = currentLang === 'tr' ? arac.aracAciklama : (sozluk[`veh${sira}_desc`] || arac.aracAciklama);
+            const adGuvenli = escapeHtml(ad || 'VIP Arac');
+            const markaGuvenli = escapeHtml(marka || 'VIP');
+            const aciklamaGuvenli = escapeHtml(aciklama || '');
 
             // SADECE BUTON SÖZLÜKTEN GELSİN:
             const btnText = sozluk['btn_incele'] || 'İncele';
+            const btnTextGuvenli = escapeHtml(btnText);
 
             // YENİ: "flex: 1 1 300px; max-width: 400px; width: 100%;" eklendi (Tek kartın bozulmasını engeller)
             vitrin.innerHTML += `
                 <div class="vehicle-card-home hover-arac-kart" data-aos="fade-up" style="flex: 1 1 300px; max-width: 400px; width: 100%; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
                     <div style="height:200px; overflow:hidden; flex-shrink: 0;"><img src="${foto}" class="hover-arac-img" style="width:100%; height:100%; object-fit:cover;"></div>
                     <div style="padding:20px; flex-grow: 1; display: flex; flex-direction: column;">
-                        <span style="font-size:11px; color:#f39c12; font-weight:bold; text-transform:uppercase;">${marka}</span>
-                        <h3 style="margin:5px 0; font-size:18px; color:#0f3d7a; word-break: break-word;">${ad}</h3>
-                        <p style="font-size:13px; color:#666; margin-bottom:15px; flex-grow: 1; word-break: break-word;">${aciklama}</p>
-                        <div style="margin-top:auto;"><a href="araclarimiz.html" class="hover-arac-btn" style="display:block; text-align:center; padding:10px; background:#0f3d7a; color:#fff; border-radius:8px; text-decoration:none;" data-lang="btn_incele">${btnText}</a></div>
+                        <span style="font-size:11px; color:#f39c12; font-weight:bold; text-transform:uppercase;">${markaGuvenli}</span>
+                        <h3 style="margin:5px 0; font-size:18px; color:#0f3d7a; word-break: break-word;">${adGuvenli}</h3>
+                        <p style="font-size:13px; color:#666; margin-bottom:15px; flex-grow: 1; word-break: break-word;">${aciklamaGuvenli}</p>
+                        <div style="margin-top:auto;"><a href="araclarimiz.html" class="hover-arac-btn" style="display:block; text-align:center; padding:10px; background:#0f3d7a; color:#fff; border-radius:8px; text-decoration:none;" data-lang="btn_incele">${btnTextGuvenli}</a></div>
                     </div>
                 </div>`;
         });
+        applyBlankLinkSecurity(vitrin);
         if (typeof AOS !== 'undefined') AOS.init();
     } catch (e) {
         vitrin.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi.</p>';

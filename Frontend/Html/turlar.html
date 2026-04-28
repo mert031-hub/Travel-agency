@@ -199,6 +199,9 @@
         document.addEventListener('DOMContentLoaded', async function () {
             const wrapper = document.getElementById('turlarSayfasiVitrini');
             if (!wrapper) return;
+            const bpUtils = window.bpUtils || {};
+            const escapeHtml = bpUtils.escapeHtml || function (deger) { return String(deger ?? ''); };
+            const sanitizeAssetUrl = bpUtils.sanitizeAssetUrl || function (url, fallback = '') { return url || fallback; };
 
             try {
                 // Backend'den tur verilerini çekiyoruz
@@ -215,9 +218,14 @@
                 // Her bir tur için HTML kart yapısını oluşturuyoruz
                 turlar.forEach((tur) => {
                     const id = tur._id;
-                    const foto = tur.fotoUrl || '/Frontend/Images/default-car.jpg';
-                    const rozetHtml = tur.turRozet ? `<div class="tour-badge">${tur.turRozet}</div>` : '';
-                    const bolgeHtml = tur.turBolge ? `<span class="tag">${tur.turBolge}</span>` : '';
+                    const foto = sanitizeAssetUrl(tur.fotoUrl, '/Frontend/Images/default-car.jpg');
+                    const turAd = escapeHtml(tur.turAd || 'VIP Tur');
+                    const turAciklama = escapeHtml(tur.turAciklama || '');
+                    const turRozet = escapeHtml(tur.turRozet || '');
+                    const turBolge = escapeHtml(tur.turBolge || '');
+                    const whatsappMesaji = encodeURIComponent(`Merhaba, ${tur.turAd || 'tur'} hakkında bilgi ve fiyat almak istiyorum.`);
+                    const rozetHtml = tur.turRozet ? `<div class="tour-badge">${turRozet}</div>` : '';
+                    const bolgeHtml = tur.turBolge ? `<span class="tag">${turBolge}</span>` : '';
 
                     // 1. Gezilecek Yerleri Oluşturma (Tikli Liste)
                     let yerlerHtml = '';
@@ -225,7 +233,7 @@
                         const yerler = tur.turYerler.split(',');
                         yerler.forEach(y => {
                             if (y.trim()) {
-                                yerlerHtml += `<li>${y.trim()}</li>`;
+                                yerlerHtml += `<li>${escapeHtml(y.trim())}</li>`;
                             }
                         });
                     } else {
@@ -236,7 +244,7 @@
                     let galeriHtml = '';
                     if (tur.galeriUrls && tur.galeriUrls.length > 0) {
                         tur.galeriUrls.forEach(url => {
-                            galeriHtml += `<img src="${url}" alt="${tur.turAd} Galeri Görseli">`;
+                            galeriHtml += `<img src="${sanitizeAssetUrl(url)}" alt="${turAd} Galeri Görseli">`;
                         });
                     } else {
                         galeriHtml = '<p style="text-align: center; color: #888; width: 100%; padding: 10px; font-size:13px;">Bu tura ait galeri fotoğrafı bulunmamaktadır.</p>';
@@ -247,12 +255,12 @@
                         <div class="tour-v-card">
                             <div class="tour-v-img">
                                 ${rozetHtml}
-                                <img src="${foto}" alt="${tur.turAd}">
+                                <img src="${foto}" alt="${turAd}">
                             </div>
                             <div class="tour-v-body">
                                 ${bolgeHtml}
-                                <h3>${tur.turAd}</h3>
-                                <p>${tur.turAciklama || ''}</p>
+                                <h3>${turAd}</h3>
+                                <p>${turAciklama}</p>
 
                                 <div class="tour-v-tabs">
                                     <div class="t-v-tab-header">
@@ -270,7 +278,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="https://wa.me/905338577240?text=Merhaba, ${encodeURIComponent(tur.turAd)} hakkında bilgi ve fiyat almak istiyorum." target="_blank" class="btn-tour-v">
+                                <a href="https://wa.me/905338577240?text=${whatsappMesaji}" target="_blank" rel="noopener noreferrer" class="btn-tour-v">
                                     <span data-lang="btn_tour_offer">TEKLİF AL</span> <i class="fab fa-whatsapp" style="margin-left:5px;"></i>
                                 </a>
                             </div>
@@ -279,6 +287,10 @@
 
                     wrapper.innerHTML += cardHTML;
                 });
+
+                if (bpUtils.applyBlankLinkSecurity) {
+                    bpUtils.applyBlankLinkSecurity(wrapper);
+                }
 
             } catch (error) {
                 console.error("Turları çekerken hata oluştu:", error);

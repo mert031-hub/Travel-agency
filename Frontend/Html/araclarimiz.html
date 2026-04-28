@@ -237,6 +237,10 @@
         window.detayliAraclariYukle = async function () {
             const wrapper = document.getElementById('araclarimizSayfasiVitrin');
             if (!wrapper) return;
+            const bpUtils = window.bpUtils || {};
+            const escapeHtml = bpUtils.escapeHtml || function (deger) { return String(deger ?? ''); };
+            const sanitizeAssetUrl = bpUtils.sanitizeAssetUrl || function (url, fallback = '') { return url || fallback; };
+            const normalizePhone = bpUtils.normalizePhone || function (telefon) { return String(telefon ?? '').trim().replace(/\s+/g, ''); };
 
             try {
                 const response = await fetch('/api/vehicles');
@@ -254,12 +258,15 @@
 
                 araclar.forEach((arac, index) => {
                     const id = arac._id || `temp-${index}`;
-                    const foto = arac.fotoUrl || arac.foto || '/Frontend/Images/default-car.jpg';
+                    const foto = sanitizeAssetUrl(arac.fotoUrl || arac.foto, '/Frontend/Images/default-car.jpg');
 
                     // Her Zaman DB'den Gelen Sabit Veriler (Türkçe)
                     const ad = arac.aracAd || arac.ad || 'VIP Araç';
                     const marka = arac.aracMarka || arac.marka || 'VIP TRANSFER';
                     const aciklama = arac.aciklama || arac.aracAciklama || '';
+                    const adGuvenli = escapeHtml(ad);
+                    const markaGuvenli = escapeHtml(marka);
+                    const aciklamaGuvenli = escapeHtml(aciklama);
 
                     // Yabancı dile çevrilen statik butonlar ve placeholderlar:
                     const tabRezText = sozluk['tab_rez'] || 'REZERVASYON YAP';
@@ -277,7 +284,7 @@
                             if (oz.trim()) {
                                 const iconClass = getSmartIcon(oz.trim());
                                 const translatedOzellik = translateFeature(oz.trim(), currentLang);
-                                ozelliklerHTML += `<span style="display:inline-flex; align-items:center; margin-right:20px; margin-bottom:10px;"><i class="${iconClass}" style="color:#f39c12; margin-right:8px; font-size:16px;"></i> <span style="font-weight:700; font-size:14px; color:#444; text-transform:capitalize;">${translatedOzellik}</span></span>`;
+                                ozelliklerHTML += `<span style="display:inline-flex; align-items:center; margin-right:20px; margin-bottom:10px;"><i class="${iconClass}" style="color:#f39c12; margin-right:8px; font-size:16px;"></i> <span style="font-weight:700; font-size:14px; color:#444; text-transform:capitalize;">${escapeHtml(translatedOzellik)}</span></span>`;
                             }
                         });
                     } else {
@@ -288,7 +295,7 @@
                     const galeriVerisi = arac.galeriUrls || arac.galeri;
                     if (galeriVerisi && galeriVerisi.length > 0) {
                         galeriVerisi.forEach(url => {
-                            galeriHTML += `<img src="${url}" alt="${ad} Galeri">`;
+                            galeriHTML += `<img src="${sanitizeAssetUrl(url)}" alt="${adGuvenli} Galeri">`;
                         });
                     } else {
                         const noGalText = currentLang === 'tr' ? 'Bu araca ait galeri fotoğrafı bulunmamaktadır.' : 'No gallery photos available.';
@@ -314,7 +321,7 @@
                                     <div class="stars" style="color:#f39c12; margin-bottom:8px; font-size:12px;">
                                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                     </div>
-                                    <p style="font-style:italic; color:#444; font-size:14px; margin:0;">"${yorumMetni}" - <strong>${musteriIsmi}</strong></p>
+                                    <p style="font-style:italic; color:#444; font-size:14px; margin:0;">"${escapeHtml(yorumMetni)}" - <strong>${escapeHtml(musteriIsmi)}</strong></p>
                                 </div>
                             `;
                         });
@@ -327,12 +334,12 @@
                         <div class="vehicle-main-card" style="margin-bottom: 50px;">
                             <div class="vehicle-top-info">
                                 <div class="v-img-side">
-                                    <img src="${foto}" alt="${ad}">
+                                    <img src="${foto}" alt="${adGuvenli}">
                                 </div>
                                 <div class="v-content-side">
-                                    <span class="tag" style="text-transform: uppercase;">${marka}</span>
-                                    <h3 style="text-transform: uppercase;">${ad}</h3>
-                                    <p>${aciklama}</p>
+                                    <span class="tag" style="text-transform: uppercase;">${markaGuvenli}</span>
+                                    <h3 style="text-transform: uppercase;">${adGuvenli}</h3>
+                                    <p>${aciklamaGuvenli}</p>
                                     <div class="quick-specs" style="display:flex; flex-wrap:wrap; margin-top:15px;">
                                         ${ozelliklerHTML}
                                     </div>
@@ -348,11 +355,11 @@
                                 
                                 <div class="tab-content-wrapper">
                                     <div id="rez-${id}" class="tab-content active">
-                                        <form class="inline-rez-form" onsubmit="gonderAracRezervasyon(event, '${ad}')">
-                                            <input type="text" placeholder="${plNameText}" required data-lang-placeholder="pl_name">
-                                            <input type="tel" placeholder="${plPhoneText}" required data-lang-placeholder="pl_phone">
+                                        <form class="inline-rez-form" onsubmit="gonderAracRezervasyon(event, '${encodeURIComponent(ad)}')">
+                                            <input type="text" placeholder="${escapeHtml(plNameText)}" required data-lang-placeholder="pl_name">
+                                            <input type="tel" placeholder="${escapeHtml(plPhoneText)}" required data-lang-placeholder="pl_phone">
                                             <input type="date" required>
-                                            <button type="submit" class="btn-primary" data-lang="btn_offer">${btnOfferText}</button>
+                                            <button type="submit" class="btn-primary" data-lang="btn_offer">${escapeHtml(btnOfferText)}</button>
                                         </form>
                                     </div>
                                     
@@ -371,6 +378,10 @@
                     `;
                     wrapper.innerHTML += cardHTML;
                 });
+
+                if (bpUtils.applyBlankLinkSecurity) {
+                    bpUtils.applyBlankLinkSecurity(wrapper);
+                }
 
             } catch (error) {
                 console.error("Araçları çekerken hata oluştu:", error);
@@ -398,6 +409,20 @@
             const inputs = form.querySelectorAll('input');
             const btn = form.querySelector('button');
             const originalText = btn.innerHTML;
+            const aracIsmiCozulmus = decodeURIComponent(aracIsmi || '');
+            const telefon = normalizePhone(inputs[1].value);
+            const phoneRegex = /^\+?[0-9]{10,15}$/;
+
+            if (!inputs[0].value || inputs[0].value.trim().length < 3) {
+                Swal.fire({ icon: 'warning', title: 'Eksik Bilgi', text: 'Lütfen ad soyad giriniz.' });
+                return;
+            }
+
+            if (!phoneRegex.test(telefon)) {
+                Swal.fire({ icon: 'warning', title: 'Geçersiz Telefon', text: 'Lütfen geçerli bir numara giriniz.' });
+                return;
+            }
+
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İletiliyor...';
             btn.disabled = true;
 
@@ -407,12 +432,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         adSoyad: inputs[0].value,
-                        telefon: inputs[1].value,
+                        telefon,
                         tarih: inputs[2].value,
                         alinisNoktasi: 'Belirtilmedi',
                         birakilisNoktasi: 'Belirtilmedi',
                         formTipi: 'Araç Sayfası Rezervasyonu',
-                        mesaj: `Seçilen Araç: ${aracIsmi}\nSeçilen Tarih: ${inputs[2].value}`
+                        mesaj: `Seçilen Araç: ${aracIsmiCozulmus}\nSeçilen Tarih: ${inputs[2].value}`
                     })
                 });
                 const result = await response.json();
