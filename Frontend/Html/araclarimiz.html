@@ -178,12 +178,8 @@
     <script src="/Frontend/Js/main.js"></script>
 
     <script>
-        // --- YENİ: AKILLI İKON SİSTEMİ ---
-        // --- YENİ VE KUSURSUZ: AKILLI İKON SİSTEMİ ---
         function getSmartIcon(ozellik) {
-            // toLocaleLowerCase('tr-TR') ile Türkçe karakterleri kusursuz çeviririz
             let text = ozellik.toLocaleLowerCase('tr-TR').trim();
-
             if (text.includes('tv') || text.includes('televizyon') || text.includes('ekran')) return 'fas fa-tv';
             if (text.includes('klima') || text.includes('havalandırma') || text.includes('soğutma')) return 'fas fa-snowflake';
             if (text.includes('bagaj') || text.includes('valiz')) return 'fas fa-suitcase';
@@ -197,36 +193,82 @@
             if (text.includes('vip') || text.includes('özel') || text.includes('lüks')) return 'fas fa-crown';
             if (text.includes('masa') || text.includes('çalışma')) return 'fas fa-table';
 
-            return 'fas fa-check-circle'; // Kelimeyi tanıyamazsa şık yuvarlak tik koyar
+            return 'fas fa-check-circle';
         }
 
-        document.addEventListener('DOMContentLoaded', async function () {
+        function translateFeature(ozellik, lang) {
+            if (lang === 'tr') return ozellik;
+
+            let text = ozellik.toLocaleLowerCase('tr-TR').trim();
+
+            if (lang === 'en') {
+                if (text.includes('tv') || text.includes('televizyon')) return 'TV';
+                if (text.includes('klima') || text.includes('havalandırma') || text.includes('soğutma')) return 'A/C';
+                if (text.includes('bagaj') || text.includes('valiz')) return 'Luggage';
+                if (text.includes('kişi') || text.includes('yolcu')) return 'Pax';
+                if (text.includes('wifi') || text.includes('internet')) return 'Wi-Fi';
+                if (text.includes('şarj') || text.includes('priz') || text.includes('usb')) return 'USB/Power';
+                if (text.includes('su') || text.includes('ikram') || text.includes('içecek') || text.includes('içki')) return 'Refreshments';
+                if (text.includes('müzik') || text.includes('ses') || text.includes('bluetooth')) return 'Audio System';
+                if (text.includes('buzdolabı') || text.includes('minibar')) return 'Minibar';
+                if (text.includes('deri')) return 'Leather Seats';
+                if (text.includes('masa') || text.includes('çalışma')) return 'Table';
+                if (text.includes('vip') || text.includes('özel')) return 'VIP';
+            }
+
+            if (lang === 'ru') {
+                if (text.includes('tv') || text.includes('televizyon')) return 'ТВ';
+                if (text.includes('klima') || text.includes('havalandırma') || text.includes('soğutma')) return 'Кондиционер';
+                if (text.includes('bagaj') || text.includes('valiz')) return 'Багаж';
+                if (text.includes('kişi') || text.includes('yolcu')) return 'Пассажиры';
+                if (text.includes('wifi') || text.includes('internet')) return 'Wi-Fi';
+                if (text.includes('şarj') || text.includes('priz') || text.includes('usb')) return 'USB/Розетка';
+                if (text.includes('su') || text.includes('ikram') || text.includes('içecek') || text.includes('içki')) return 'Напитки';
+                if (text.includes('müzik') || text.includes('ses') || text.includes('bluetooth')) return 'Аудиосистема';
+                if (text.includes('buzdolabı') || text.includes('minibar')) return 'Мини-бар';
+                if (text.includes('deri')) return 'Кожаные сиденья';
+                if (text.includes('masa') || text.includes('çalışma')) return 'Стол';
+                if (text.includes('vip') || text.includes('özel')) return 'VIP';
+            }
+
+            return ozellik;
+        }
+
+        window.detayliAraclariYukle = async function () {
             const wrapper = document.getElementById('araclarimizSayfasiVitrin');
             if (!wrapper) return;
 
             try {
-                // Backend'den araç verilerini çekiyoruz
                 const response = await fetch('/api/vehicles');
                 const araclar = await response.json();
 
-                wrapper.innerHTML = ''; // Yükleniyor ikonunu temizle
+                wrapper.innerHTML = '';
 
                 if (araclar.length === 0) {
                     wrapper.innerHTML = '<p style="text-align:center; padding: 40px; color:#666;">Şu an sistemde gösterilecek araç bulunmuyor.</p>';
                     return;
                 }
 
-                // Her bir araç için HTML kart yapısını oluşturuyoruz
+                const currentLang = localStorage.getItem('selectedLang') || 'tr';
+                const sozluk = (typeof translations !== 'undefined' && translations[currentLang]) ? translations[currentLang] : {};
+
                 araclar.forEach((arac, index) => {
                     const id = arac._id || `temp-${index}`;
                     const foto = arac.fotoUrl || arac.foto || '/Frontend/Images/default-car.jpg';
 
-                    // YENİ: Veritabanı isim uyuşmazlıklarına karşı (arac.marka veya arac.aracMarka) garantili güvenlik ağı
-                    const marka = arac.marka || arac.aracMarka || 'VIP TRANSFER';
-                    const aciklama = arac.aciklama || arac.aracAciklama || 'Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu seçenek.';
-                    const ad = arac.ad || arac.aracAd || 'Lüks VIP Araç';
+                    // Her Zaman DB'den Gelen Sabit Veriler (Türkçe)
+                    const ad = arac.aracAd || arac.ad || 'VIP Araç';
+                    const marka = arac.aracMarka || arac.marka || 'VIP TRANSFER';
+                    const aciklama = arac.aciklama || arac.aracAciklama || '';
 
-                    // 1. Özellikleri Oluşturma (Akıllı İkonlarla Birlikte)
+                    // Yabancı dile çevrilen statik butonlar ve placeholderlar:
+                    const tabRezText = sozluk['tab_rez'] || 'REZERVASYON YAP';
+                    const tabGalText = sozluk['tab_gal'] || 'ARAÇ RESİMLERİ';
+                    const tabComText = sozluk['tab_com'] || 'MÜŞTERİ YORUMLARI';
+                    const plNameText = sozluk['pl_name'] || 'Ad Soyad';
+                    const plPhoneText = sozluk['pl_phone'] || 'Telefon';
+                    const btnOfferText = sozluk['btn_offer'] || 'TEKLİF AL';
+
                     let ozelliklerHTML = '';
                     const ozellikVerisi = arac.ozellikler || arac.aracOzellikler;
                     if (ozellikVerisi) {
@@ -234,14 +276,14 @@
                         ozellikler.forEach(oz => {
                             if (oz.trim()) {
                                 const iconClass = getSmartIcon(oz.trim());
-                                ozelliklerHTML += `<span style="display:inline-flex; align-items:center; margin-right:20px; margin-bottom:10px;"><i class="${iconClass}" style="color:#f39c12; margin-right:8px; font-size:16px;"></i> <span style="font-weight:700; font-size:14px; color:#444;">${oz.trim()}</span></span>`;
+                                const translatedOzellik = translateFeature(oz.trim(), currentLang);
+                                ozelliklerHTML += `<span style="display:inline-flex; align-items:center; margin-right:20px; margin-bottom:10px;"><i class="${iconClass}" style="color:#f39c12; margin-right:8px; font-size:16px;"></i> <span style="font-weight:700; font-size:14px; color:#444; text-transform:capitalize;">${translatedOzellik}</span></span>`;
                             }
                         });
                     } else {
                         ozelliklerHTML = '<span style="color:#999; font-size:12px;">Özellik eklenmemiş</span>';
                     }
 
-                    // 2. Çoklu Galeri Oluşturma
                     let galeriHTML = '';
                     const galeriVerisi = arac.galeriUrls || arac.galeri;
                     if (galeriVerisi && galeriVerisi.length > 0) {
@@ -249,14 +291,13 @@
                             galeriHTML += `<img src="${url}" alt="${ad} Galeri">`;
                         });
                     } else {
-                        galeriHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #888; padding: 20px;">Bu araca ait galeri fotoğrafı bulunmamaktadır.</p>`;
+                        const noGalText = currentLang === 'tr' ? 'Bu araca ait galeri fotoğrafı bulunmamaktadır.' : 'No gallery photos available.';
+                        galeriHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #888; padding: 20px;">${noGalText}</p>`;
                     }
 
-                    // 3. Müşteri Yorumlarını Oluşturma (Garantili Veri Çekimi)
                     let yorumlarHTML = '';
                     let yorumlarDizisi = [];
                     const yorumVerisi = arac.yorumlar || arac.aracYorumlar;
-
                     if (Array.isArray(yorumVerisi)) {
                         yorumlarDizisi = yorumVerisi;
                     } else if (yorumVerisi && typeof yorumVerisi === 'string' && yorumVerisi !== '[]') {
@@ -278,10 +319,10 @@
                             `;
                         });
                     } else {
-                        yorumlarHTML = `<p style="text-align: center; color: #888; padding: 20px;">Bu araç için henüz müşteri yorumu eklenmemiştir.</p>`;
+                        const noComText = currentLang === 'tr' ? 'Bu araç için henüz müşteri yorumu eklenmemiştir.' : 'No customer reviews added yet.';
+                        yorumlarHTML = `<p style="text-align: center; color: #888; padding: 20px;">${noComText}</p>`;
                     }
 
-                    // KART ŞABLONU (Tasarımınızın Birebir Aynısı)
                     const cardHTML = `
                         <div class="vehicle-main-card" style="margin-bottom: 50px;">
                             <div class="vehicle-top-info">
@@ -300,18 +341,18 @@
 
                             <div class="vehicle-tabs">
                                 <div class="tab-header">
-                                    <button class="tab-btn active" onclick="openDynamicTab(event, 'rez-${id}', this)"><i class="fas fa-calendar-check"></i> <span>REZERVASYON YAP</span></button>
-                                    <button class="tab-btn" onclick="openDynamicTab(event, 'gal-${id}', this)"><i class="fas fa-images"></i> <span>ARAÇ RESİMLERİ</span></button>
-                                    <button class="tab-btn" onclick="openDynamicTab(event, 'com-${id}', this)"><i class="fas fa-comments"></i> <span>MÜŞTERİ YORUMLARI</span></button>
+                                    <button class="tab-btn active" onclick="openDynamicTab(event, 'rez-${id}', this)"><i class="fas fa-calendar-check"></i> <span data-lang="tab_rez">${tabRezText}</span></button>
+                                    <button class="tab-btn" onclick="openDynamicTab(event, 'gal-${id}', this)"><i class="fas fa-images"></i> <span data-lang="tab_gal">${tabGalText}</span></button>
+                                    <button class="tab-btn" onclick="openDynamicTab(event, 'com-${id}', this)"><i class="fas fa-comments"></i> <span data-lang="tab_com">${tabComText}</span></button>
                                 </div>
                                 
                                 <div class="tab-content-wrapper">
                                     <div id="rez-${id}" class="tab-content active">
                                         <form class="inline-rez-form" onsubmit="gonderAracRezervasyon(event, '${ad}')">
-                                            <input type="text" placeholder="Ad Soyad" required>
-                                            <input type="tel" placeholder="Telefon" required>
+                                            <input type="text" placeholder="${plNameText}" required data-lang-placeholder="pl_name">
+                                            <input type="tel" placeholder="${plPhoneText}" required data-lang-placeholder="pl_phone">
                                             <input type="date" required>
-                                            <button type="submit" class="btn-primary">TEKLİF AL</button>
+                                            <button type="submit" class="btn-primary" data-lang="btn_offer">${btnOfferText}</button>
                                         </form>
                                     </div>
                                     
@@ -328,7 +369,6 @@
                             </div>
                         </div>
                     `;
-
                     wrapper.innerHTML += cardHTML;
                 });
 
@@ -336,9 +376,8 @@
                 console.error("Araçları çekerken hata oluştu:", error);
                 wrapper.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi. Lütfen daha sonra tekrar deneyin.</p>';
             }
-        });
+        };
 
-        // Dinamik Sekme (Tab) Değiştirme Fonksiyonu
         window.openDynamicTab = function (evt, tabId, btnElement) {
             const container = btnElement.closest('.vehicle-tabs');
             const contents = container.getElementsByClassName("tab-content");
@@ -353,7 +392,6 @@
             btnElement.classList.add("active");
         };
 
-        // Dinamik Rezervasyon Gönderim Fonksiyonu
         window.gonderAracRezervasyon = async function (e, aracIsmi) {
             e.preventDefault();
             const form = e.target;
@@ -393,7 +431,7 @@
             }
         };
 
-        // Preloader Güvenlik Kodu
+        // Preloader 
         (function () {
             var preloader = document.getElementById('bp-preloader');
             if (!preloader) return;

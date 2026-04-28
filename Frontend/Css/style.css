@@ -459,7 +459,6 @@ a {
   flex-shrink: 0;
 }
 
-/* YENİ: Hem input hem de select etiketleri için ortak tasarım (Taşma Sorunu Çözümü) */
 .form-group input,
 .form-group select {
   border: none;
@@ -475,14 +474,12 @@ a {
   background: transparent;
 }
 
-/* YENİ: Sadece select (Açılır Liste) için lüks ikon ve boşluk ayarları */
 .form-group select {
   cursor: pointer;
-  padding-right: 25px; /* Yeni VIP ok ikonu için sağdan boşluk */
+  padding-right: 25px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  /* Standart çirkin ok yerine VIP Lacivert Ok */
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230f3d7a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
   background-repeat: no-repeat;
   background-position: right 5px center;
@@ -1093,7 +1090,7 @@ a {
   }
 }
 
-/* KÜÇÜK MOBİL (768px ve altı) */
+/* KÜÇÜK MOBİL (768px ve altı) İÇİN MEDİA QUERY'LER */
 @media (max-width: 768px) {
   .grid-3 {
     grid-template-columns: 1fr;
@@ -1135,7 +1132,29 @@ a {
     flex: 1 1 100%;
     width: 100%;
   }
+
+  /* Araç Kartları Mobil Düzeltme */
+  .v-content-side h3 {
+    font-size: 22px;
+  }
+  .tab-header {
+    flex-direction: column;
+  }
+  .tab-btn {
+    border-bottom: 1px solid #ddd;
+    border-left: 3px solid transparent;
+    justify-content: flex-start;
+    padding: 15px 20px;
+  }
+  .tab-btn.active {
+    border-bottom: 1px solid #ddd;
+    border-left: 3px solid var(--primary);
+  }
+  .inline-rez-form {
+    flex-direction: column;
+  }
 }
+
 /* =======================================================
    MOBİL İÇİN BUTON DÜZELTMESİ (AŞIRI DAR/İNCE GÖRÜNÜMÜ ESNESİR)
 ======================================================= */
@@ -1143,12 +1162,42 @@ a {
   .hero-booking-form button,
   .btn-primary,
   .btn-offer {
-    padding: 16px 20px !important; /* Butonu dikeyde ve yatayda dolgunlaştırır */
-    font-size: 16px !important; /* Mobilde yazının rahat okunmasını sağlar */
+    padding: 16px 20px !important;
+    font-size: 16px !important;
     font-weight: 800 !important;
-    border-radius: 10px !important; /* Köşeleri modern ve yumuşak yapar */
-    height: auto !important; /* Eğer başka yerde sabit yükseklik verildiyse onu ezer */
-    line-height: normal !important; /* Metnin tam ortalanmasını sağlar */
-    width: 100% !important; /* Ekrana tam yayılmasını sağlar */
+    border-radius: 10px !important;
+    height: auto !important;
+    line-height: normal !important;
+    width: 100% !important;
   }
+}
+
+/* =======================================================
+   SADECE ARAÇLAR VİTRİNİ İÇİN LÜKS HOVER EFEKTLERİ
+   (Turlar kısmını veya sayfanın hiçbir yerini etkilemez)
+======================================================= */
+.hover-arac-kart {
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid #eaeaea;
+}
+.hover-arac-kart:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(15, 61, 122, 0.15) !important;
+  border-color: rgba(15, 61, 122, 0.2);
+}
+.hover-arac-img {
+  transition: transform 0.6s ease;
+}
+.hover-arac-kart:hover .hover-arac-img {
+  transform: scale(1.08);
+}
+.hover-arac-btn {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  font-weight: 700 !important;
+}
+.hover-arac-btn:hover {
+  background: transparent !important;
+  color: #0f3d7a !important;
+  border-color: #0f3d7a !important;
 }

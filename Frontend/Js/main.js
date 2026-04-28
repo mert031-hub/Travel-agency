@@ -16,6 +16,9 @@
 
 const WHATSAPP_NUMBER = "905338577240";
 
+// Titreme (flickering) sorununu tamamen kaldıran kilit değişken
+let isInitialLoad = true;
+
 /**
  * Dil değiştirme fonksiyonu
  */
@@ -59,6 +62,13 @@ function changeLanguage(lang) {
     }
 
     updateWhatsAppLinks(lang);
+
+    // KİLİT NOKTA: Sayfa ilk açılışında çifte yükleme (flickering) yapmaması için koruma kondu!
+    if (!isInitialLoad) {
+        if (typeof window.turlariYukle === 'function') window.turlariYukle();
+        if (typeof window.araclariYukle === 'function') window.araclariYukle();
+        if (typeof window.detayliAraclariYukle === 'function') window.detayliAraclariYukle();
+    }
 
     if (typeof AOS !== 'undefined') {
         setTimeout(() => { AOS.refresh(); }, 150);
@@ -227,13 +237,20 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ==============================================================
-   YENİ DİNAMİK VERİ YÜKLEYİCİLER (AÇIKLAMALAR TAMAMEN GÖRÜNÜR)
+   DİNAMİK VERİ YÜKLEYİCİLER
 ============================================================== */
 
 // 1. TURLARI YÜKLE
-async function turlariYukle() {
+window.turlariYukle = async function () {
     const vitrin = document.getElementById('anaSayfaTurVitrini');
     if (!vitrin) return;
+
+    // YENİ: İç içe geçmeyi ve tek eleman uzamasını engelleyen Esnek (Flex) sistem
+    vitrin.style.display = 'flex';
+    vitrin.style.flexWrap = 'wrap';
+    vitrin.style.justifyContent = 'center';
+    vitrin.style.gap = '30px';
+    vitrin.style.alignItems = 'stretch';
 
     try {
         const res = await fetch('/api/tours');
@@ -241,35 +258,68 @@ async function turlariYukle() {
         vitrin.innerHTML = '';
 
         if (turlar.length === 0) {
-            vitrin.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">Şu an tur bulunmuyor.</p>';
+            vitrin.innerHTML = '<p style="text-align:center; width: 100%;">Şu an tur bulunmuyor.</p>';
             return;
         }
 
+        const currentLang = localStorage.getItem('selectedLang') || 'tr';
+        const sozluk = (typeof translations !== 'undefined' && translations[currentLang]) ? translations[currentLang] : {};
+
         turlar.forEach(tur => {
+            const sira = tur.turSira || 999;
             const foto = tur.fotoUrl || '/Frontend/photo/default-tour.jpg';
+
+            // Veriler TR ise kesinlikle DB'den gelir.
+            const ad = currentLang === 'tr' ? tur.turAd : (sozluk[`t${sira}_title`] || tur.turAd);
+            const aciklama = currentLang === 'tr' ? tur.turAciklama : (sozluk[`t${sira}_desc`] || tur.turAciklama);
+            const rozet = currentLang === 'tr' ? (tur.turRozet || 'VIP') : (sozluk[`t${sira}_badge`] || tur.turRozet || 'VIP');
+
+            // YENİ: "flex: 1 1 300px; max-width: 400px; width: 100%;" eklendi (Tek kartın bozulmasını engeller)
             vitrin.innerHTML += `
-                <div class="tour-card" data-aos="fade-up">
-                    <div class="card-img">
-                        <img src="${foto}" alt="${tur.turAd}">
-                        <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span>${tur.turRozet || 'VIP'}</span></span></div>
+                <div class="tour-card" data-aos="fade-up" style="flex: 1 1 300px; max-width: 400px; width: 100%; display: flex; flex-direction: column;">
+                    <div class="card-img" style="min-height: 220px; flex-shrink: 0;">
+                        <img src="${foto}" alt="${ad}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="img-bar center"><span><i class="far fa-calendar-alt"></i> <span>${rozet}</span></span></div>
                     </div>
-                    <div class="card-body">
-                        <h3>${tur.turAd}</h3>
-                        <p style="margin-bottom: 15px;">${tur.turAciklama || ''}</p> 
-                        <a href="https://wa.me/905338577240?text=Merhaba, ${encodeURIComponent(tur.turAd)} hakkında bilgi almak istiyorum." target="_blank" class="circle-icon green"><i class="fab fa-whatsapp"></i></a>
+                    <div class="card-body" style="flex-grow: 1; display: flex; flex-direction: column;">
+                        <h3 style="word-break: break-word;">${ad}</h3>
+                        <p style="margin-bottom: 15px; flex-grow: 1; word-break: break-word;">${aciklama}</p> 
+                        <a href="https://wa.me/905338577240?text=Merhaba, ${encodeURIComponent(tur.turAd)} hakkında bilgi almak istiyorum." target="_blank" class="circle-icon green" style="align-self: flex-start;"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>`;
         });
         if (typeof AOS !== 'undefined') AOS.init();
     } catch (e) {
-        vitrin.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red;">Turlar yüklenemedi.</p>';
+        vitrin.innerHTML = '<p style="text-align:center; width: 100%; color:red;">Turlar yüklenemedi.</p>';
     }
 }
 
 // 2. ARAÇLARI YÜKLE
-async function araclariYukle() {
+window.araclariYukle = async function () {
     const vitrin = document.getElementById('anaSayfaAracVitrisi');
     if (!vitrin) return;
+
+    // SADECE Araçlar için CSS enjekte edilir
+    if (!document.getElementById('araclar-hover-styles')) {
+        const hoverStyle = document.createElement('style');
+        hoverStyle.id = 'araclar-hover-styles';
+        hoverStyle.innerHTML = `
+            .hover-arac-kart { transition: all 0.3s ease; border: 1px solid #eaeaea; }
+            .hover-arac-kart:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; border-color: #0f3d7a; }
+            .hover-arac-img { transition: transform 0.5s ease; }
+            .hover-arac-kart:hover .hover-arac-img { transform: scale(1.08); }
+            .hover-arac-btn { transition: all 0.3s ease; border: 2px solid transparent; }
+            .hover-arac-btn:hover { background: transparent !important; color: #0f3d7a !important; border-color: #0f3d7a !important; }
+        `;
+        document.head.appendChild(hoverStyle);
+    }
+
+    // YENİ: İç içe geçmeyi ve tek araç kalınca devasa uzamayı engelleyen Esnek (Flex) sistem
+    vitrin.style.display = 'flex';
+    vitrin.style.flexWrap = 'wrap';
+    vitrin.style.justifyContent = 'center';
+    vitrin.style.gap = '30px';
+    vitrin.style.alignItems = 'stretch';
 
     try {
         const res = await fetch('/api/vehicles');
@@ -281,21 +331,34 @@ async function araclariYukle() {
             return;
         }
 
+        const currentLang = localStorage.getItem('selectedLang') || 'tr';
+        const sozluk = (typeof translations !== 'undefined' && translations[currentLang]) ? translations[currentLang] : {};
+
         araclar.forEach(arac => {
+            const sira = arac.aracSira || 999;
             const foto = arac.fotoUrl || '/Frontend/Images/default-car.jpg';
+
+            // TR ise veritabanından çek. 
+            const ad = currentLang === 'tr' ? arac.aracAd : (sozluk[`veh${sira}_title`] || arac.aracAd);
+            const marka = currentLang === 'tr' ? (arac.aracMarka || 'VIP') : (sozluk[`veh${sira}_tag`] || arac.aracMarka || 'VIP');
+            const aciklama = currentLang === 'tr' ? arac.aracAciklama : (sozluk[`veh${sira}_desc`] || arac.aracAciklama);
+
+            // SADECE BUTON SÖZLÜKTEN GELSİN:
+            const btnText = sozluk['btn_incele'] || 'İncele';
+
+            // YENİ: "flex: 1 1 300px; max-width: 400px; width: 100%;" eklendi (Tek kartın bozulmasını engeller)
             vitrin.innerHTML += `
-                <div class="col-md-4 col-sm-6 mb-4">
-                    <div class="vehicle-card-home" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
-                        <div style="height:200px; overflow:hidden;"><img src="${foto}" style="width:100%; height:100%; object-fit:cover;"></div>
-                        <div style="padding:20px; flex-grow: 1; display: flex; flex-direction: column;">
-                            <span style="font-size:11px; color:#f39c12; font-weight:bold;">${arac.aracMarka || 'VIP'}</span>
-                            <h3 style="margin:5px 0; font-size:18px; color:#0f3d7a;">${arac.aracAd}</h3>
-                            <p style="font-size:13px; color:#666; margin-bottom:15px;">${arac.aracAciklama || ''}</p>
-                            <div style="margin-top:auto;"><a href="araclarimiz.html" style="display:block; text-align:center; padding:10px; background:#0f3d7a; color:#fff; border-radius:8px; text-decoration:none;">İncele</a></div>
-                        </div>
+                <div class="vehicle-card-home hover-arac-kart" data-aos="fade-up" style="flex: 1 1 300px; max-width: 400px; width: 100%; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+                    <div style="height:200px; overflow:hidden; flex-shrink: 0;"><img src="${foto}" class="hover-arac-img" style="width:100%; height:100%; object-fit:cover;"></div>
+                    <div style="padding:20px; flex-grow: 1; display: flex; flex-direction: column;">
+                        <span style="font-size:11px; color:#f39c12; font-weight:bold; text-transform:uppercase;">${marka}</span>
+                        <h3 style="margin:5px 0; font-size:18px; color:#0f3d7a; word-break: break-word;">${ad}</h3>
+                        <p style="font-size:13px; color:#666; margin-bottom:15px; flex-grow: 1; word-break: break-word;">${aciklama}</p>
+                        <div style="margin-top:auto;"><a href="araclarimiz.html" class="hover-arac-btn" style="display:block; text-align:center; padding:10px; background:#0f3d7a; color:#fff; border-radius:8px; text-decoration:none;" data-lang="btn_incele">${btnText}</a></div>
                     </div>
                 </div>`;
         });
+        if (typeof AOS !== 'undefined') AOS.init();
     } catch (e) {
         vitrin.innerHTML = '<p style="text-align:center; width:100%; color:red;">Araçlar yüklenemedi.</p>';
     }
@@ -303,8 +366,12 @@ async function araclariYukle() {
 
 // Sayfa yüklendiğinde çalıştır
 document.addEventListener('DOMContentLoaded', () => {
-    turlariYukle();
-    araclariYukle();
+    if (typeof window.turlariYukle === 'function') window.turlariYukle();
+    if (typeof window.araclariYukle === 'function') window.araclariYukle();
+    if (typeof window.detayliAraclariYukle === 'function') window.detayliAraclariYukle();
+
+    // İşlemler bittikten sonra kilidi kapatıyoruz (Bir daha gereksiz yere çekmesin diye)
+    setTimeout(() => { isInitialLoad = false; }, 500);
 });
 
 /* Sayfalar Arası Yumuşak Geçiş */
