@@ -11,6 +11,8 @@ const rateLimit = require('express-rate-limit'); // İstek sınırlayıcı
 const multer = require('multer'); // Fotoğraf yükleme kütüphanesi
 const { Resend } = require('resend');
 const session = require('express-session');
+const mongoSanitize = require('express-mongo-sanitize'); // YENİ: NoSQL Injection koruması
+const xss = require('xss-clean'); // YENİ: XSS koruması
 
 const Reservation = require('./models/Reservation');
 
@@ -176,8 +178,14 @@ app.use(cors({
     },
     credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// --- YENİ EKLENEN GÜVENLİK KALKANLARI ---
+app.use(mongoSanitize()); // Veritabanı zehirlenmesine karşı koruma
+app.use(xss()); // XSS Saldırılarına karşı zararlı script koruması
+// ----------------------------------------
 
 app.use(session({
     secret: generatedSessionSecret,
