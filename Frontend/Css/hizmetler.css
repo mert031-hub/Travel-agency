@@ -742,3 +742,100 @@ a {
     width: 100% !important; /* Ekrana tam yayılmasını sağlar */
   }
 }
+
+/* =======================================================
+   9. VIP ÇEREZ (COOKIE) ONAY BANNER - YENİ MODERN TASARIM
+======================================================= */
+.cookie-consent-banner {
+  position: fixed;
+  bottom: -150px; /* Başlangıçta gizli tutar */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 700px; /* Ekranı boydan boya kaplamaz, şık bir kart gibi durur */
+  background: rgba(
+    15,
+    61,
+    122,
+    0.95
+  ); /* Marka renginin çok hafif şeffaf hali */
+  backdrop-filter: blur(10px); /* Lüks buzlu cam efekti */
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999999;
+  transition: bottom 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 16px; /* Köşeleri yuvarlak */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 20px;
+}
+
+.cookie-consent-banner.show {
+  bottom: 30px; /* Ekranda zarifçe yüzer */
+}
+
+.cookie-consent-banner .cookie-text {
+  font-size: 14px;
+  text-align: left;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.cookie-consent-banner .cookie-text a {
+  color: #f39c12; /* Turuncu vurgu */
+  text-decoration: none;
+  margin-left: 5px;
+  font-weight: 700;
+  border-bottom: 1px dashed #f39c12;
+  transition: 0.3s;
+}
+
+.cookie-consent-banner .cookie-text a:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+.cookie-consent-banner button {
+  background-color: #f39c12;
+  color: #0f3d7a;
+  border: none;
+  padding: 10px 30px;
+  font-weight: 800;
+  border-radius: 50px; /* Hap (pill) şeklinde lüks buton */
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.cookie-consent-banner button:hover {
+  background-color: #fff;
+  color: #0f3d7a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .cookie-consent-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    bottom: -200px;
+    border-radius: 16px 16px 0 0; /* Mobilde sadece üst köşeler yuvarlak */
+    width: 100%;
+    max-width: 100%;
+  }
+  .cookie-consent-banner.show {
+    bottom: 0; /* Mobilde en alta tam oturur (Bottom Sheet mantığı) */
+  }
+  .cookie-consent-banner .cookie-text {
+    text-align: center;
+  }
+  .cookie-consent-banner button {
+    width: 100%;
+  }
+}

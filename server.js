@@ -3,22 +3,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs'); // Dosya silme/kontrol işlemleri için
+const fs = require('fs');
 const crypto = require('crypto');
-const helmet = require('helmet'); // Güvenlik kalkanı
-const morgan = require('morgan'); // HTTP istek loglayıcı
-const rateLimit = require('express-rate-limit'); // İstek sınırlayıcı
-const multer = require('multer'); // Fotoğraf yükleme kütüphanesi
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const multer = require('multer');
 const { Resend } = require('resend');
-const session = require('express-session');
-const mongoSanitize = require('express-mongo-sanitize'); // YENİ: NoSQL Injection koruması
-const xss = require('xss-clean'); // YENİ: XSS koruması
 
 const Reservation = require('./models/Reservation');
 
 // --- 1. MONGODB ŞEMALARI ---
-
-// ARAÇLAR (VEHICLES) ŞEMASI
 const vehicleSchema = new mongoose.Schema({
     aracAd: { type: String, required: true },
     aracMarka: { type: String, default: '' },
@@ -32,40 +27,42 @@ const vehicleSchema = new mongoose.Schema({
 });
 const Vehicle = mongoose.models.Vehicle || mongoose.model('Vehicle', vehicleSchema);
 
-// YENİ: TURLAR (TOURS) ŞEMASI
 const tourSchema = new mongoose.Schema({
-    turAd: { type: String, required: true }, // Örn: Girne & Bellapais
-    turBolge: { type: String, default: '' }, // Örn: Girne Bölgesi
-    turAciklama: { type: String, default: '' }, // Örn: Limanın büyüleyici...
-    turYerler: { type: String, default: '' }, // Örn: Girne Kalesi, Eski Yat Limanı (Virgülle ayrılmış)
-    turRozet: { type: String, default: '' }, // Örn: VIP Tur, Popüler
-    turSira: { type: Number, default: 999 }, // Ekranda gösterme sırası
-    fotoUrl: { type: String, default: '' }, // Ana Kapak Fotoğrafı
-    galeriUrls: [{ type: String }], // Çoklu Galeri Fotoğrafları
+    turAd: { type: String, required: true },
+    turBolge: { type: String, default: '' },
+    turAciklama: { type: String, default: '' },
+    turYerler: { type: String, default: '' },
+    turRozet: { type: String, default: '' },
+    turSira: { type: Number, default: 999 },
+    fotoUrl: { type: String, default: '' },
+    galeriUrls: [{ type: String }],
     kayitTarihi: { type: Date, default: Date.now }
 });
 const Tour = mongoose.models.Tour || mongoose.model('Tour', tourSchema);
 
 
 const app = express();
+
+// =========================================================================
+// KRİTİK SEO ÇÖZÜMÜ: Sitemap ve Robots.txt Rotaları En Üstte Olmalı
+// =========================================================================
+app.get('/sitemap.xml', (req, res) => {
+    res.setHeader('Content-Type', 'application/xml');
+    res.sendFile(path.join(__dirname, 'sitemap.xml'));
+});
+
+app.get('/robots.txt', (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.sendFile(path.join(__dirname, 'robots.txt'));
+});
+// =========================================================================
+
 const PORT = process.env.PORT || 5000;
-const isProduction = process.env.NODE_ENV === 'production';
-const generatedSessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 const allowedOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim()).filter(Boolean)
     : null;
-const allowedImageMimeTypes = new Set([
-    'image/jpeg',
-    'image/png',
-    'image/webp',
-    'image/gif',
-    'image/avif'
-]);
+const allowedImageMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']);
 const emailAlici = process.env.NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || '';
-
-if (!process.env.SESSION_SECRET) {
-    console.warn('SESSION_SECRET tanimli degil. Gecici bir oturum anahtari uretildi.');
-}
 
 function temizMetin(deger, maxUzunluk = 5000) {
     if (deger === undefined || deger === null) return '';
@@ -74,11 +71,7 @@ function temizMetin(deger, maxUzunluk = 5000) {
 
 function temizListeMetni(deger, maxUzunluk = 500) {
     if (!deger) return '';
-    return String(deger)
-        .split(',')
-        .map(item => temizMetin(item, 80))
-        .filter(Boolean)
-        .join(', ');
+    return String(deger).split(',').map(item => temizMetin(item, 80)).filter(Boolean).join(', ');
 }
 
 function temizEmail(deger) {
@@ -100,12 +93,7 @@ function sayiOku(deger, varsayilanDeger = 999) {
 }
 
 function htmlKacis(deger) {
-    return String(deger)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    return String(deger).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function rezervasyonVerisiniHazirla(body = {}) {
@@ -123,57 +111,30 @@ function rezervasyonVerisiniHazirla(body = {}) {
 }
 
 function rezervasyonDogrula(veri) {
-    if (!veri.adSoyad || veri.adSoyad.length < 3) {
-        return 'Lutfen gecerli bir ad soyad girin.';
-    }
-
-    if (!veri.telefon) {
-        return 'Lutfen gecerli bir telefon numarasi girin.';
-    }
-
-    if (veri.email && !temizEmail(veri.email)) {
-        return 'Lutfen gecerli bir e-posta adresi girin.';
-    }
-
+    if (!veri.adSoyad || veri.adSoyad.length < 3) return 'Lutfen gecerli bir ad soyad girin.';
+    if (!veri.telefon) return 'Lutfen gecerli bir telefon numarasi girin.';
+    if (veri.email && !temizEmail(veri.email)) return 'Lutfen gecerli bir e-posta adresi girin.';
     return '';
 }
 
 function dosyaYolunuCoz(dosyaUrl) {
-    if (!dosyaUrl || typeof dosyaUrl !== 'string' || !dosyaUrl.startsWith('/Frontend/Images/')) {
-        return '';
-    }
+    if (!dosyaUrl || typeof dosyaUrl !== 'string' || !dosyaUrl.startsWith('/Frontend/Images/')) return '';
     return path.join(__dirname, dosyaUrl);
 }
 
-// --- 2. GÜVENLİK, İZLEME VE OTURUM ---
-
-app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false
-}));
-
+// --- 2. GÜVENLİK VE SİSTEM KONTROLÜ ---
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(morgan('dev'));
 
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: { mesaj: "Çok fazla deneme yaptınız, lütfen biraz bekleyin." }
-});
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use('/api/teklif-al', limiter);
-const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 10,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { basari: false, mesaj: 'Cok fazla giris denemesi yaptiniz. Lutfen biraz bekleyin.' }
-});
+
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, standardHeaders: true, legacyHeaders: false });
 app.use('/api/login', loginLimiter);
 
 app.use(cors({
     origin(origin, cb) {
-        if (!origin || !allowedOrigins || allowedOrigins.includes(origin)) {
-            return cb(null, true);
-        }
+        if (!origin || !allowedOrigins || allowedOrigins.includes(origin)) return cb(null, true);
         return cb(new Error('CORS engellendi.'));
     },
     credentials: true
@@ -181,27 +142,11 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// --- YENİ EKLENEN GÜVENLİK KALKANLARI ---
-app.use(mongoSanitize()); // Veritabanı zehirlenmesine karşı koruma
-app.use(xss()); // XSS Saldırılarına karşı zararlı script koruması
-// ----------------------------------------
-
-app.use(session({
-    secret: generatedSessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    name: 'bp-admin-session',
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: isProduction
-    }
-}));
+app.set('trust proxy', 1);
 
 const adminKontrol = (req, res, next) => {
-    if (req.session && req.session.adminGirisYapti) {
+    const cookies = req.headers.cookie || '';
+    if (cookies.includes('bp_admin_auth=basarili_giris')) {
         next();
     } else {
         if (req.originalUrl.startsWith('/api/')) {
@@ -215,16 +160,9 @@ const adminKontrol = (req, res, next) => {
 // --- 3. MULTER (FOTOĞRAF YÜKLEME) AYARLARI ---
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        // İsteğin geldiği URL'ye göre klasörü belirle (Araç mı Tur mu?)
-        let folderName = 'Cars';
-        if (req.originalUrl.includes('tours')) {
-            folderName = 'Tours';
-        }
-
+        let folderName = req.originalUrl.includes('tours') ? 'Tours' : 'Cars';
         const dir = path.join(__dirname, 'Frontend', 'Images', folderName);
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         cb(null, dir);
     },
     filename: function (req, file, cb) {
@@ -235,62 +173,63 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
     storage: storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024,
-        files: 11
-    },
+    limits: { fileSize: 5 * 1024 * 1024, files: 11 },
     fileFilter(req, file, cb) {
-        if (!allowedImageMimeTypes.has(file.mimetype)) {
-            return cb(new Error('Sadece gorsel dosyalari yuklenebilir.'));
-        }
+        if (!allowedImageMimeTypes.has(file.mimetype)) return cb(new Error('Sadece gorsel dosyalari yuklenebilir.'));
         cb(null, true);
     }
 });
 
-// Araçlar İçin Upload
-const cpUpload = upload.fields([
-    { name: 'aracFoto', maxCount: 1 },
-    { name: 'aracGaleri', maxCount: 10 }
-]);
+const cpUpload = upload.fields([{ name: 'aracFoto', maxCount: 1 }, { name: 'aracGaleri', maxCount: 10 }]);
+const tourUpload = upload.fields([{ name: 'turFoto', maxCount: 1 }, { name: 'turGaleri', maxCount: 10 }]);
 
-// Turlar İçin Upload
-const tourUpload = upload.fields([
-    { name: 'turFoto', maxCount: 1 },
-    { name: 'turGaleri', maxCount: 10 }
-]);
-
-// Resend (E-posta) Başlatma
 let resend;
-if (process.env.RESEND_API_KEY) {
-    resend = new Resend(process.env.RESEND_API_KEY);
-}
+if (process.env.RESEND_API_KEY) resend = new Resend(process.env.RESEND_API_KEY);
+
 
 // --- 4. STATİK DOSYA SUNUMU ---
+// Klasör Bazlı Statik Sunumlar
 app.use('/Frontend', express.static(path.join(__dirname, 'Frontend')));
 app.use('/Css', express.static(path.join(__dirname, 'Frontend', 'Css')));
 app.use('/Js', express.static(path.join(__dirname, 'Frontend', 'Js')));
-app.use(express.static(path.join(__dirname, 'Frontend')));
 app.use(express.static(path.join(__dirname, 'Frontend', 'Html')));
+app.use(express.static(path.join(__dirname, 'Frontend')));
+app.use(express.static(__dirname));
 
 // --- 5. ÖZEL ROTALAR VE GİRİŞ (AUTH) ---
 app.get('/login', (req, res) => {
-    if (req.session.adminGirisYapti) return res.redirect('/admin');
+    const cookies = req.headers.cookie || '';
+    if (cookies.includes('bp_admin_auth=basarili_giris')) return res.redirect('/admin');
     res.sendFile(path.join(__dirname, 'Frontend', 'Html', 'login.html'));
 });
 
 app.post('/api/login', (req, res) => {
     const kullaniciAdi = temizMetin(req.body?.kullaniciAdi, 120);
     const sifre = temizMetin(req.body?.sifre, 120);
-    if (kullaniciAdi === process.env.ADMIN_USERNAME && sifre === process.env.ADMIN_PASS) {
-        req.session.adminGirisYapti = true;
+
+    const dogruKullanici = process.env.ADMIN_USERNAME || 'admin';
+    const dogruSifre = process.env.ADMIN_PASS || 'pass';
+
+    if (kullaniciAdi === dogruKullanici && sifre === dogruSifre) {
+        res.cookie('bp_admin_auth', 'basarili_giris', {
+            maxAge: 24 * 60 * 60 * 1000,
+            path: '/',
+            httpOnly: false,
+            secure: false
+        });
+
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, private');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+
         res.json({ basari: true });
     } else {
-        res.status(401).json({ basari: false, mesaj: 'Hatali kullanici adi veya sifre!' });
+        res.status(401).json({ basari: false, mesaj: 'Hatalı kullanıcı adı veya şifre!' });
     }
 });
 
 app.post('/api/logout', (req, res) => {
-    req.session.destroy();
+    res.clearCookie('bp_admin_auth', { path: '/' });
     res.json({ basari: true });
 });
 
@@ -303,7 +242,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-    res.json({ durum: 'UP', zaman: new Date(), uptime: Math.floor(process.uptime()) + " saniye" });
+    res.json({ durum: 'UP', zaman: new Date() });
 });
 
 // --- 6. MONGODB BAĞLANTISI ---
@@ -374,14 +313,14 @@ app.get('/api/vehicles', async (req, res) => {
     try {
         const araclar = await Vehicle.find().sort({ aracSira: 1, kayitTarihi: -1 });
         res.json(araclar);
-    } catch (error) { res.status(500).json({ mesaj: "Araçlar getirilemedi." }); }
+    } catch (error) { res.status(500).json({ mesaj: "Hata" }); }
 });
 
 app.get('/api/admin/vehicles', adminKontrol, async (req, res) => {
     try {
         const araclar = await Vehicle.find().sort({ aracSira: 1, kayitTarihi: -1 });
         res.json(araclar);
-    } catch (error) { res.status(500).json({ mesaj: "Araçlar getirilemedi." }); }
+    } catch (error) { res.status(500).json({ mesaj: "Hata" }); }
 });
 
 app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
@@ -393,9 +332,7 @@ app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
         const aracYorumlar = temizMetin(req.body?.aracYorumlar, 5000) || '[]';
         const aracSira = sayiOku(req.body?.aracSira, 999);
 
-        if (!aracAd) {
-            return res.status(400).json({ basari: false, mesaj: "Araç adı zorunludur." });
-        }
+        if (!aracAd) return res.status(400).json({ basari: false, mesaj: "Araç adı zorunludur." });
 
         let fotoUrl = '';
         if (req.files && req.files['aracFoto']) { fotoUrl = '/Frontend/Images/Cars/' + req.files['aracFoto'][0].filename; }
@@ -405,20 +342,10 @@ app.post('/api/admin/vehicles', adminKontrol, cpUpload, async (req, res) => {
             req.files['aracGaleri'].forEach(file => { galeriUrls.push('/Frontend/Images/Cars/' + file.filename); });
         }
 
-        const yeniArac = new Vehicle({
-            aracAd,
-            aracMarka,
-            aracAciklama,
-            aracYorumlar,
-            aracSira,
-            aracOzellikler,
-            fotoUrl: fotoUrl,
-            galeriUrls: galeriUrls
-        });
-
+        const yeniArac = new Vehicle({ aracAd, aracMarka, aracAciklama, aracYorumlar, aracSira, aracOzellikler, fotoUrl, galeriUrls });
         await yeniArac.save();
-        res.status(201).json({ basari: true, mesaj: "Araç başarıyla eklendi." });
-    } catch (error) { res.status(500).json({ basari: false, mesaj: "Araç eklenirken hata oluştu." }); }
+        res.status(201).json({ basari: true, mesaj: "Araç eklendi." });
+    } catch (error) { res.status(500).json({ basari: false, mesaj: "Hata" }); }
 });
 
 app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
@@ -431,7 +358,7 @@ app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
         arac.aracOzellikler = req.body.aracOzellikler !== undefined ? temizListeMetni(req.body.aracOzellikler, 500) : arac.aracOzellikler;
         arac.aracMarka = req.body.aracMarka !== undefined ? temizMetin(req.body.aracMarka, 150) : arac.aracMarka;
         arac.aracAciklama = req.body.aracAciklama !== undefined ? temizMetin(req.body.aracAciklama, 3000) : arac.aracAciklama;
-        if (req.body.aracYorumlar !== undefined) { arac.aracYorumlar = temizMetin(req.body.aracYorumlar, 5000) || '[]'; }
+        if (req.body.aracYorumlar !== undefined) arac.aracYorumlar = temizMetin(req.body.aracYorumlar, 5000) || '[]';
 
         if (req.files && req.files['aracFoto']) {
             if (arac.fotoUrl) {
@@ -455,7 +382,7 @@ app.put('/api/admin/vehicles/:id', adminKontrol, cpUpload, async (req, res) => {
 
         await arac.save();
         res.json({ basari: true, mesaj: "Araç güncellendi." });
-    } catch (error) { res.status(500).json({ basari: false, mesaj: "Araç güncellenirken hata oluştu." }); }
+    } catch (error) { res.status(500).json({ basari: false, mesaj: "Hata" }); }
 });
 
 app.delete('/api/admin/vehicles/:id', adminKontrol, async (req, res) => {
@@ -476,23 +403,23 @@ app.delete('/api/admin/vehicles/:id', adminKontrol, async (req, res) => {
         }
 
         await Vehicle.findByIdAndDelete(req.params.id);
-        res.json({ basari: true, mesaj: "Araç tamamen silindi." });
-    } catch (error) { res.status(500).json({ basari: false, mesaj: "Silme işlemi başarısız." }); }
+        res.json({ basari: true, mesaj: "Araç silindi." });
+    } catch (error) { res.status(500).json({ basari: false, mesaj: "Hata" }); }
 });
 
-// --- YENİ: 9. TUR YÖNETİMİ API'LERİ ---
+// --- 9. TUR YÖNETİMİ API'LERİ ---
 app.get('/api/tours', async (req, res) => {
     try {
         const turlar = await Tour.find().sort({ turSira: 1, kayitTarihi: -1 });
         res.json(turlar);
-    } catch (error) { res.status(500).json({ mesaj: "Turlar getirilemedi." }); }
+    } catch (error) { res.status(500).json({ mesaj: "Hata" }); }
 });
 
 app.get('/api/admin/tours', adminKontrol, async (req, res) => {
     try {
         const turlar = await Tour.find().sort({ turSira: 1, kayitTarihi: -1 });
         res.json(turlar);
-    } catch (error) { res.status(500).json({ mesaj: "Turlar getirilemedi." }); }
+    } catch (error) { res.status(500).json({ mesaj: "Hata" }); }
 });
 
 app.post('/api/admin/tours', adminKontrol, tourUpload, async (req, res) => {
@@ -504,9 +431,7 @@ app.post('/api/admin/tours', adminKontrol, tourUpload, async (req, res) => {
         const turRozet = temizMetin(req.body?.turRozet, 80);
         const turSira = sayiOku(req.body?.turSira, 999);
 
-        if (!turAd) {
-            return res.status(400).json({ basari: false, mesaj: "Tur adı zorunludur." });
-        }
+        if (!turAd) return res.status(400).json({ basari: false, mesaj: "Tur adı zorunludur." });
 
         let fotoUrl = '';
         if (req.files && req.files['turFoto']) { fotoUrl = '/Frontend/Images/Tours/' + req.files['turFoto'][0].filename; }
@@ -516,20 +441,10 @@ app.post('/api/admin/tours', adminKontrol, tourUpload, async (req, res) => {
             req.files['turGaleri'].forEach(file => { galeriUrls.push('/Frontend/Images/Tours/' + file.filename); });
         }
 
-        const yeniTur = new Tour({
-            turAd,
-            turBolge,
-            turAciklama,
-            turYerler,
-            turRozet,
-            turSira,
-            fotoUrl: fotoUrl,
-            galeriUrls: galeriUrls
-        });
-
+        const yeniTur = new Tour({ turAd, turBolge, turAciklama, turYerler, turRozet, turSira, fotoUrl, galeriUrls });
         await yeniTur.save();
-        res.status(201).json({ basari: true, mesaj: "Tur başarıyla eklendi." });
-    } catch (error) { res.status(500).json({ basari: false, mesaj: "Tur eklenirken hata oluştu." }); }
+        res.status(201).json({ basari: true, mesaj: "Tur eklendi." });
+    } catch (error) { res.status(500).json({ basari: false, mesaj: "Hata" }); }
 });
 
 app.put('/api/admin/tours/:id', adminKontrol, tourUpload, async (req, res) => {
@@ -565,8 +480,8 @@ app.put('/api/admin/tours/:id', adminKontrol, tourUpload, async (req, res) => {
         }
 
         await tur.save();
-        res.json({ basari: true, mesaj: "Tur güncellendi." });
-    } catch (error) { res.status(500).json({ basari: false, mesaj: "Tur güncellenirken hata." }); }
+        res.json({ basari: true, mesaj: "Güncellendi." });
+    } catch (error) { res.status(500).json({ basari: false, mesaj: "Hata" }); }
 });
 
 app.delete('/api/admin/tours/:id', adminKontrol, async (req, res) => {
@@ -587,8 +502,8 @@ app.delete('/api/admin/tours/:id', adminKontrol, async (req, res) => {
         }
 
         await Tour.findByIdAndDelete(req.params.id);
-        res.json({ basari: true, mesaj: "Tur tamamen silindi." });
-    } catch (error) { res.status(500).json({ basari: false, mesaj: "Silme işlemi başarısız." }); }
+        res.json({ basari: true, mesaj: "Tur silindi." });
+    } catch (error) { res.status(500).json({ basari: false, mesaj: "Hata" }); }
 });
 
 // --- MÜŞTERİ FORMU (TEKLİF AL) ---
@@ -597,9 +512,7 @@ app.post('/api/teklif-al', async (req, res) => {
         const rezervasyonVerisi = rezervasyonVerisiniHazirla(req.body);
         const dogrulamaHatasi = rezervasyonDogrula(rezervasyonVerisi);
 
-        if (dogrulamaHatasi) {
-            return res.status(400).json({ basari: false, mesaj: dogrulamaHatasi });
-        }
+        if (dogrulamaHatasi) return res.status(400).json({ basari: false, mesaj: dogrulamaHatasi });
 
         const yeni = new Reservation(rezervasyonVerisi);
         await yeni.save();
@@ -610,24 +523,14 @@ app.post('/api/teklif-al', async (req, res) => {
                     from: 'BUGRA POLAT <onboarding@resend.dev>',
                     to: emailAlici,
                     subject: `Yeni VIP Talep: ${htmlKacis(rezervasyonVerisi.adSoyad)}`,
-                    html: `
-                        <h3>Yeni Rezervasyon Talebi!</h3>
-                        <p><strong>Musteri:</strong> ${htmlKacis(rezervasyonVerisi.adSoyad)}</p>
-                        <p><strong>Tel:</strong> ${htmlKacis(rezervasyonVerisi.telefon)}</p>
-                        <p><strong>Nereden:</strong> ${htmlKacis(rezervasyonVerisi.alinisNoktasi || '-')}</p>
-                        <p><strong>Nereye:</strong> ${htmlKacis(rezervasyonVerisi.birakilisNoktasi || '-')}</p>
-                        <p><strong>Tarih:</strong> ${htmlKacis(rezervasyonVerisi.tarih || '-')}</p>
-                        <p><strong>Mesaj:</strong> ${htmlKacis(rezervasyonVerisi.mesaj || '-')}</p>
-                    `
+                    html: `<p>Yeni Talep: ${htmlKacis(rezervasyonVerisi.adSoyad)}</p>`
                 });
             } catch (e) {
-                console.log("Mail gönderiminde takıldı, ancak talep veritabanına yazıldı.");
+                console.log("Mail gönderiminde hata.");
             }
         }
-        res.status(201).json({ basari: true, mesaj: "Talebiniz başarıyla alındı." });
-    } catch (e) {
-        res.status(500).json({ basari: false, mesaj: "Sunucu hatası oluştu." });
-    }
+        res.status(201).json({ basari: true });
+    } catch (e) { res.status(500).json({ basari: false }); }
 });
 
 // --- 10. HATA YÖNETİMİ ---

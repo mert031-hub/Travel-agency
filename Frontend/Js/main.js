@@ -89,15 +89,17 @@ function changeLanguage(lang) {
     const currentFlag = document.getElementById('currentFlag');
     const currentLangText = document.getElementById('currentLangText');
 
-    if (lang === 'tr') {
-        currentFlag.src = "https://flagcdn.com/w20/tr.png";
-        currentLangText.innerText = "TR";
-    } else if (lang === 'en') {
-        currentFlag.src = "https://flagcdn.com/w20/gb.png";
-        currentLangText.innerText = "EN";
-    } else if (lang === 'ru') {
-        currentFlag.src = "https://flagcdn.com/w20/ru.png";
-        currentLangText.innerText = "RU";
+    if (currentFlag && currentLangText) {
+        if (lang === 'tr') {
+            currentFlag.src = "https://flagcdn.com/w20/tr.png";
+            currentLangText.innerText = "TR";
+        } else if (lang === 'en') {
+            currentFlag.src = "https://flagcdn.com/w20/gb.png";
+            currentLangText.innerText = "EN";
+        } else if (lang === 'ru') {
+            currentFlag.src = "https://flagcdn.com/w20/ru.png";
+            currentLangText.innerText = "RU";
+        }
     }
 
     updateWhatsAppLinks(lang);
@@ -437,4 +439,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+});
+
+/* ==============================================================
+   6. ÇEREZ (COOKIE) ONAY SİSTEMİ
+============================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    const cookieBanner = document.getElementById('cookieConsent');
+    const acceptBtn = document.getElementById('acceptCookies');
+
+    if (cookieBanner && acceptBtn) {
+        // Kullanıcı daha önce onay vermiş mi diye localStorage'ı kontrol et
+        const hasAccepted = localStorage.getItem('cookiesAccepted');
+
+        if (!hasAccepted) {
+            // Onay yoksa banner'ı tatlı bir animasyonla yukarı çıkar (2 saniye gecikmeli)
+            setTimeout(() => {
+                cookieBanner.classList.add('show');
+            }, 2000);
+        }
+
+        // Kabul Et butonuna basıldığında
+        acceptBtn.addEventListener('click', () => {
+            // Tarayıcı hafızasına onayı kaydet
+            localStorage.setItem('cookiesAccepted', 'true');
+            // Banner'ı aşağı indirerek gizle
+            cookieBanner.classList.remove('show');
+        });
+    }
 });

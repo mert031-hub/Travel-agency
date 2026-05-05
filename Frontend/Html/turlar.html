@@ -5,15 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kıbrıs VIP Turlar - BUĞRA POLAT TURİZM</title>
+
+    <!-- Arama Motoru İndeksleme ve Canonical (Kopya İçerik Koruması) -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://bugrapolatturizim.com/turlar.html" />
+
+    <!-- Yerel SEO (Local SEO) ve Geo-Etiketleri (Girne / KKTC) -->
+    <meta name="geo.region" content="CY" />
+    <meta name="geo.placename" content="Girne, Kuzey Kıbrıs" />
+    <meta name="geo.position" content="35.3392;33.3174" />
+    <meta name="ICBM" content="35.3392, 33.3174" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/Frontend/Css/turlar.css">
     <link rel="icon" type="image/jpeg" href="/Frontend/photo/favicon.jpeg">
     <link rel="apple-touch-icon" href="/Frontend/photo/favicon.jpeg">
+
     <meta name="description"
         content="Buğra Polat Turizm ile Kıbrıs'ta her noktaya lüks VIP turlar. Siz rotayı çizin, biz götürelim.">
+    <meta name="keywords"
+        content="Kıbrıs VIP turlar, Girne kültür turu, Magosa Maraş turu, Kıbrıs özel rehberli tur, Buğra Polat Turizm">
+    <meta name="author" content="Buğra Polat Turizm">
+
+    <meta property="og:title" content="Buğra Polat Turizm | Kıbrıs VIP Turlar">
+    <meta property="og:description"
+        content="Kıbrıs'ın tarihi ve doğal güzelliklerini VIP konforunda keşfedin. Size özel tur programları.">
+    <meta property="og:image" content="https://bugrapolatturizim.com/Frontend/photo/favicon.jpeg">
+    <meta property="og:url" content="https://bugrapolatturizim.com/turlar.html">
+    <meta property="og:type" content="website">
 
     <style>
-        /* Sadece preloader'ı sabit tutan CSS kaldı, Navbar için orijinal harici CSS (turlar.css) kullanılacak */
         #bp-preloader {
             position: fixed;
             top: 0;
@@ -156,16 +177,32 @@
             <div class="footer-col">
                 <h3 data-lang="footer_contact_title">İLETİŞİM</h3>
                 <ul class="footer-contact">
+                    <li><i class="fas fa-map-marker-alt"></i> Şehit Mehmet Kurt Sok. Diamont Apt. C Blok No:3 Girne</li>
                     <li><i class="fas fa-envelope"></i> info@bugrapolatturizim.com</li>
                     <li><i class="fas fa-phone-alt"></i> +90 533 857 72 40</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
+            <div style="text-align: center; margin-bottom: 10px; font-size: 13px;">
+                <a href="/gizlilik.html" style="color: #ccc; text-decoration: none; margin-right: 15px;">Gizlilik
+                    Politikası (KVKK)</a>
+                <a href="/kullanim-kosullari.html" style="color: #ccc; text-decoration: none;">Kullanım Koşulları</a>
+            </div>
             <p>&copy; 2026 <span>BUĞRA POLAT TURİZM</span> <span data-lang="footer_copyright">Tüm Hakları
                     Saklıdır.</span></p>
         </div>
     </footer>
+
+    <!-- Modern ve Şık Çerez (Cookie) Onay Kutusu -->
+    <div id="cookieConsent" class="cookie-consent-banner">
+        <div class="cookie-text">
+            <span data-lang="cookie_message">Sitemizde size en iyi deneyimi sunabilmek için çerezler
+                kullanıyoruz.</span>
+            <a href="/gizlilik.html" target="_blank" data-lang="cookie_link">Detaylı Bilgi</a>
+        </div>
+        <button id="acceptCookies" data-lang="cookie_btn">Kabul Et</button>
+    </div>
 
     <a href="#" data-wp-msg="wp_msg_default" class="whatsapp-fixed-left" target="_blank"><i
             class="fab fa-whatsapp"></i></a>
@@ -204,18 +241,16 @@
             const sanitizeAssetUrl = bpUtils.sanitizeAssetUrl || function (url, fallback = '') { return url || fallback; };
 
             try {
-                // Backend'den tur verilerini çekiyoruz
                 const response = await fetch('/api/tours');
                 const turlar = await response.json();
 
-                wrapper.innerHTML = ''; // Yükleniyor ikonunu temizle
+                wrapper.innerHTML = '';
 
                 if (turlar.length === 0) {
                     wrapper.innerHTML = '<p style="text-align:center; grid-column: 1 / -1; padding: 40px; color:#666; font-size:16px;">Şu an sistemde gösterilecek tur bulunmuyor.</p>';
                     return;
                 }
 
-                // Her bir tur için HTML kart yapısını oluşturuyoruz
                 turlar.forEach((tur) => {
                     const id = tur._id;
                     const foto = sanitizeAssetUrl(tur.fotoUrl, '/Frontend/Images/default-car.jpg');
@@ -227,7 +262,6 @@
                     const rozetHtml = tur.turRozet ? `<div class="tour-badge">${turRozet}</div>` : '';
                     const bolgeHtml = tur.turBolge ? `<span class="tag">${turBolge}</span>` : '';
 
-                    // 1. Gezilecek Yerleri Oluşturma (Tikli Liste)
                     let yerlerHtml = '';
                     if (tur.turYerler) {
                         const yerler = tur.turYerler.split(',');
@@ -240,7 +274,6 @@
                         yerlerHtml = '<li style="color:#999; list-style:none; padding-left:0;">Gezilecek yer eklenmemiş.</li>';
                     }
 
-                    // 2. Çoklu Galeri Oluşturma
                     let galeriHtml = '';
                     if (tur.galeriUrls && tur.galeriUrls.length > 0) {
                         tur.galeriUrls.forEach(url => {
@@ -250,7 +283,6 @@
                         galeriHtml = '<p style="text-align: center; color: #888; width: 100%; padding: 10px; font-size:13px;">Bu tura ait galeri fotoğrafı bulunmamaktadır.</p>';
                     }
 
-                    // KART ŞABLONU
                     const cardHTML = `
                         <div class="tour-v-card">
                             <div class="tour-v-img">
@@ -302,7 +334,6 @@
 </body>
 
 <script>
-    // Preloader Güvenlik Kodu
     (function () {
         var preloader = document.getElementById('bp-preloader');
         if (!preloader) return;

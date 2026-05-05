@@ -23,6 +23,10 @@ const translations = {
         hero_desc_1: "Mercedes Vito araçlarımızla Ercan Havalimanı transferleri ve özel Kıbrıs turları.",
         hero_title_2: "Tatil Yolculuğunuz Başlasın",
         hero_desc_2: "Ercan'dan otelinize zamanında, güvenli ve konforlu VIP ulaşım.",
+        // YENİ EKLENEN 3. SLIDER
+        hero_title_3: "Kıbrıs’ı Keşfetmeye Hazır mısınız?",
+        hero_desc_3: "Tarihi dokulardan eşsiz sahillere, size özel hazırlanan tur programları.",
+
         form_pickup: "Alınış Noktası Seçiniz...",
         form_dropoff: "Bırakılış Noktası Seçiniz...",
         form_btn_price: "FİYAT SOR",
@@ -87,7 +91,7 @@ const translations = {
         veh_page_sub: "KONFORUNUZ İÇİN",
         veh_page_h2: "Geniş ve Modern Araç Filomuz",
         veh1_tag: "MERCEDES MARKA",
-        veh1_title: "MERCEDES VITO VIP (6+1)",
+        veh1_title: "MERCEDES VITO VIP (7+1)",
         veh1_desc: "Kıbrıs tatilinizde aileniz veya arkadaş grubunuz için en konforlu seçenek. Geniş bagaj hacmi ve deri koltuk tasarımıyla prestiji hissedin.",
         veh1_spec_pax: "6+1 Kişi",
         veh1_spec_lug: "5 Bagaj",
@@ -243,7 +247,15 @@ const translations = {
         // HİZMETLER SAYFASI WHATSAPP MESAJLARI
         wp_msg_srv_ercan: "Merhaba, Ercan Havalimanı VIP Transfer hizmetiniz için fiyat almak istiyorum.",
         wp_msg_srv_tahsis: "Merhaba, Şoförlü Araç Tahsisi hizmetiniz hakkında detaylı bilgi almak istiyorum.",
-        wp_msg_srv_karsilama: "Merhaba, VIP Karşılama ve Asistanlık hizmetiniz için rezervasyon yaptırmak istiyorum."
+        wp_msg_srv_karsilama: "Merhaba, VIP Karşılama ve Asistanlık hizmetiniz için rezervasyon yaptırmak istiyorum.",
+
+        // GİZLİLİK POLİTİKASI ONAYI
+        privacyCheckbox: "Kişisel verilerime ait <a href='gizlilik.html' target='_blank'>Gizlilik Politikası</a>'nı kabul ediyorum.",
+
+        // ÇEREZ (COOKIE) ONAYI
+        cookie_message: "Sitemizde size en iyi deneyimi sunabilmek için çerezler kullanıyoruz.",
+        cookie_link: "Detaylı Bilgi",
+        cookie_btn: "Kabul Et"
     },
     en: {
         topbar_service: "24/7 At Your Service",
@@ -259,10 +271,14 @@ const translations = {
         footer_contact_title: "CONTACT",
         footer_copyright: "All Rights Reserved.",
 
-        hero_title_1: "Address of Luxury and Comfort",
-        hero_desc_1: "Ercan Airport transfers and private Cyprus tours with our Mercedes Vito vehicles.",
+        hero_title_1: "The Address of Luxury and Comfort",
+        hero_desc_1: "Ercan Airport transfers and special Cyprus tours with our Mercedes Vito vehicles.",
         hero_title_2: "Let Your Holiday Journey Begin",
-        hero_desc_2: "On-time, safe, and comfortable VIP transportation from Ercan to your hotel.",
+        hero_desc_2: "Safe and comfortable VIP transportation from Ercan to your hotel on time.",
+        // YENİ EKLENEN 3. SLIDER
+        hero_title_3: "Ready to Explore Cyprus?",
+        hero_desc_3: "Tour programs specially prepared for you, from historical sites to unique beaches.",
+
         form_pickup: "Select Pick-up Location...",
         form_dropoff: "Select Drop-off Location...",
         form_btn_price: "GET A QUOTE",
@@ -297,9 +313,9 @@ const translations = {
         testi_3_desc: "Vehicles are sparkling clean. The transfer was the most comfortable part of our family vacation.",
 
         sec_offer_sub: "GET A QUOTE NOW",
-        sec_offer_title: "Special moments, beautiful gatherings.",
+        sec_offer_title: "Special moments, beautiful together.",
         sec_offer_desc: "Fill out our form for the most affordable VIP transfer quotes.",
-        offer_box_title: "DO NOT PLAN WITHOUT GETTING A QUOTE FROM US",
+        offer_box_title: "DON'T PLAN WITHOUT GETTING A QUOTE FROM US",
         offer_box_discount: "10% DISCOUNT ON ROUND-TRIP RESERVATIONS!",
         form_name: "Full Name",
         form_email: "E-Mail",
@@ -325,7 +341,7 @@ const translations = {
         veh_page_sub: "FOR YOUR COMFORT",
         veh_page_h2: "Our Large and Modern Fleet",
         veh1_tag: "MERCEDES BRAND",
-        veh1_title: "MERCEDES VITO VIP (6+1)",
+        veh1_title: "MERCEDES VITO VIP (7+1)",
         veh1_desc: "The most comfortable option for your family or group of friends during your Cyprus holiday. Feel the prestige with its large luggage capacity and leather seat design.",
         veh1_spec_pax: "6+1 Pax",
         veh1_spec_lug: "5 Luggage",
@@ -335,7 +351,7 @@ const translations = {
         veh2_desc: "Our VIP minibus with high ceiling and TV unit, ideal for large groups, wedding organizations, and casino tours.",
         veh2_spec_pax: "15+1 Pax",
         veh2_spec_lug: "15 Luggage",
-        veh2_spec_tv: "Entertainment",
+        veh2_spec_tv: "Entertainment Package",
         tab_rez: "MAKE RESERVATION",
         tab_gal: "VEHICLE IMAGES",
         tab_com: "CUSTOMER REVIEWS",
@@ -345,7 +361,7 @@ const translations = {
         com1_text: "\"The vehicle was very clean, the driver greeted us at the door. Thank you.\" - Ahmet Y.",
         com2_text: "\"As a group, we were very pleased, the in-car treats were wonderful.\" - Mehmet K.",
 
-        about_page_title: "VIP CYPRUS TRAVEL",
+        about_page_title: "BUĞRA POLAT TURİZM",
         about_page_h1: "About Us",
         about_sub: "WHO ARE WE?",
         about_h2: "We Transform Journey into Art in Cyprus",
@@ -479,7 +495,15 @@ const translations = {
         // HİZMETLER SAYFASI WHATSAPP MESAJLARI
         wp_msg_srv_ercan: "Hello, I would like to get a price for your Ercan Airport VIP Transfer service.",
         wp_msg_srv_tahsis: "Hello, I would like to get detailed information about your Chauffeur Driven Car Allocation service.",
-        wp_msg_srv_karsilama: "Hello, I would like to make a reservation for your VIP Meet & Greet and Assistance service."
+        wp_msg_srv_karsilama: "Hello, I would like to make a reservation for your VIP Meet & Greet and Assistance service.",
+
+        // GİZLİLİK POLİTİKASI ONAYI
+        privacyCheckbox: "I agree to the <a href='gizlilik.html' target='_blank'>Privacy Policy</a> regarding my personal data.",
+
+        // ÇEREZ (COOKIE) ONAYI
+        cookie_message: "We use cookies to give you the best experience on our website.",
+        cookie_link: "More Info",
+        cookie_btn: "Accept"
     },
     ru: {
         topbar_service: "К Вашим Услугам 24/7",
@@ -496,9 +520,13 @@ const translations = {
         footer_copyright: "Все права защищены.",
 
         hero_title_1: "Адрес Роскоши и Комфорта",
-        hero_desc_1: "Трансферы из аэропорта Эрджан и частные туры по Кипру на наших Mercedes Vito.",
+        hero_desc_1: "Трансферы из аэропорта Эрджан и частные туры по Кипру на наших автомобилях Mercedes Vito.",
         hero_title_2: "Пусть Начнется Ваше Путешествие",
         hero_desc_2: "Своевременный, безопасный и комфортный VIP-трансфер из Эрджана в ваш отель.",
+        // YENİ EKLENEN 3. SLIDER
+        hero_title_3: "Готовы исследовать Кипр?",
+        hero_desc_3: "От исторических мест до уникальных пляжей — экскурсионные программы, подготовленные специально для вас.",
+
         form_pickup: "Выберите место отправления...",
         form_dropoff: "Выберите место назначения...",
         form_btn_price: "УЗНАТЬ ЦЕНУ",
@@ -561,7 +589,7 @@ const translations = {
         veh_page_sub: "ДЛЯ ВАШЕГО КОМФОРТА",
         veh_page_h2: "Наш Большой и Современный Автопарк",
         veh1_tag: "МАРКА MERCEDES",
-        veh1_title: "MERCEDES VITO VIP (6+1)",
+        veh1_title: "MERCEDES VITO VIP (7+1)",
         veh1_desc: "Самый комфортный вариант для вашей семьи или компании друзей во время отпуска на Кипре. Почувствуйте престиж благодаря большой вместимости багажа и кожаным сиденьям.",
         veh1_spec_pax: "6+1 Чел.",
         veh1_spec_lug: "5 Багаж",
@@ -571,7 +599,7 @@ const translations = {
         veh2_desc: "Наш VIP-микроавтобус с высоким потолком и телевизором, идеально подходящий для больших групп, свадебных торжеств и казино-туров.",
         veh2_spec_pax: "15+1 Чел.",
         veh2_spec_lug: "15 Багаж",
-        veh2_spec_tv: "Развлечения",
+        veh2_spec_tv: "Развлекательный Пакет",
         tab_rez: "СДЕЛАТЬ БРОНЬ",
         tab_gal: "ФОТОГРАФИИ АВТО",
         tab_com: "ОТЗЫВЫ КЛИЕНТОВ",
@@ -581,7 +609,7 @@ const translations = {
         com1_text: "\"Машина была очень чистой, водитель встретил нас у дверей. Спасибо.\" - Ахмет Й.",
         com2_text: "\"Наша группа осталась очень довольна, угощения в машине были прекрасны.\" - Мехмет К.",
 
-        about_page_title: "VIP CYPRUS TRAVEL",
+        about_page_title: "BUĞRA POLAT TURİZM",
         about_page_h1: "О Нас",
         about_sub: "КТО МЫ?",
         about_h2: "Мы Превращаем Путешествие в Искусство на Кипре",
@@ -715,6 +743,73 @@ const translations = {
         // HİZMETLER SAYFASI WHATSAPP MESAJLARI
         wp_msg_srv_ercan: "Здравствуйте, я хотел бы узнать цену на услугу VIP-трансфера из аэропорта Эрджан.",
         wp_msg_srv_tahsis: "Здравствуйте, я хотел бы получить подробную информацию о вашей услуге аренды автомобиля с водителем.",
-        wp_msg_srv_karsilama: "Здравствуйте, я хотел бы забронировать услугу VIP-встречи и сопровождения."
+        wp_msg_srv_karsilama: "Здравствуйте, я хотел бы забронировать услугу VIP-встречи и сопровождения.",
+
+        // GİZLİLİK POLİTİKASI ONAYI
+        privacyCheckbox: "Я принимаю <a href='gizlilik.html' target='_blank'>Политику конфиденциальности</a> в отношении моих персональных данных.",
+
+        // ÇEREZ (COOKIE) ONAYI
+        cookie_message: "Мы используем файлы cookie, чтобы сделать ваше пребывание на сайте максимально комфортным.",
+        cookie_link: "Подробнее",
+        cookie_btn: "Принять"
     }
 };
+
+/**
+ * Dil Değiştirme ve İçerik Güncelleme Mantığı
+ * Bu kısım main.js tarafından da çağrılabilir veya doğrudan burada kalabilir.
+ */
+
+function changeLanguage(lang) {
+    localStorage.setItem('selectedLanguage', lang);
+    updateContent(lang);
+
+    // UI güncellemeleri (bayrak ve yazı)
+    const flagImg = document.getElementById('currentFlag');
+    const langText = document.getElementById('currentLangText');
+
+    if (flagImg && langText) {
+        if (lang === 'tr') {
+            flagImg.src = "https://flagcdn.com/w20/tr.png";
+            langText.innerText = "TR";
+        } else if (lang === 'en') {
+            flagImg.src = "https://flagcdn.com/w20/gb.png";
+            langText.innerText = "EN";
+        } else if (lang === 'ru') {
+            flagImg.src = "https://flagcdn.com/w20/ru.png";
+            langText.innerText = "RU";
+        }
+    }
+}
+
+function updateContent(lang) {
+    const data = translations[lang];
+    if (!data) return;
+
+    // data-lang niteliğine sahip metinleri güncelle
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (data[key]) {
+            // Eğer element içinde HTML varsa (strong vb) innerHTML kullan, yoksa textContent
+            if (data[key].includes('<strong') || data[key].includes('<a')) {
+                el.innerHTML = data[key];
+            } else {
+                el.textContent = data[key];
+            }
+        }
+    });
+
+    // data-lang-placeholder niteliğine sahip placeholder'ları güncelle
+    document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-lang-placeholder');
+        if (data[key]) {
+            el.setAttribute('placeholder', data[key]);
+        }
+    });
+}
+
+// Sayfa yüklendiğinde varsayılan dili uygula
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selectedLanguage') || 'tr';
+    updateContent(savedLang);
+});

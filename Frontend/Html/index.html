@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kıbrıs VIP Transfer & Özel Turlar | BUĞRA POLAT TURİZM</title>
+
+    <!-- Arama Motoru İndeksleme ve Canonical (Kopya İçerik Koruması) -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://bugrapolatturizim.com/" />
+
+    <!-- Yerel SEO (Local SEO) ve Geo-Etiketleri (Girne / KKTC) -->
+    <meta name="geo.region" content="CY" />
+    <meta name="geo.placename" content="Girne, Kuzey Kıbrıs" />
+    <meta name="geo.position" content="35.3392;33.3174" />
+    <meta name="ICBM" content="35.3392, 33.3174" />
+
     <style>
         /* CSS dosyası inene kadar preloader'ı sabit tutar */
         #bp-preloader {
@@ -159,8 +170,9 @@
 
                 <div class="swiper-slide hero-slide" style="background-image: url('/Frontend/photo/buyukhanYeni.jpg');">
                     <div class="slide-content">
-                        <h2 data-lang="hero_title_2">Tatil Yolculuğunuz Başlasın</h2>
-                        <p data-lang="hero_desc_2">Ercan'dan otelinize zamanında, güvenli ve konforlu VIP ulaşım.</p>
+                        <h2 data-lang="hero_title_3">Kıbrıs’ı Keşfetmeye Hazır mısınız?</h2>
+                        <p data-lang="hero_desc_3">Tarihi dokulardan eşsiz sahillere, size özel hazırlanan tur
+                            programları.</p>
                     </div>
                 </div>
 
@@ -219,6 +231,18 @@
                 <div class="form-group">
                     <i class="fas fa-calendar-alt text-primary" style="color: #0f3d7a;"></i>
                     <input type="date" id="heroDate" required>
+                </div>
+
+                <div
+                    style="margin-bottom: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <input type="checkbox" id="kvkkOnayHero" name="kvkkOnayHero" required
+                        style="width: 16px; height: 16px; cursor: pointer; margin: 0; accent-color: #0f3d7a;">
+                    <label for="kvkkOnayHero" style="font-size: 13px; color: #555; cursor: pointer; margin: 0;">
+                        <span data-lang="privacyCheckbox">Kişisel verilerime ait <a href="/gizlilik.html"
+                                target="_blank"
+                                style="color: #0f3d7a; font-weight: bold; text-decoration: none; border-bottom: 1px solid #0f3d7a;">Gizlilik
+                                Politikası</a>'nı kabul ediyorum.</span>
+                    </label>
                 </div>
 
                 <button type="button" onclick="gonderHeroForm()" class="btn btn-primary" data-lang="form_btn_price">
@@ -355,14 +379,29 @@
                     <p class="offer-discount" data-lang="offer_box_discount">GİDİŞ-DÖNÜŞ REZERVASYONU %10 İNDİRİMLİ!</p>
                     <form>
                         <div class="offer-form-row">
-                            <input type="text" placeholder="Ad-Soyad" data-lang-placeholder="form_name">
+                            <input type="text" placeholder="Ad-Soyad" required data-lang-placeholder="form_name">
                             <input type="email" placeholder="E-Mail" data-lang-placeholder="form_email">
                         </div>
                         <div class="offer-form-row">
-                            <input type="tel" placeholder="Telefon" data-lang-placeholder="form_phone">
-                            <input type="number" placeholder="Yolcu Sayısı" data-lang-placeholder="form_passengers">
+                            <input type="tel" placeholder="Telefon" required data-lang-placeholder="form_phone">
+                            <input type="number" placeholder="Yolcu Sayısı" required
+                                data-lang-placeholder="form_passengers">
                         </div>
                         <textarea placeholder="Mesajınız" data-lang-placeholder="form_message"></textarea>
+
+                        <div
+                            style="margin-bottom: 20px; width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+                            <input type="checkbox" id="kvkkOnayOffer" name="kvkkOnayOffer" required
+                                style="width: 16px; height: 16px; cursor: pointer; margin: 0; accent-color: #f39c12;">
+                            <label for="kvkkOnayOffer"
+                                style="font-size: 13px; color: #fff; cursor: pointer; margin: 0;">
+                                <span data-lang="privacyCheckbox">Kişisel verilerime ait <a href="/gizlilik.html"
+                                        target="_blank"
+                                        style="color: #f39c12; font-weight: bold; text-decoration: none; border-bottom: 1px solid #f39c12;">Gizlilik
+                                        Politikası</a>'nı kabul ediyorum.</span>
+                            </label>
+                        </div>
+
                         <button type="submit" class="btn-offer" data-lang="form_btn_offer">TEKLİF AL</button>
                     </form>
                 </div>
@@ -428,10 +467,25 @@
             </div>
         </div>
         <div class="footer-bottom">
+            <div style="text-align: center; margin-bottom: 10px; font-size: 13px;">
+                <a href="/gizlilik.html" style="color: #ccc; text-decoration: none; margin-right: 15px;">Gizlilik
+                    Politikası (KVKK)</a>
+                <a href="/kullanim-kosullari.html" style="color: #ccc; text-decoration: none;">Kullanım Koşulları</a>
+            </div>
             <p>© 2026 <span>BUĞRA POLAT TURİZM</span> <span data-lang="footer_copyright">Tüm Hakları Saklıdır.</span>
             </p>
         </div>
     </footer>
+
+    <!-- Çerez (Cookie) Onay Kutusu -->
+    <div id="cookieConsent" class="cookie-consent-banner">
+        <div class="cookie-text">
+            <span data-lang="cookie_message">Sitemizde size en iyi deneyimi sunabilmek için çerezler
+                kullanıyoruz.</span>
+            <a href="/gizlilik.html" target="_blank" data-lang="cookie_link">Detaylı Bilgi</a>
+        </div>
+        <button id="acceptCookies" class="btn btn-primary" data-lang="cookie_btn">Kabul Et</button>
+    </div>
 
     <a href="#" data-wp-msg="wp_msg_default" class="whatsapp-fixed-left" target="_blank"><i
             class="fab fa-whatsapp"></i></a>
