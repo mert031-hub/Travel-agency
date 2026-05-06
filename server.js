@@ -10,6 +10,8 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs'); // Şifreleri güvenle şifrelemek için
 
 const Reservation = require('./models/Reservation');
 
@@ -40,11 +42,21 @@ const tourSchema = new mongoose.Schema({
 });
 const Tour = mongoose.models.Tour || mongoose.model('Tour', tourSchema);
 
+// ADMİN ŞEMASI (Dinamik Şifre Yönetimi İçin)
+const adminSchema = new mongoose.Schema({
+    kullaniciAdi: { type: String, required: true },
+    email: { type: String, required: true },
+    sifre: { type: String, required: true }, // Bcrypt ile şifrelenmiş tutulacak
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
+});
+const Admin = mongoose.models.Admin || mongoose.model('Admin', adminSchema);
+
 
 const app = express();
 
 // =========================================================================
-// KRİTİK SEO ÇÖZÜMÜ: Sitemap ve Robots.txt Rotaları En Üstte Olmalı
+// KRİTİK SEO ÇÖZÜMÜ: Sitemap ve Robots.txt Rotaları
 // =========================================================================
 app.get('/sitemap.xml', (req, res) => {
     res.setHeader('Content-Type', 'application/xml');
@@ -55,7 +67,6 @@ app.get('/robots.txt', (req, res) => {
     res.setHeader('Content-Type', 'text/plain');
     res.sendFile(path.join(__dirname, 'robots.txt'));
 });
-// =========================================================================
 
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = process.env.CORS_ORIGIN
@@ -132,6 +143,12 @@ app.use('/api/teklif-al', limiter);
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, standardHeaders: true, legacyHeaders: false });
 app.use('/api/login', loginLimiter);
 
+const sifreSifirlaLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 3,
+    message: { basari: false, mesaj: "Çok fazla istek gönderdiniz, lütfen 15 dakika bekleyin." }
+});
+
 app.use(cors({
     origin(origin, cb) {
         if (!origin || !allowedOrigins || allowedOrigins.includes(origin)) return cb(null, true);
@@ -188,7 +205,6 @@ if (process.env.RESEND_API_KEY) resend = new Resend(process.env.RESEND_API_KEY);
 
 
 // --- 4. STATİK DOSYA SUNUMU ---
-// Klasör Bazlı Statik Sunumlar
 app.use('/Frontend', express.static(path.join(__dirname, 'Frontend')));
 app.use('/Css', express.static(path.join(__dirname, 'Frontend', 'Css')));
 app.use('/Js', express.static(path.join(__dirname, 'Frontend', 'Js')));
@@ -203,14 +219,24 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'Html', 'login.html'));
 });
 
-app.post('/api/login', (req, res) => {
-    const kullaniciAdi = temizMetin(req.body?.kullaniciAdi, 120);
-    const sifre = temizMetin(req.body?.sifre, 120);
+// VERİTABANI VE BCRYPT DESTEKLİ GİRİŞ
+app.post('/api/login', async (req, res) => {
+    try {
+        const kullaniciAdi = temizMetin(req.body?.kullaniciAdi, 120);
+        const sifre = temizMetin(req.body?.sifre, 120);
 
-    const dogruKullanici = process.env.ADMIN_USERNAME || 'admin';
-    const dogruSifre = process.env.ADMIN_PASS || 'pass';
+        // Veritabanından admini bul
+        const admin = await Admin.findOne({ kullaniciAdi });
+        if (!admin) {
+            return res.status(401).json({ basari: false, mesaj: 'Hatalı kullanıcı adı veya şifre!' });
+        }
 
-    if (kullaniciAdi === dogruKullanici && sifre === dogruSifre) {
+        // Şifreyi bcrypt ile kontrol et
+        const sifreDogruMu = await bcrypt.compare(sifre, admin.sifre);
+        if (!sifreDogruMu) {
+            return res.status(401).json({ basari: false, mesaj: 'Hatalı kullanıcı adı veya şifre!' });
+        }
+
         res.cookie('bp_admin_auth', 'basarili_giris', {
             maxAge: 24 * 60 * 60 * 1000,
             path: '/',
@@ -223,8 +249,9 @@ app.post('/api/login', (req, res) => {
         res.setHeader('Expires', '0');
 
         res.json({ basari: true });
-    } else {
-        res.status(401).json({ basari: false, mesaj: 'Hatalı kullanıcı adı veya şifre!' });
+    } catch (err) {
+        console.error("Login hatası:", err);
+        res.status(500).json({ basari: false, mesaj: 'Sunucu hatası oluştu.' });
     }
 });
 
@@ -232,6 +259,100 @@ app.post('/api/logout', (req, res) => {
     res.clearCookie('bp_admin_auth', { path: '/' });
     res.json({ basari: true });
 });
+
+// =========================================================================
+// GERÇEK ŞİFRE SIFIRLAMA (LİNK GÖNDERME) PLESK UYUMLU
+// =========================================================================
+app.post('/api/sifre-sifirla', sifreSifirlaLimiter, async (req, res) => {
+    try {
+        const email = temizEmail(req.body?.email);
+        const admin = await Admin.findOne({ email });
+
+        // Admin bulunamazsa da başarılı dön (Brute force koruması)
+        if (!admin) {
+            return res.json({ basari: true, mesaj: "Eğer e-posta adresi sistemde kayıtlıysa, şifre sıfırlama bağlantısı gönderilmiştir." });
+        }
+
+        // Benzersiz Token Üretimi
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        admin.resetPasswordToken = resetToken;
+        admin.resetPasswordExpires = Date.now() + 3600000; // 1 Saat geçerli
+        await admin.save();
+
+        // Şifre sıfırlama linki (Domain yerine dinamik host alıyoruz)
+        const host = req.get('host');
+        const protokol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+        const resetUrl = `${protokol}://${host}/sifre-yenile.html?token=${resetToken}`;
+
+        // Plesk kurumsal mail uyumlu Nodemailer ayarları
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.MAIL_ADRES,
+                pass: process.env.MAIL_SIFRE
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+
+        const mailOptions = {
+            from: `"BUĞRA POLAT TURİZM" <${process.env.MAIL_ADRES}>`,
+            to: admin.email,
+            subject: 'VIP Kıbrıs - Şifre Sıfırlama Talebi',
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 25px; border: 1px solid #eaeaea; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #0f3d7a; border-bottom: 2px solid #f39c12; padding-bottom: 10px;">Şifre Sıfırlama</h2>
+                    <p style="color: #333; font-size: 15px;">Yönetim paneli için şifre sıfırlama talebinde bulundunuz.</p>
+                    <p>Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz. <b>Bu bağlantı 1 saat boyunca geçerlidir.</b></p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetUrl}" style="background-color: #f39c12; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Şifremi Yenile</a>
+                    </div>
+                    <p style="color: #666; font-size: 13px;"><em>Eğer bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</em></p>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({ basari: true, mesaj: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi." });
+
+    } catch (error) {
+        console.error("Şifre sıfırlama hatası:", error);
+        res.status(500).json({ basari: false, mesaj: "Sunucu hatası oluştu. E-posta gönderilemedi." });
+    }
+});
+
+// YENİ ŞİFREYİ KAYDETME API'Sİ
+app.post('/api/yeni-sifre', async (req, res) => {
+    try {
+        const { token, yeniSifre } = req.body;
+
+        // Tokeni kontrol et ve süresinin dolup dolmadığına bak
+        const admin = await Admin.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() } // Zamanı geçmemiş olmalı
+        });
+
+        if (!admin) {
+            return res.status(400).json({ basari: false, mesaj: "Geçersiz veya süresi dolmuş bir bağlantı kullandınız." });
+        }
+
+        // Yeni şifreyi Hash'le (şifrele) ve kaydet
+        admin.sifre = await bcrypt.hash(yeniSifre, 10);
+        admin.resetPasswordToken = undefined; // Tokeni temizle (tek kullanımlık)
+        admin.resetPasswordExpires = undefined;
+        await admin.save();
+
+        res.json({ basari: true, mesaj: "Şifreniz başarıyla güncellendi! Artık giriş yapabilirsiniz." });
+
+    } catch (error) {
+        console.error("Yeni şifre kaydetme hatası:", error);
+        res.status(500).json({ basari: false, mesaj: "Sunucu hatası." });
+    }
+});
+// =========================================================================
 
 app.get('/admin', adminKontrol, (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'Html', 'admin.html'));
@@ -245,10 +366,32 @@ app.get('/api/health', (req, res) => {
     res.json({ durum: 'UP', zaman: new Date() });
 });
 
-// --- 6. MONGODB BAĞLANTISI ---
+// --- 6. MONGODB BAĞLANTISI VE VARSAYILAN ADMİN OLUŞTURUCU ---
+async function varsayilanAdminOlustur() {
+    try {
+        const adminCount = await Admin.countDocuments();
+        if (adminCount === 0) {
+            const defaultPass = process.env.ADMIN_PASS || 'pass';
+            const hashedSifre = await bcrypt.hash(defaultPass, 10);
+
+            await Admin.create({
+                kullaniciAdi: process.env.ADMIN_USERNAME || 'admin',
+                email: process.env.MAIL_ADRES || process.env.ADMIN_EMAIL || 'info@bugrapolatturizim.com',
+                sifre: hashedSifre
+            });
+            console.log('✅ Varsayılan Yönetici (Admin) hesabı veritabanına eklendi!');
+        }
+    } catch (err) {
+        console.error('Admin oluşturulurken hata:', err);
+    }
+}
+
 if (process.env.MONGODB_URI) {
     mongoose.connect(process.env.MONGODB_URI)
-        .then(() => console.log('✅ MongoDB Bağlantısı Başarılı'))
+        .then(() => {
+            console.log('✅ MongoDB Bağlantısı Başarılı');
+            varsayilanAdminOlustur(); // Veritabanı bağlanınca admini kontrol et
+        })
         .catch((err) => console.error('❌ MongoDB Hatası:', err));
 }
 

@@ -136,6 +136,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
+            margin-bottom: 15px;
         }
 
         .btn-login:hover {
@@ -146,6 +147,21 @@
         .btn-login:disabled {
             background: #666;
             cursor: not-allowed;
+        }
+
+        /* YENİ EKLENEN ŞİFREMİ UNUTTUM STİLİ */
+        .forgot-password {
+            color: #0f3d7a;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .forgot-password:hover {
+            color: #f39c12;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -169,6 +185,9 @@
                 <input type="password" id="password" placeholder="Şifre" required>
             </div>
             <button type="submit" class="btn-login" id="loginBtn">Giriş Yap</button>
+
+            <!-- ŞİFREMİ UNUTTUM LİNKİ -->
+            <a href="#" class="forgot-password" onclick="sifremiUnuttumAc(event)">Şifremi Unuttum?</a>
         </form>
     </div>
 
@@ -203,6 +222,69 @@
                 btn.disabled = false;
             }
         });
+
+        // ŞİFREMİ UNUTTUM FONKSİYONU
+        async function sifremiUnuttumAc(e) {
+            e.preventDefault();
+
+            const { value: email } = await Swal.fire({
+                title: 'Şifre Sıfırlama',
+                input: 'email',
+                inputLabel: 'Sistemde kayıtlı e-posta adresinizi giriniz.',
+                inputPlaceholder: 'ornek@bugrapolatturizim.com',
+                showCancelButton: true,
+                confirmButtonText: 'Sıfırlama Bağlantısı Gönder',
+                cancelButtonText: 'İptal',
+                confirmButtonColor: '#0f3d7a',
+                cancelButtonColor: '#e74c3c'
+            });
+
+            if (email) {
+                // Backend'e istek atılan kısım. (API URL'sini kendi Node.js backend'ine göre ayarlamalısın)
+                Swal.fire({
+                    title: 'Lütfen Bekleyin...',
+                    text: 'İşleminiz gerçekleştiriliyor',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                });
+
+                try {
+                    // Not: Backend tarafında '/api/sifre-sifirla' rotasının post isteğine hazır olması gerekir.
+                    const res = await fetch('/api/sifre-sifirla', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email })
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Gönderildi!',
+                            text: 'Eğer e-posta adresi sistemde kayıtlıysa, şifre sıfırlama bağlantısı gönderilmiştir.',
+                            confirmButtonColor: '#0f3d7a'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata',
+                            text: data.mesaj || 'İşlem sırasında bir sorun oluştu.',
+                            confirmButtonColor: '#0f3d7a'
+                        });
+                    }
+                } catch (err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Bağlantı Hatası',
+                        text: 'Sunucu ile iletişim kurulamadı.',
+                        confirmButtonColor: '#0f3d7a'
+                    });
+                }
+            }
+        }
     </script>
     <script src="/Frontend/Js/main.js"></script>
 

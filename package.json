@@ -21,6 +21,7 @@
   "homepage": "https://github.com/mert031-hub/Travel-agency#readme",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^4.22.1",
@@ -31,6 +32,7 @@
     "mongoose": "^9.3.3",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
+    "nodemailer": "^8.0.7",
     "resend": "^6.9.4",
     "xss-clean": "^0.1.4"
   },

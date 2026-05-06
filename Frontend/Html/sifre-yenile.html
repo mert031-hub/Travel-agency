@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şifre Yenileme - VIP Kıbrıs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" type="image/jpeg" href="/Frontend/photo/favicon.jpeg">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f3d7a 0%, #1e5ba3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: #0f3d7a;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 14px;
+            color: #888;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #0f3d7a;
+            box-shadow: 0 0 5px rgba(15, 61, 122, 0.3);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #f39c12;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #d68910;
+            transform: translateY(-2px);
+        }
+
+        .btn-login:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Yeni Şifre Belirle</h2>
+        <form id="resetForm">
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="newPassword" placeholder="Yeni Şifre" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-check-circle"></i>
+                <input type="password" id="confirmPassword" placeholder="Yeni Şifre (Tekrar)" required>
+            </div>
+            <button type="submit" class="btn-login" id="resetBtn">Şifreyi Güncelle</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Linkteki tokeni al
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (!token) {
+                return Swal.fire('Hata', 'Bağlantı geçersiz veya eksik.', 'error');
+            }
+
+            const p1 = document.getElementById('newPassword').value;
+            const p2 = document.getElementById('confirmPassword').value;
+
+            if (p1 !== p2) {
+                return Swal.fire('Uyarı', 'Şifreler birbiriyle eşleşmiyor!', 'warning');
+            }
+            if (p1.length < 6) {
+                return Swal.fire('Uyarı', 'Şifreniz en az 6 karakter olmalıdır.', 'warning');
+            }
+
+            const btn = document.getElementById('resetBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Güncelleniyor...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/yeni-sifre', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token, yeniSifre: p1 })
+                });
+                const data = await res.json();
+
+                if (data.basari) {
+                    Swal.fire({ icon: 'success', title: 'Başarılı', text: data.mesaj, confirmButtonColor: '#0f3d7a' })
+                        .then(() => { window.location.href = '/login'; });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Hata', text: data.mesaj, confirmButtonColor: '#0f3d7a' });
+                    btn.innerHTML = 'Şifreyi Güncelle';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                Swal.fire('Hata', 'Sunucu bağlantı hatası.', 'error');
+                btn.innerHTML = 'Şifreyi Güncelle';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
