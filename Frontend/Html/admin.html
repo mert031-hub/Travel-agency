@@ -62,6 +62,11 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Arşiv Stat Kartı İçin Renk */
+        .stat-card-archive i {
+            color: #8e44ad;
+        }
     </style>
 </head>
 
@@ -73,7 +78,8 @@
     </div>
 
     <div class="admin-container">
-        <div class="stats-grid">
+        <!-- İSTATİSTİKLER (ARŞİV EKLENDİ) -->
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
             <div class="stat-card">
                 <i class="fas fa-list-ul"></i>
                 <div class="stat-info">
@@ -86,6 +92,13 @@
                 <div class="stat-info">
                     <h3 id="statNew">0</h3>
                     <p>Bekleyen</p>
+                </div>
+            </div>
+            <div class="stat-card stat-card-archive">
+                <i class="fas fa-archive"></i>
+                <div class="stat-info">
+                    <h3 id="statArchive">0</h3>
+                    <p>Arşivlenenler</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -104,13 +117,20 @@
                     onkeyup="tabloyuFiltrele()">
             </div>
             <button onclick="aktifSekmeyiYenile()" class="btn-refresh"><i class="fas fa-sync-alt"></i> Yenile</button>
+            <!-- Excel Çıktısı (Arşiv sayfasında görünür) -->
+            <button id="btnExportExcel" onclick="excelIndir()" class="btn-refresh"
+                style="display: none; background: #27ae60; color: white;"><i class="fas fa-file-excel"></i> Excel
+                İndir</button>
             <button onclick="cikisYap()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
         </div>
 
         <div class="main-card">
+            <!-- SEKMELER (ARŞİV EKLENDİ) -->
             <div class="tabs">
                 <button class="tab-btn active" id="btnActive" onclick="tabDegistir('active')"><i
                         class="fas fa-envelope"></i> Aktif Talepler</button>
+                <button class="tab-btn" id="btnArchive" onclick="tabDegistir('archive')"><i class="fas fa-archive"></i>
+                    Arşiv</button>
                 <button class="tab-btn" id="btnTrash" onclick="tabDegistir('trash')"><i class="fas fa-trash"></i> Çöp
                     Kutusu</button>
                 <button class="tab-btn" id="btnVehicles" onclick="tabDegistir('vehicles')"><i class="fas fa-car"></i>
@@ -126,10 +146,10 @@
                         <tr>
                             <th style="width: 110px;">Tarih</th>
                             <th style="width: 180px;">Müşteri</th>
-                            <th style="width: 180px;">Güzergah</th>
+                            <th style="width: 180px;">Güzergah / Neden</th>
                             <th>Mesaj / Not</th>
                             <th style="width: 120px;">Tip</th>
-                            <th style="width: 140px;">İşlemler</th>
+                            <th style="width: 150px;">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -150,6 +170,48 @@
         </div>
     </div>
 
+    <!-- ==============================================
+         YENİ: ARŞİVE ALMA MODALI 
+    =============================================== -->
+    <div class="custom-modal-overlay" id="archiveModal">
+        <div class="custom-modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Müşteriyi Arşive Taşı</h3>
+                <button class="btn-close-modal" onclick="archiveModalKapat()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Arşiv Sebebi (Zorunlu Değil)</label>
+                <select id="arsivSebebiSelect" class="form-control"
+                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 15px;">
+                    <option value="">Sebep Seçin...</option>
+                    <option value="Fiyat Yüksek Geldi">Fiyat Yüksek Geldi</option>
+                    <option value="Seneye Düşünüyor">Seneye Düşünüyor</option>
+                    <option value="Sadık / VIP Müşteri">Sadık / VIP Müşteri</option>
+                    <option value="İptal Etti">İptal Etti</option>
+                    <option value="Ulaşılamadı">Ulaşılamadı</option>
+                    <option value="Daha Sonra Aranacak">Daha Sonra Aranacak</option>
+                    <option value="Diğer">Diğer...</option>
+                </select>
+
+                <input type="text" id="arsivSebebiInput" placeholder="Diğer bir sebep yazın..."
+                    style="display: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 15px;">
+
+                <label>Hatırlatma Tarihi (Ne zaman aransın?)</label>
+                <input type="date" id="hatirlatmaTarihi"
+                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 15px;">
+
+                <input type="hidden" id="ariveRezId">
+            </div>
+            <div class="modal-footer" style="margin-top: 0;">
+                <button type="button" class="tab-btn" onclick="archiveModalKapat()">İptal</button>
+                <button type="button" class="btn-save-modal" style="background: #8e44ad;" onclick="arsiveKaydet()"><i
+                        class="fas fa-archive"></i> Arşivle</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ARAÇ MODAL -->
     <div class="custom-modal-overlay" id="vehicleModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -193,6 +255,7 @@
                     <input type="hidden" id="aracOzelliklerGizli" name="aracOzellikler">
                 </div>
 
+                <!-- Müşteri Yorumları Alanı (Tasarım Korundu) -->
                 <div class="form-group"
                     style="background: rgba(15, 61, 122, 0.03); padding: 15px; border-radius: 10px; border: 1px dashed #ccc;">
                     <label style="color: #0f3d7a;"><i class="fas fa-comments"></i> Müşteri Yorumları Ekle</label>
@@ -246,6 +309,7 @@
         </div>
     </div>
 
+    <!-- TUR MODAL -->
     <div class="custom-modal-overlay" id="tourModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -331,6 +395,8 @@
         </div>
     </div>
 
+    <!-- Excel İndirme İşlemi İçin Gerekli Kütüphane -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/Frontend/Js/admin.js"></script>
 
@@ -343,7 +409,7 @@
                 setTimeout(function () { preloader.style.setProperty('display', 'none', 'important'); }, 500);
             }
             window.addEventListener('load', function () { setTimeout(removePreloader, 300); });
-            setTimeout(removePreloader, 2000); // Admin JS hata verse bile 2 saniye sonra kesin açılır!
+            setTimeout(removePreloader, 2000); // Admin JS hata verse bile 2 saniye sonra kesin açılır
         })();
     </script>
 </body>

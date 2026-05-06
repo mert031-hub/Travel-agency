@@ -396,18 +396,24 @@ if (process.env.MONGODB_URI) {
 }
 
 // --- 7. API UÇ NOKTALARI (CRM VE REZERVASYON) ---
+
+// YENİ: Arşiv istatistiklerini de kapsayacak şekilde güncellendi
 app.get('/api/admin/stats', adminKontrol, async (req, res) => {
     try {
-        const toplam = await Reservation.countDocuments({ isDeleted: { $ne: true } });
-        const okunmamis = await Reservation.countDocuments({ isDeleted: { $ne: true }, isRead: false });
+        // Toplam ve Okunmamış kısımlarda Çöp'te VE Arşiv'de OLMAYANLARI sayıyoruz
+        const toplam = await Reservation.countDocuments({ isDeleted: { $ne: true }, isArchived: { $ne: true } });
+        const okunmamis = await Reservation.countDocuments({ isDeleted: { $ne: true }, isArchived: { $ne: true }, isRead: false });
         const cop = await Reservation.countDocuments({ isDeleted: true });
-        res.json({ toplam, okunmamis, cop });
+        const arsiv = await Reservation.countDocuments({ isArchived: true, isDeleted: { $ne: true } });
+
+        res.json({ toplam, okunmamis, cop, arsiv });
     } catch (e) { res.status(500).json({ hata: e.message }); }
 });
 
+// YENİ: Sadece Aktif talepleri getirir (Çöp'teki ve Arşiv'dekileri getirmez)
 app.get('/api/admin/reservations', adminKontrol, async (req, res) => {
     try {
-        const veriler = await Reservation.find({ isDeleted: { $ne: true } }).sort({ kayitTarihi: -1 });
+        const veriler = await Reservation.find({ isDeleted: { $ne: true }, isArchived: { $ne: true } }).sort({ kayitTarihi: -1 });
         res.json(veriler);
     } catch (e) { res.status(500).json({ mesaj: "Hata" }); }
 });
@@ -415,6 +421,14 @@ app.get('/api/admin/reservations', adminKontrol, async (req, res) => {
 app.get('/api/admin/trash', adminKontrol, async (req, res) => {
     try {
         const veriler = await Reservation.find({ isDeleted: true }).sort({ deletedAt: -1 });
+        res.json(veriler);
+    } catch (e) { res.status(500).json({ mesaj: "Hata" }); }
+});
+
+// YENİ: Arşiv listesini getir
+app.get('/api/admin/archive', adminKontrol, async (req, res) => {
+    try {
+        const veriler = await Reservation.find({ isArchived: true, isDeleted: { $ne: true } }).sort({ archivedAt: -1 });
         res.json(veriler);
     } catch (e) { res.status(500).json({ mesaj: "Hata" }); }
 });
@@ -435,6 +449,35 @@ app.put('/api/admin/reservations/:id/note', adminKontrol, async (req, res) => {
         await Reservation.findByIdAndUpdate(req.params.id, { adminNotu });
         res.json({ basari: true });
     } catch (e) { res.status(500).send(); }
+});
+
+// YENİ: Arşive Taşıma (Archive)
+app.put('/api/admin/reservations/:id/archive', adminKontrol, async (req, res) => {
+    try {
+        const arsivSebebi = temizMetin(req.body?.arsivSebebi, 200) || '';
+        const hatirlatmaTarihi = req.body?.hatirlatmaTarihi ? new Date(req.body.hatirlatmaTarihi) : null;
+
+        await Reservation.findByIdAndUpdate(req.params.id, {
+            isArchived: true,
+            archivedAt: new Date(),
+            arsivSebebi,
+            hatirlatmaTarihi
+        });
+        res.json({ basari: true });
+    } catch (error) { res.status(500).send(); }
+});
+
+// YENİ: Arşivden Geri Çıkarma (Geri Yükle)
+app.put('/api/admin/archive/:id/restore', adminKontrol, async (req, res) => {
+    try {
+        await Reservation.findByIdAndUpdate(req.params.id, {
+            isArchived: false,
+            archivedAt: null,
+            arsivSebebi: '',
+            hatirlatmaTarihi: null
+        });
+        res.json({ basari: true });
+    } catch (error) { res.status(500).send(); }
 });
 
 app.delete('/api/admin/reservations/:id', adminKontrol, async (req, res) => {

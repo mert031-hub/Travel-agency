@@ -16,7 +16,17 @@ let tumTurlar = [];
 let aktifYerler = [];
 let secilenTurGaleriDosyalari = [];
 
-window.onload = verileriYukle;
+window.onload = function () {
+    verileriYukle();
+
+    // Arşiv sebebi seçimi (Diğer seçilirse input aç)
+    const select = document.getElementById('arsivSebebiSelect');
+    if (select) {
+        select.addEventListener('change', (e) => {
+            document.getElementById('arsivSebebiInput').style.display = (e.target.value === 'Diğer') ? 'block' : 'none';
+        });
+    }
+};
 
 function escapeHtml(deger) {
     return String(deger ?? '')
@@ -72,20 +82,32 @@ function aktifSekmeyiYenile() {
     }
 }
 
-// --- 1. REZERVASYON SİSTEMİ KODLARI ---
+// --- 1. REZERVASYON VE ARŞİV SİSTEMİ KODLARI ---
 async function verileriYukle() {
     const tbody = document.getElementById('tableBody');
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
     if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
 
+    // YENİ EKLENEN: Tıklanır tıklanmaz eski veriyi silip şık bir animasyon gösterir
+    if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:60px; color:#0f3d7a;"><i class="fas fa-circle-notch fa-spin fa-2x" style="margin-bottom:15px;"></i><br><b style="letter-spacing: 1px;">Veriler Yükleniyor...</b></td></tr>';
+
     try {
+        // İstatistikleri Yükle
         const sRes = await guvenliFetch('/api/admin/stats');
         const stats = await sRes.json();
         document.getElementById('statTotal').innerText = stats.toplam || 0;
         document.getElementById('statNew').innerText = stats.okunmamis || 0;
         document.getElementById('statTrash').innerText = stats.cop || 0;
 
-        const url = currentTab === 'active' ? '/api/admin/reservations' : '/api/admin/trash';
+        // Yeni: Arşiv İstatistiği
+        const statArchiveEl = document.getElementById('statArchive');
+        if (statArchiveEl) statArchiveEl.innerText = stats.arsiv || 0;
+
+        // Sekmeye göre URL belirle
+        let url = '/api/admin/reservations'; // default (active)
+        if (currentTab === 'trash') url = '/api/admin/trash';
+        if (currentTab === 'archive') url = '/api/admin/archive'; // Yeni
+
         const res = await guvenliFetch(url);
         tumVeriler = await res.json();
         tabloyuCiz(tumVeriler);
@@ -125,28 +147,58 @@ function tabloyuCiz(liste) {
         const formTipi = escapeHtml(item.formTipi || 'Genel');
         const adminNotu = item.adminNotu ? `${escapeHtml(item.adminNotu.substring(0, 25))}...` : '';
 
+        // Güzergah / Neden Hücresi Mantığı (Arşivdeyse Sebep Göster)
+        let guzargahHtml = '';
+        if (currentTab === 'archive') {
+            const sebep = escapeHtml(item.arsivSebebi || 'Belirtilmedi');
+            const hatirlatma = item.hatirlatmaTarihi ? new Date(item.hatirlatmaTarihi).toLocaleDateString('tr-TR') : 'Yok';
+            guzargahHtml = `
+                <div style="margin-bottom:5px;"><i class="fas fa-archive" style="color:#8e44ad;"></i> <strong>Sebep:</strong> ${sebep}</div>
+                <div><i class="fas fa-calendar-alt text-dark"></i> <small>Hatırlatma:</small> <b>${hatirlatma}</b></div>
+            `;
+        } else {
+            guzargahHtml = `
+                <div><i class="fas fa-map-marker-alt text-danger"></i> ${alinisNoktasi}</div>
+                <div><i class="fas fa-flag-checkered text-dark"></i> ${birakilisNoktasi}</div>
+            `;
+        }
+
+        // Aksiyon (İşlem) Butonları Mantığı
+        let actionHtml = '';
+        if (currentTab === 'active') {
+            actionHtml = `
+                <button onclick="durumDegistir('${item._id}')" class="btn btn-blue" title="Görülme Durumu"><i class="fas ${item.isRead ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
+                <a href="${wpLink}" target="_blank" rel="noopener noreferrer" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <button onclick="arsiveAtModalAc('${item._id}')" class="btn" style="background:#8e44ad; color:white;" title="Arşive Al"><i class="fas fa-archive"></i></button>
+                <button onclick="kayitSil('${item._id}')" class="btn btn-red" title="Çöpe At"><i class="fas fa-trash"></i></button>
+            `;
+        } else if (currentTab === 'archive') {
+            actionHtml = `
+                <button onclick="arsivdenCikar('${item._id}')" class="btn btn-blue" title="Gelen Kutusuna Al"><i class="fas fa-inbox"></i></button>
+                <a href="${wpLink}" target="_blank" rel="noopener noreferrer" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <button onclick="kayitSil('${item._id}')" class="btn btn-red" title="Çöpe At"><i class="fas fa-trash"></i></button>
+            `;
+        } else { // Trash
+            actionHtml = `
+                <button onclick="geriYukle('${item._id}')" class="btn btn-orange" title="Geri Yükle"><i class="fas fa-undo"></i></button>
+            `;
+        }
+
         tbody.innerHTML += `
             <tr class="${rowClass}">
                 <td data-label="Tarih">${tarih}</td>
                 <td data-label="Müşteri"><strong>${adSoyad}</strong><br><small style="color:#666">${telefon}</small></td>
-                <td class="route-cell" data-label="Güzergah">
-                    <div><i class="fas fa-map-marker-alt text-danger"></i> ${alinisNoktasi}</div>
-                    <div><i class="fas fa-flag-checkered text-dark"></i> ${birakilisNoktasi}</div>
+                <td class="route-cell" data-label="${currentTab === 'archive' ? 'Arşiv Detayı' : 'Güzergah'}">
+                    ${guzargahHtml}
                 </td>
-                <td onclick="mesajGoster('${msgEscaped}', '${item._id}', '${noteEscaped}')" class="msg-cell" data-label="Mesaj">
+                <td onclick="mesajGoster('${msgEscaped}', '${item._id}', '${noteEscaped}')" class="msg-cell" data-label="Mesaj / Not">
                     <div class="msg-preview" title="Detay için tıkla">${msgPreview}</div>
                     <span class="note-tag">${item.adminNotu ? `<i class="fas fa-sticky-note"></i> ${adminNotu}` : '<i class="fas fa-plus-circle"></i> Not ekle'}</span>
                 </td>
                 <td data-label="Tip"><span class="tag ${item.formTipi?.includes('Hero') ? 'tag-hero' : 'tag-contact'}">${formTipi}</span></td>
                 <td data-label="İşlemler">
                     <div class="action-flex">
-                        ${currentTab === 'active' ? `
-                            <button onclick="durumDegistir('${item._id}')" class="btn btn-blue" title="Görülme Durumu"><i class="fas ${item.isRead ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
-                            <a href="${wpLink}" target="_blank" rel="noopener noreferrer" class="btn btn-green" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                            <button onclick="kayitSil('${item._id}')" class="btn btn-red" title="Çöpe At"><i class="fas fa-trash"></i></button>
-                        ` : `
-                            <button onclick="geriYukle('${item._id}')" class="btn btn-orange" title="Geri Yükle"><i class="fas fa-undo"></i></button>
-                        `}
+                        ${actionHtml}
                     </div>
                 </td>
             </tr>`;
@@ -175,6 +227,81 @@ function tabloyuFiltrele() {
     });
     tabloyuCiz(filtrelenmis);
 }
+
+// --- ARŞİVE ALMA İŞLEMLERİ (YENİ) ---
+window.arsiveAtModalAc = function (id) {
+    document.getElementById('ariveRezId').value = id;
+    document.getElementById('arsivSebebiSelect').value = '';
+    document.getElementById('arsivSebebiInput').value = '';
+    document.getElementById('arsivSebebiInput').style.display = 'none';
+    document.getElementById('hatirlatmaTarihi').value = '';
+    document.getElementById('archiveModal').classList.add('active');
+};
+
+window.archiveModalKapat = function () {
+    document.getElementById('archiveModal').classList.remove('active');
+};
+
+window.arsiveKaydet = async function () {
+    const id = document.getElementById('ariveRezId').value;
+    let sebep = document.getElementById('arsivSebebiSelect').value;
+    if (sebep === 'Diğer') sebep = document.getElementById('arsivSebebiInput').value;
+    const tarih = document.getElementById('hatirlatmaTarihi').value;
+
+    try {
+        const res = await guvenliFetch(`/api/admin/reservations/${id}/archive`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ arsivSebebi: sebep, hatirlatmaTarihi: tarih })
+        });
+        if (res.ok) {
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Arşive Taşındı', showConfirmButton: false, timer: 1500 });
+            archiveModalKapat();
+            verileriYukle();
+        }
+    } catch (e) {
+        console.error("Arşivleme hatası", e);
+    }
+};
+
+window.arsivdenCikar = async function (id) {
+    const confirm = await Swal.fire({ title: 'Arşivden Çıkarılsın mı?', text: "Bu müşteri tekrar aktif talepler listesine alınacak.", icon: 'question', showCancelButton: true, confirmButtonColor: '#0f3d7a' });
+    if (confirm.isConfirmed) {
+        await guvenliFetch(`/api/admin/archive/${id}/restore`, { method: 'PUT' });
+        verileriYukle();
+    }
+};
+
+// --- EXCEL İNDİRME İŞLEMİ (YENİ) ---
+window.excelIndir = function () {
+    if (tumVeriler.length === 0) {
+        Swal.fire('Uyarı', 'Arşivde indirilecek veri bulunamadı.', 'warning');
+        return;
+    }
+
+    // Verileri Excel sütunlarına göre haritala
+    const excelData = tumVeriler.map(item => ({
+        'Kayıt Tarihi': item.kayitTarihi ? new Date(item.kayitTarihi).toLocaleDateString('tr-TR') : '-',
+        'Müşteri Ad Soyad': item.adSoyad || '-',
+        'Telefon Numarası': item.telefon || '-',
+        'E-Posta Adresi': item.email || '-',
+        'Alınış Noktası': item.alinisNoktasi || '-',
+        'Bırakılış Noktası': item.birakilisNoktasi || '-',
+        'Yolcu Sayısı': item.yolcuSayisi || '-',
+        'İletişim Kanalı': item.formTipi || '-',
+        'Arşiv Sebebi': item.arsivSebebi || '-',
+        'Hatırlatma Tarihi': item.hatirlatmaTarihi ? new Date(item.hatirlatmaTarihi).toLocaleDateString('tr-TR') : '-',
+        'Müşteri Özel Mesajı': item.mesaj || '-',
+        'Admin Notu': item.adminNotu || '-'
+    }));
+
+    // XLSX Kütüphanesi ile dosyayı oluştur ve indir
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "VIP_Musteri_Arsivi");
+    XLSX.writeFile(workbook, "Bugra_Polat_VIP_Arsiv.xlsx");
+};
+// ------------------------------------
 
 async function mesajGoster(encodedMsg, id, encodedNote) {
     const msg = decodeBase64Unicode(encodedMsg);
@@ -226,11 +353,18 @@ window.cikisYap = async function () {
 window.tabDegistir = function (t) {
     currentTab = t;
     document.getElementById('btnActive').classList.toggle('active', t === 'active');
+    document.getElementById('btnArchive').classList.toggle('active', t === 'archive'); // Yeni
     document.getElementById('btnTrash').classList.toggle('active', t === 'trash');
     document.getElementById('btnVehicles').classList.toggle('active', t === 'vehicles');
-    document.getElementById('btnTours').classList.toggle('active', t === 'tours'); // Yeni Tur Sekmesi
+    document.getElementById('btnTours').classList.toggle('active', t === 'tours');
 
     const searchInput = document.getElementById('searchInput');
+    const excelBtn = document.getElementById('btnExportExcel'); // Yeni
+
+    // Excel Butonu Görünürlüğü (Sadece Arşivde Göster)
+    if (excelBtn) {
+        excelBtn.style.display = (t === 'archive') ? 'inline-block' : 'none';
+    }
 
     // Araçlar
     if (t === 'vehicles') {
@@ -250,7 +384,7 @@ window.tabDegistir = function (t) {
         searchInput.value = '';
         turlariYukle();
     }
-    // Rezervasyonlar
+    // Rezervasyonlar, Arşiv ve Çöp Kutusu
     else {
         document.getElementById('vehiclesSection').style.display = 'none';
         document.getElementById('toursSection').style.display = 'none';
@@ -266,8 +400,12 @@ window.tabDegistir = function (t) {
    3. ARAÇ YÖNETİMİ SİSTEMİ KODLARI
 ============================================================== */
 async function araclariYukle() {
+    const grid = document.getElementById('vehicleGrid');
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
     if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
+
+    // YENİ EKLENEN: Anında geçiş animasyonu
+    if (grid) grid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding:60px; color:#0f3d7a;"><i class="fas fa-circle-notch fa-spin fa-2x" style="margin-bottom:15px;"></i><br><b style="letter-spacing: 1px;">Araç Filosu Yükleniyor...</b></div>';
 
     try {
         const res = await guvenliFetch('/api/admin/vehicles');
@@ -276,7 +414,7 @@ async function araclariYukle() {
             tumAraclar.sort((a, b) => (a.aracSira || 999) - (b.aracSira || 999));
             araclariCiz(tumAraclar);
         } else {
-            document.getElementById('vehicleGrid').innerHTML = '<p style="color:#666; width:100%; text-align:center;">Araçlar yüklenemedi.</p>';
+            grid.innerHTML = '<p style="color:#666; width:100%; text-align:center;">Araçlar yüklenemedi.</p>';
         }
     } catch (e) {
         console.error("Araç yükleme hatası:", e);
@@ -562,8 +700,12 @@ window.aracTamamenSil = async function (id) {
 ============================================================== */
 
 async function turlariYukle() {
+    const grid = document.getElementById('tourGrid');
     const refreshBtnIcon = document.querySelector('.btn-refresh i');
     if (refreshBtnIcon) refreshBtnIcon.classList.add('fa-spin');
+
+    // YENİ EKLENEN: Anında geçiş animasyonu
+    if (grid) grid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding:60px; color:#27ae60;"><i class="fas fa-circle-notch fa-spin fa-2x" style="margin-bottom:15px;"></i><br><b style="letter-spacing: 1px;">Turlar Yükleniyor...</b></div>';
 
     try {
         const res = await guvenliFetch('/api/admin/tours');
@@ -572,7 +714,7 @@ async function turlariYukle() {
             tumTurlar.sort((a, b) => (a.turSira || 999) - (b.turSira || 999));
             turlariCiz(tumTurlar);
         } else {
-            document.getElementById('tourGrid').innerHTML = '<p style="color:#666; width:100%; text-align:center;">Turlar yüklenemedi.</p>';
+            grid.innerHTML = '<p style="color:#666; width:100%; text-align:center;">Turlar yüklenemedi.</p>';
         }
     } catch (e) {
         console.error("Tur yükleme hatası:", e);
